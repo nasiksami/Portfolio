@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  transition: background 0.15s, color 0.15s;
+
+}
+body {
+  @apply bg-gray-950 text-gray-100 dark:bg-white dark:text-gray-900 transition-colors duration-100;
+}
+
+section {
+  scroll-margin-top: 5rem;
+}
+
+.card {
+  @apply bg-gray-900/80 dark:bg-white/80 rounded-2xl shadow-xl border border-gray-800 dark:border-gray-200 transition-colors duration-100;
+}
+
+/* Section reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+} 
