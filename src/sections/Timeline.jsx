@@ -1,9 +1,27 @@
 import React from 'react';
+import bdmLogo from '../assets/bdm.png';
 import uofrLogo from '../assets/uofr.jpg';
 import dpoLogo from '../assets/dpo.jpg';
 import dhlLogo from '../assets/dhl.jpg';
 
 export const experienceTimeline = [
+  {
+    year: 'Sep 2025 – Present',
+    title: 'AI Team Lead (AI Software Developer)',
+    institution: 'BDM Healthware Inc., Saskatoon, SK, Canada',
+    logo: bdmLogo,
+    description: [
+      'Leading the AI team within R&D to design, develop, and integrate state-of-the-art AI solutions into BDM’s healthcare software.',
+      'Design and implement AI/ML models (research-to-production) using frameworks such as PyTorch and TensorFlow; optimize models for scalability and cloud deployment (AWS/Azure/GCP).',
+      'Architect and maintain data pipelines for training, preprocessing, and inference using tools like SQL, Pandas, and cloud-native services to ensure efficient and reliable model performance.',
+      'Collaborate closely with product managers, software engineers, and customers to translate clinical and business requirements into robust AI features that improve patient care workflows.',
+      'Drive research and evaluation of new AI techniques and ensure ethical, secure, and compliant deployment of AI systems within healthcare settings.',
+      'Mentor developers, lead knowledge-sharing sessions, and establish best practices for ML engineering, testing, and model monitoring.',
+      'Troubleshoot and resolve system-level issues related to AI integrations; document architecture, algorithms, and deployment processes for maintainability.',
+      'Work directly with stakeholders (including Trevor Tessier and Armand Sewell) during recruitment and onboarding activities to align team goals and project priorities.'
+    ],
+    iconColor: 'bg-teal-400',
+  },
   {
     year: 'Jan 2023 – May 2025',
     title: 'Graduate Research Assistant',

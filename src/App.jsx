@@ -57,6 +57,7 @@ function App() {
           <a href="#about" className="hover:text-blue-400 transition">About</a>
           <a href="#resume" className="hover:text-blue-400 transition">Resume</a>
           <a href="#projects" className="hover:text-blue-400 transition">Projects</a>
+          <a href="#experience-timeline" className="hover:text-blue-400 transition">Experience</a>
           <a href="#publications" className="hover:text-blue-400 transition">Publications</a>
           <a href="#contact" className="hover:text-blue-400 transition">Contact</a>
         </nav>
