@@ -10,7 +10,10 @@ export const profile = {
   // Shown as the hero badge — states current standing rather than availability.
   currentRole: 'AI Team Lead at BDM Healthware',
   headshot,
-  resumeUrl: '/resume.pdf',
+  // Relative, not root-absolute: the site has to work both at a domain root
+  // (nasik.ca) and under a subdirectory (GitHub Pages preview). Vite's
+  // base: './' only rewrites imported assets, not string literals like this.
+  resumeUrl: './resume.pdf',
   siteUrl: 'https://nasik.ca/',
 };
 

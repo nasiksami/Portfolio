@@ -1,0 +1,66 @@
+name: Deploy preview to GitHub Pages
+
+# Builds the site and publishes it to the Pages preview at
+# https://nasiksami.github.io/Portfolio/ so changes can be reviewed before
+# they go to the live host. This does not touch nasik.ca, which is still
+# deployed by hand.
+on:
+  push:
+    branches: [redesign/v2, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a newer push cancel an in-flight deploy, but never interrupt one that is
+# already publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # Fail the deploy on lint errors rather than shipping them to the preview.
+      - run: npm run lint
+
+      - run: npm run build
+
+      # The preview is a second public copy of the site. Keep it out of search
+      # results so it never competes with nasik.ca; the canonical tag in
+      # index.html already points at the real domain.
+      - name: Block crawlers on the preview
+        run: |
+          cat > dist/robots.txt <<'EOF'
+          # Preview build only — the canonical site is https://nasik.ca/
+          # Kept out of search results so this copy never competes with the real domain.
+          User-agent: *
+          Disallow: /
+          EOF
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
