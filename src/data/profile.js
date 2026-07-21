@@ -30,7 +30,8 @@ export const availability =
 //
 // These defaults are derived strictly from content already in this repo:
 //   publications  → 7 entries in data/publications.js
-//   experience    → first professional role began Feb 2021 (DHL Express)
+//   experience    → "over 3 years", matching the wording in public/resume.pdf
+//                   so the site and the PDF never contradict each other
 //   roles         → 9 entries in data/experience.js
 //   msc grade     → 88.40%, from data/education.js
 //
@@ -39,7 +40,11 @@ export const availability =
 // ─────────────────────────────────────────────────────────────────────────────
 export const stats = [
   { value: '7', label: 'Publications', detail: 'Peer-reviewed papers & book chapters' },
-  { value: '5+', label: 'Years experience', detail: 'Research and industry, since 2021' },
+  {
+    value: '3+',
+    label: 'Years experience',
+    detail: 'Applied AI, data engineering & software',
+  },
   { value: '9', label: 'Roles held', detail: 'Across industry and academia' },
   { value: '88.4%', label: 'MSc grade', detail: 'University of Regina' },
 ];
