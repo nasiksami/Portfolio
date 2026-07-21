@@ -52,7 +52,7 @@ export default function Contact() {
       id="contact"
       eyebrow="Contact"
       title="Let’s build something"
-      description="Open to roles and collaborations in AI/ML, cloud, telecom, and software engineering. I read every message."
+      description="Always glad to talk about AI/ML, cloud, telecom, and software engineering. I read every message."
     >
       <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr]">
         {/* Direct channels */}

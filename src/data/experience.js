@@ -32,7 +32,7 @@ export const experience = [
       'Conducted AI/ML research under Dr. Nashid Shahriar, collaborating with industry partners including Rogers and the Department of National Defence.',
       'Developed NLP and AI systems spanning retrieval-augmented generation, agentic AI, and intrusion detection.',
       'Simulated 5G network testbeds to evaluate and improve network performance and security.',
-      'Published peer-reviewed papers at IEEE Globecom Workshops and CNSM.',
+      'Published peer-reviewed work in the IEEE Journal on Selected Areas in Communications, IEEE Globecom Workshops, and CNSM.',
       'Presented research at international conferences and contributed to academic peer review.',
     ],
   },

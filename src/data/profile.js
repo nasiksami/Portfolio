@@ -7,6 +7,8 @@ export const profile = {
   summary:
     'Specializing in Generative AI, LLMs, NLP, and scalable software solutions — turning applied research into production systems.',
   location: 'Saskatoon, SK, Canada',
+  // Shown as the hero badge — states current standing rather than availability.
+  currentRole: 'AI Team Lead at BDM Healthware',
   headshot,
   resumeUrl: '/resume.pdf',
   siteUrl: 'https://nasik.ca/',
@@ -15,17 +17,19 @@ export const profile = {
 export const bio = [
   'I am an MSc in Computer Science graduate with a proven record of translating advanced AI/ML research into impactful, production-ready solutions. My work bridges rigorous academic research and hands-on software engineering, helping organizations solve difficult technical problems and accelerate growth.',
   'I have collaborated with industry partners including Rogers and the Department of National Defence, and earned recognition in global AI/ML competitions run by the ITU. My work has delivered measurable results: a 47% QA accuracy improvement in telecom RAG systems, a 22% F1 gain in intrusion detection, and a 40% improvement in microservices performance at DPO International.',
-  'With peer-reviewed publications and presentations at top international conferences including IEEE GLOBECOM and CNSM, I bring depth in LLMs, scalable architectures, and end-to-end delivery across both research and production environments.',
+  'With peer-reviewed publications spanning the IEEE Journal on Selected Areas in Communications and presentations at top international conferences including IEEE GLOBECOM and CNSM, I bring depth in LLMs, scalable architectures, and end-to-end delivery across both research and production environments.',
 ];
 
+// Sub-heading under the About title. Deliberately positions the work rather
+// than signalling job-seeking.
 export const availability =
-  'Open to opportunities in AI/ML, cloud, telecom, and software engineering.';
+  'Working across AI/ML, cloud, and telecom — from peer-reviewed research to systems in production.';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STAT TILES — shown in the About section.
 //
 // These defaults are derived strictly from content already in this repo:
-//   publications  → 6 entries in data/publications.js
+//   publications  → 7 entries in data/publications.js
 //   experience    → first professional role began Feb 2021 (DHL Express)
 //   roles         → 9 entries in data/experience.js
 //   msc grade     → 88.40%, from data/education.js
@@ -34,7 +38,7 @@ export const availability =
 // what the site displays; `label` and `detail` are free text.
 // ─────────────────────────────────────────────────────────────────────────────
 export const stats = [
-  { value: '6', label: 'Publications', detail: 'Peer-reviewed papers & book chapters' },
+  { value: '7', label: 'Publications', detail: 'Peer-reviewed papers & book chapters' },
   { value: '5+', label: 'Years experience', detail: 'Research and industry, since 2021' },
   { value: '9', label: 'Roles held', detail: 'Across industry and academia' },
   { value: '88.4%', label: 'MSc grade', detail: 'University of Regina' },

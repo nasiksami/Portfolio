@@ -3,6 +3,15 @@ export const authorKey = 'N. S. Khan';
 
 export const publications = [
   {
+    title: 'Leveraging LLM for Enhanced Incident Management in Wireless Networks',
+    authors:
+      'M. S. Towhid, N. S. Khan, N. Shahriar, M. Tornatore, R. Boutaba, and A. Saleh',
+    venue: 'IEEE Journal on Selected Areas in Communications, vol. 44, pp. 4505–4519',
+    year: 2026,
+    type: 'Journal',
+    href: 'https://uregina.ca/~nss373/papers/JSAC_2026.pdf',
+  },
+  {
     title:
       'Enhancing Large Language Models for Telecom Networks Using Retrieval-Augmented Generation',
     authors: 'N. S. Khan, M. M. Hasan, M. S. Towhid, S. Basnet, and N. Shahriar',
@@ -27,7 +36,7 @@ export const publications = [
     venue: '19th IEEE/ACM/IFIP International Conference on Network and Service Management (CNSM)',
     year: 2023,
     type: 'Conference',
-    href: 'https://rboutaba.cs.uwaterloo.ca/Papers/Conferences/2023/TowhidCNSM23.pdf',
+    href: 'https://uregina.ca/~nss373/papers/NCT_CNSM_2023.pdf',
   },
   {
     title:

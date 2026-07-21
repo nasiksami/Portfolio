@@ -42,11 +42,8 @@ export default function Hero() {
               {...itemProps}
               className="mb-5 inline-flex items-center gap-2 rounded-full border border-edge bg-surface-raised/60 px-3.5 py-1.5 text-xs text-content-secondary backdrop-blur"
             >
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-              </span>
-              Open to new opportunities
+              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-accent" />
+              {profile.currentRole}
             </motion.p>
 
             <motion.h1

@@ -28,16 +28,29 @@ export const projects = [
     links: {},
   },
   {
-    title: 'Network Ticket Classification',
+    title: 'LLM-Based Incident Management',
     category: 'AI/ML',
     featured: true,
     description:
-      'A BERT-based NLP model using data augmentation and class weighting to classify telecom network trouble tickets into priority categories, addressing severe class imbalance.',
-    role: 'ML Engineer',
+      'Automated multi-label classification of telecom incident management tickets, pairing a BERT encoder using relevance-guided feature selection with an LLM-based approach to handle noisy text and overlapping impact and cause categories.',
+    role: 'Co-author & Researcher',
+    impact: 'Published in IEEE JSAC (2026)',
+    tech: ['LLMs', 'BERT', 'NLP', 'Python', 'PyTorch'],
+    links: {
+      paper: 'https://uregina.ca/~nss373/papers/JSAC_2026.pdf',
+    },
+  },
+  {
+    title: 'Network Ticket Classification',
+    category: 'AI/ML',
+    featured: false,
+    description:
+      'A BERT-based NLP model using token prioritization, data augmentation, and class weighting to classify telecom network-change tickets into priority categories under severe class imbalance.',
+    role: 'Co-author & ML Engineer',
     impact: 'Improved automated issue triaging accuracy',
     tech: ['BERT', 'NLP', 'Python', 'PyTorch'],
     links: {
-      paper: 'https://rboutaba.cs.uwaterloo.ca/Papers/Conferences/2023/TowhidCNSM23.pdf',
+      paper: 'https://uregina.ca/~nss373/papers/NCT_CNSM_2023.pdf',
     },
   },
   {
