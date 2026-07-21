@@ -24,7 +24,7 @@ export default function Section({
     >
       <Reveal className={`mb-12 max-w-2xl md:mb-16 ${alignment}`}>
         {eyebrow && (
-          <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
+          <p className="mb-3 font-mono text-sm uppercase tracking-[0.2em] text-accent md:text-base">
             {eyebrow}
           </p>
         )}
