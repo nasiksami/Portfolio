@@ -6,7 +6,7 @@ name: Deploy preview to GitHub Pages
 # deployed by hand.
 on:
   push:
-    branches: [redesign/v2, main]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
