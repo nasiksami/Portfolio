@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
-import { FiMoon, FiSun } from 'react-icons/fi';
 import { navLinks, profile } from '../data/profile';
 import { useScrollSpy } from '../hooks/useScrollSpy';
 import { useTheme } from '../hooks/useTheme';
@@ -9,13 +8,16 @@ import Button from './ui/Button';
 
 const SECTION_IDS = navLinks.map((link) => link.id);
 
+/** Record number for a nav target, matching the §NN in each Section. */
+const recordNumber = (index) => String(index + 1).padStart(2, '0');
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { activeId, selectId } = useScrollSpy(SECTION_IDS);
   const { theme, toggle } = useTheme();
 
-  // Condense the bar once the hero has scrolled past.
+  // Draw the rule under the bar once the hero has scrolled past.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
@@ -40,26 +42,20 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'border-b border-edge bg-surface-base/80 backdrop-blur-xl'
-          : 'border-b border-transparent'
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+        // Solid, not translucent: there is no glass anywhere in this design.
+        scrolled ? 'border-b border-edge bg-surface-base' : ''
       }`}
     >
-      <nav
-        aria-label="Primary"
-        className="mx-auto flex h-16 max-w-content items-center justify-between px-5 sm:px-8"
-      >
-        <a
-          href="#top"
-          className="rounded-lg font-display text-base font-bold tracking-tight text-content-primary"
-        >
-          Nasik<span className="text-accent">.</span>
+      <nav aria-label="Primary" className="shell flex h-20 items-center justify-between">
+        <a href="#top" className="display text-lg text-content-primary" style={{ '--wdth': 88 }}>
+          Nasik
+          <span className="text-accent">⁄</span>
         </a>
 
-        {/* Desktop navigation */}
-        <ul className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => {
+        {/* Desktop navigation — a numbered index, not a menu. */}
+        <ul className="hidden items-center gap-7 md:flex">
+          {navLinks.map((link, index) => {
             const isActive = activeId === link.id;
             return (
               <li key={link.id}>
@@ -67,17 +63,24 @@ export default function Navbar() {
                   href={`#${link.id}`}
                   onClick={() => selectId(link.id)}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`relative rounded-lg px-3 py-2 text-sm transition-colors ${
+                  className={`meta-sm flex items-center gap-1.5 transition-colors ${
                     isActive
                       ? 'text-content-primary'
-                      : 'text-content-secondary hover:text-content-primary'
+                      : 'text-content-muted hover:text-content-primary'
                   }`}
                 >
+                  <span
+                    aria-hidden="true"
+                    className={isActive ? 'text-accent' : 'text-content-muted'}
+                  >
+                    §{recordNumber(index)}
+                  </span>
                   {link.label}
                   {isActive && (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-accent"
+                      aria-hidden="true"
+                      className="ml-0.5 h-1.5 w-1.5 bg-accent"
                       transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -87,18 +90,25 @@ export default function Navbar() {
           })}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <button
             type="button"
             onClick={toggle}
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-            className="rounded-lg p-2 text-content-secondary transition-colors hover:bg-surface-overlay hover:text-content-primary"
+            aria-label={`Switch to ${theme === 'dark' ? 'paper' : 'ink'} theme`}
+            className="meta-sm flex items-center gap-2 text-content-muted transition-colors hover:text-accent"
           >
-            {theme === 'dark' ? <FiSun className="h-4 w-4" /> : <FiMoon className="h-4 w-4" />}
+            <span
+              aria-hidden="true"
+              className={`h-3 w-3 border border-current ${
+                theme === 'dark' ? '' : 'bg-current'
+              }`}
+            />
+            <span aria-hidden="true">{theme === 'dark' ? 'Ink' : 'Paper'}</span>
           </button>
 
           <Button
             href="#contact"
+            variant="solid"
             size="sm"
             className="hidden sm:inline-flex"
             onClick={() => selectId('contact')}
@@ -112,25 +122,26 @@ export default function Navbar() {
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
-            className="rounded-lg p-2 text-content-primary transition-colors hover:bg-surface-overlay md:hidden"
+            className="text-content-primary transition-colors hover:text-accent md:hidden"
           >
-            {menuOpen ? <HiX className="h-5 w-5" /> : <HiMenuAlt3 className="h-5 w-5" />}
+            {menuOpen ? <HiX className="h-6 w-6" /> : <HiMenuAlt3 className="h-6 w-6" />}
           </button>
         </div>
       </nav>
 
+      {/* Mobile menu: a full-screen inverted index page. */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
             id="mobile-menu"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-b border-edge bg-surface-base/95 backdrop-blur-xl md:hidden"
+            initial={{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }}
+            animate={{ opacity: 1, clipPath: 'inset(0 0 0% 0)' }}
+            exit={{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="invert-surface fixed inset-x-0 top-20 bottom-0 overflow-y-auto md:hidden"
           >
-            <ul className="space-y-1 px-5 py-4">
-              {navLinks.map((link) => (
+            <ul className="ledger shell py-4">
+              {navLinks.map((link, index) => (
                 <li key={link.id}>
                   <a
                     href={`#${link.id}`}
@@ -139,18 +150,28 @@ export default function Navbar() {
                       setMenuOpen(false);
                     }}
                     aria-current={activeId === link.id ? 'page' : undefined}
-                    className={`block rounded-lg px-3 py-2.5 text-sm transition-colors ${
+                    className={`flex items-baseline gap-4 py-5 transition-colors ${
                       activeId === link.id
-                        ? 'bg-accent/10 text-accent'
-                        : 'text-content-secondary hover:bg-surface-overlay hover:text-content-primary'
+                        ? 'text-accent'
+                        : 'text-content-primary hover:text-accent'
                     }`}
                   >
-                    {link.label}
+                    <span aria-hidden="true" className="meta-sm text-content-muted">
+                      §{recordNumber(index)}
+                    </span>
+                    <span className="display d-2" style={{ '--wdth': 92 }}>
+                      {link.label}
+                    </span>
                   </a>
                 </li>
               ))}
-              <li className="pt-2">
-                <Button href={profile.resumeUrl} external size="sm" className="w-full">
+              <li>
+                <Button
+                  href={profile.resumeUrl}
+                  external
+                  variant="outline"
+                  className="mt-6 w-full"
+                >
                   Download resume
                 </Button>
               </li>

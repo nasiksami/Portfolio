@@ -12,14 +12,16 @@ const ICONS = {
 };
 
 /**
- * Row of icon-only social links.
+ * Row of social links set as monospace labels rather than icon-only buttons —
+ * in this design the label is the mark.
  *
- * Each link carries an aria-label because the icon alone conveys no accessible
- * name; the visible label is reserved for the Contact section's list form.
+ * Because the label is visible text each link already has an accessible name;
+ * `aria-label` adds the value (handle, address) that sighted visitors get from
+ * the Contact ledger, and the icon stays decorative.
  */
 export default function SocialLinks({ items = allSocials, className = '' }) {
   return (
-    <ul className={`flex flex-wrap items-center gap-2 ${className}`}>
+    <ul className={`flex flex-wrap items-center gap-x-6 gap-y-3 ${className}`}>
       {items.map((social) => {
         const Icon = ICONS[social.icon] ?? FiMail;
         const isExternal = social.href.startsWith('http');
@@ -29,9 +31,10 @@ export default function SocialLinks({ items = allSocials, className = '' }) {
               href={social.href}
               aria-label={`${social.label}: ${social.value}`}
               {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-edge bg-surface-raised/60 text-content-secondary backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-accent/50 hover:text-accent"
+              className="link-draw meta flex items-center gap-2 text-content-secondary transition-colors hover:text-accent"
             >
-              <Icon className="h-4 w-4" aria-hidden="true" />
+              <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+              {social.label}
             </a>
           </li>
         );

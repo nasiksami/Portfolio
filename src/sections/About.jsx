@@ -1,5 +1,6 @@
 import { HiOutlineChip, HiOutlineCode, HiOutlineCloud, HiOutlineDocumentText } from 'react-icons/hi';
 import { availability, bio, focusAreas, profile, stats } from '../data/profile';
+import { useCountUp } from '../hooks/useCountUp';
 import Section from '../components/ui/Section';
 import Reveal from '../components/ui/Reveal';
 
@@ -10,77 +11,91 @@ const FOCUS_ICONS = {
   document: HiOutlineDocumentText,
 };
 
+/** One cell of the stat band. Counts up when it scrolls into view. */
+function Stat({ stat }) {
+  const [ref, display] = useCountUp(stat.value);
+
+  return (
+    <div ref={ref} className="px-5 py-8 md:px-6">
+      <dt className="meta-sm text-content-muted">{stat.label}</dt>
+      <dd>
+        <span
+          className="display mt-4 block text-[clamp(2.25rem,5vw,4rem)] text-accent"
+          style={{ '--wdth': 88, '--wght': 800 }}
+        >
+          {display}
+        </span>
+        <span className="mt-3 block text-sm leading-relaxed text-content-secondary">
+          {stat.detail}
+        </span>
+      </dd>
+    </div>
+  );
+}
+
 export default function About() {
   return (
     <Section
       id="about"
-      eyebrow="About"
+      index="01"
+      label="About"
       title={profile.tagline}
       description={availability}
     >
-      {/* Bio */}
-      <div className="mx-auto max-w-3xl">
+      {/* ── Bio, offset into the right two-thirds with hanging paragraph
+             indices in the margin, the way a printed monograph numbers its
+             body copy. ─────────────────────────────────────────────────── */}
+      <div className="ledger">
         {bio.map((paragraph, index) => (
-          <Reveal key={index} delay={index * 0.08}>
-            <p className="mb-5 text-base leading-relaxed text-content-secondary md:text-lg">
-              {paragraph}
-            </p>
+          <Reveal key={paragraph} delay={index * 0.08}>
+            <div className="grid gap-x-6 gap-y-2 py-7 md:grid-cols-[4rem_minmax(0,1fr)]">
+              <p aria-hidden="true" className="meta-sm text-accent">
+                ¶{String(index + 1).padStart(2, '0')}
+              </p>
+              <p className="max-w-prose text-base leading-relaxed text-content-secondary md:text-lg">
+                {paragraph}
+              </p>
+            </div>
           </Reveal>
         ))}
       </div>
 
-      {/* Stat tiles */}
+      {/* ── Stat band ────────────────────────────────────────────────────── */}
       <Reveal delay={0.1}>
-        <dl className="mt-14 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <dl className="stat-band mt-20 grid grid-cols-2 border-y-2 border-content-primary lg:grid-cols-4">
           {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="card group relative overflow-hidden p-5 transition-colors duration-300 hover:border-accent/40"
-            >
-              <dt className="sr-only">{stat.label}</dt>
-              <dd>
-                <span className="block bg-gradient-to-br from-accent to-iris bg-clip-text font-display text-3xl font-bold text-transparent sm:text-4xl">
-                  {stat.value}
-                </span>
-                <span className="mt-1.5 block text-sm font-medium text-content-primary">
-                  {stat.label}
-                </span>
-                <span className="mt-1 block text-xs leading-relaxed text-content-muted">
-                  {stat.detail}
-                </span>
-              </dd>
-            </div>
+            <Stat key={stat.label} stat={stat} />
           ))}
         </dl>
       </Reveal>
 
-      {/* What I do */}
-      <div className="mt-16">
+      {/* ── What I do ────────────────────────────────────────────────────── */}
+      <div className="mt-20">
         <Reveal>
-          <h3 className="mb-8 text-center font-display text-xl font-semibold text-content-primary sm:text-2xl">
-            What I do
-          </h3>
+          <h3 className="meta mb-6 text-content-muted">What I do</h3>
         </Reveal>
-        <div className="grid gap-4 sm:grid-cols-2">
+
+        <ol className="ledger">
           {focusAreas.map((area, index) => {
             const Icon = FOCUS_ICONS[area.icon] ?? HiOutlineChip;
             return (
-              <Reveal key={area.title} delay={index * 0.08}>
-                <article className="card h-full p-6 transition-colors duration-300 hover:border-accent/40">
-                  <span className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <h4 className="mb-2 text-base font-semibold text-content-primary">
+              <Reveal key={area.title} as="li" delay={index * 0.07}>
+                <div className="group grid gap-x-6 gap-y-3 py-8 md:grid-cols-[4rem_18rem_minmax(0,1fr)]">
+                  <p aria-hidden="true" className="meta-sm text-content-muted">
+                    {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <h4 className="display d-3 flex items-start gap-3 text-content-primary transition-colors group-hover:text-accent">
+                    <Icon className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
                     {area.title}
                   </h4>
-                  <p className="text-sm leading-relaxed text-content-secondary">
+                  <p className="max-w-prose text-sm leading-relaxed text-content-secondary md:text-base">
                     {area.description}
                   </p>
-                </article>
+                </div>
               </Reveal>
             );
           })}
-        </div>
+        </ol>
       </div>
     </Section>
   );

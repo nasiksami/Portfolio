@@ -27,13 +27,14 @@ export default function BackToTop() {
                 : 'smooth',
             })
           }
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 12 }}
           transition={{ duration: 0.2 }}
-          className="fixed bottom-6 right-6 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-edge bg-surface-raised/80 text-content-primary shadow-lg backdrop-blur-xl transition-colors hover:border-accent/50 hover:text-accent"
+          className="meta-sm fixed bottom-6 right-6 z-50 flex items-center gap-2 border border-content-primary bg-surface-base px-3 py-2.5 text-content-primary transition-colors hover:bg-accent hover:border-accent hover:text-on-accent"
         >
-          <FiArrowUp className="h-4 w-4" aria-hidden="true" />
+          <FiArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
+          <span aria-hidden="true">Top</span>
         </motion.button>
       )}
     </AnimatePresence>

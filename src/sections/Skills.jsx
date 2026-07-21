@@ -1,4 +1,4 @@
-import { skillGroups } from '../data/skills';
+import { levelOrder, skillGroups } from '../data/skills';
 import Section from '../components/ui/Section';
 import Reveal from '../components/ui/Reveal';
 import SkillIcon from '../components/SkillIcon';
@@ -6,20 +6,19 @@ import SkillIcon from '../components/SkillIcon';
 // Proficiency is shown as a 3-step meter rather than an invented percentage.
 const LEVEL_STEPS = { Expert: 3, Advanced: 2, Intermediate: 1 };
 
+/** Three hard blocks; filled ones carry the signal colour. */
 function LevelMeter({ level }) {
   const filled = LEVEL_STEPS[level] ?? 1;
   return (
     <span
-      className="flex items-center gap-0.5"
+      className="flex shrink-0 items-center gap-1"
       role="img"
       aria-label={`Proficiency: ${level}`}
     >
       {[1, 2, 3].map((step) => (
         <span
           key={step}
-          className={`h-1 w-3 rounded-full transition-colors ${
-            step <= filled ? 'bg-accent' : 'bg-edge'
-          }`}
+          className={`h-2.5 w-2.5 ${step <= filled ? 'bg-accent' : 'bg-edge'}`}
         />
       ))}
     </span>
@@ -30,26 +29,30 @@ export default function Skills() {
   return (
     <Section
       id="skills"
-      eyebrow="Toolkit"
+      index="03"
+      label="Toolkit"
       title="Skills & technologies"
       description="The stack I reach for across research prototypes and production systems."
     >
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-x-10 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
         {skillGroups.map((group, index) => (
           <Reveal key={group.category} delay={index * 0.06}>
-            <article className="card h-full p-6 transition-colors duration-300 hover:border-accent/40">
-              <header className="mb-5">
-                <h3 className="text-base font-semibold text-content-primary">
+            <section aria-label={group.category}>
+              <header className="border-b-2 border-content-primary pb-3">
+                <h3
+                  className="display text-lg text-content-primary"
+                  style={{ '--wdth': 92, '--wght': 700 }}
+                >
                   {group.category}
                 </h3>
-                <p className="mt-0.5 text-xs text-content-muted">{group.blurb}</p>
+                <p className="meta-sm mt-2 text-content-muted">{group.blurb}</p>
               </header>
 
-              <ul className="space-y-2.5">
+              <ul className="ledger">
                 {group.items.map((item) => (
-                  <li key={item.name} className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-edge bg-surface-overlay/60 text-content-secondary">
-                      <SkillIcon icon={item.icon} name={item.name} />
+                  <li key={item.name} className="flex items-center gap-3 py-3">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center border border-edge text-content-secondary">
+                      <SkillIcon icon={item.icon} name={item.name} className="h-4 w-4" />
                     </span>
                     <span className="flex-1 truncate text-sm text-content-secondary">
                       {item.name}
@@ -58,21 +61,24 @@ export default function Skills() {
                   </li>
                 ))}
               </ul>
-            </article>
+            </section>
           </Reveal>
         ))}
       </div>
 
+      {/* Legend, ordered by the canonical level order from data/skills.js. */}
       <Reveal delay={0.15}>
-        <p className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-content-muted">
-          <span className="font-medium text-content-secondary">Proficiency</span>
-          {Object.entries(LEVEL_STEPS).map(([label, steps]) => (
-            <span key={label} className="inline-flex items-center gap-1.5">
-              <span className="flex gap-0.5">
+        <p className="meta-sm mt-16 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-edge pt-6 text-content-muted">
+          <span className="text-content-secondary">Proficiency</span>
+          {levelOrder.map((label) => (
+            <span key={label} className="inline-flex items-center gap-2">
+              <span className="flex gap-1" aria-hidden="true">
                 {[1, 2, 3].map((step) => (
                   <span
                     key={step}
-                    className={`h-1 w-3 rounded-full ${step <= steps ? 'bg-accent' : 'bg-edge'}`}
+                    className={`h-2.5 w-2.5 ${
+                      step <= LEVEL_STEPS[label] ? 'bg-accent' : 'bg-edge'
+                    }`}
                   />
                 ))}
               </span>

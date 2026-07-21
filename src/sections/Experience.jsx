@@ -1,26 +1,18 @@
 import { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { FiChevronDown } from 'react-icons/fi';
+import { FiPlus } from 'react-icons/fi';
 import { experience } from '../data/experience';
 import { education } from '../data/education';
 import Section from '../components/ui/Section';
 import Reveal from '../components/ui/Reveal';
-import Badge from '../components/ui/Badge';
-
-const TYPE_TONE = {
-  Industry: 'accent',
-  Research: 'iris',
-  Teaching: 'ember',
-  Support: 'neutral',
-};
+import Tag from '../components/ui/Tag';
 
 /**
- * One node on the vertical timeline.
- *
- * Long bullet lists are collapsed behind a disclosure so the timeline stays
- * scannable; the first two points always show as a preview.
+ * One row of the record ledger: period in the left column, the post in the
+ * middle, and any bullets beyond the first two behind a disclosure so the
+ * ledger stays scannable.
  */
-function TimelineNode({ entry, index, isEducation = false }) {
+function LedgerRow({ entry, index, isEducation = false }) {
   const [open, setOpen] = useState(index === 0);
   const reduceMotion = useReducedMotion();
 
@@ -28,69 +20,76 @@ function TimelineNode({ entry, index, isEducation = false }) {
   const points = entry.points ?? [];
   const preview = points.slice(0, 2);
   const hasMore = points.length > 2;
-  const panelId = `timeline-panel-${isEducation ? 'edu' : 'exp'}-${index}`;
+  const panelId = `record-panel-${isEducation ? 'edu' : 'exp'}-${index}`;
 
   return (
-    <li className="relative pl-14 sm:pl-[4.5rem]">
-      {/* Node marker.
-          Every logo ships with its own baked-in margin, so at the old 36/44px
-          the actual mark was only ~half the tile and the wordmarks turned to
-          mush. Bigger tile + object-contain + a uniform white plate keeps them
-          legible and consistent across the set. The DPO asset is masked to a
-          disc in the source file so it matches DHL's circular mark. */}
-      <span
-        aria-hidden="true"
-        className={`absolute left-0 top-1 flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border sm:h-14 sm:w-14 ${
-          entry.logo ? 'bg-white' : 'bg-surface-raised'
-        } ${entry.current ? 'border-accent' : 'border-edge'}`}
-      >
-        {entry.logo ? (
-          <img
-            src={entry.logo}
-            alt=""
-            width="56"
-            height="56"
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-contain p-1 sm:p-1.5"
-          />
-        ) : (
-          <span className="h-2 w-2 rounded-full bg-accent" />
+    <li className="grid gap-x-6 gap-y-4 py-8 md:grid-cols-[8.5rem_minmax(0,1fr)]">
+      {/* Period rail */}
+      <div className="flex items-center gap-3 md:block">
+        <p className="meta-sm text-accent">{entry.period}</p>
+        {entry.current && (
+          <p className="meta-sm mt-2 flex items-center gap-2 text-content-primary">
+            <span aria-hidden="true" className="h-2 w-2 bg-accent" />
+            Current
+          </p>
         )}
-      </span>
+      </div>
 
-      <div className="card p-5 transition-colors duration-300 hover:border-accent/40">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="font-mono text-xs text-accent">{entry.period}</span>
-          {entry.current && (
-            <Badge tone="accent">
-              <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-current" />
-              Current
-            </Badge>
+      <div>
+        <div className="flex items-start gap-4">
+          {/* Brand marks ship with their own baked-in padding and several are
+              wordmarks, so they need a generous tile and object-contain to stay
+              legible. The uniform white plate keeps the set consistent across
+              both the paper and ink surfaces. */}
+          {entry.logo && (
+            <span
+              aria-hidden="true"
+              className={`hidden h-12 w-12 shrink-0 items-center justify-center overflow-hidden border bg-white sm:flex ${
+                entry.current ? 'border-accent' : 'border-edge'
+              }`}
+            >
+              <img
+                src={entry.logo}
+                alt=""
+                width="48"
+                height="48"
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-contain p-1"
+              />
+            </span>
           )}
-          {entry.type && <Badge tone={TYPE_TONE[entry.type] ?? 'neutral'}>{entry.type}</Badge>}
-          {entry.grade && <Badge tone="iris">{entry.grade}</Badge>}
+
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <h4
+                className="display d-3 text-content-primary"
+                style={{ '--wdth': 96 }}
+              >
+                {title}
+              </h4>
+              {entry.type && <Tag>{entry.type}</Tag>}
+              {entry.grade && <Tag tone="signal">{entry.grade}</Tag>}
+            </div>
+
+            <p className="mt-2 text-sm text-content-secondary">
+              {entry.org}
+              {entry.location && (
+                <span className="text-content-muted"> · {entry.location}</span>
+              )}
+            </p>
+          </div>
         </div>
-
-        <h3 className="mt-2 text-base font-semibold text-content-primary sm:text-lg">
-          {title}
-        </h3>
-        <p className="mt-0.5 text-sm text-content-secondary">
-          {entry.org}
-          {entry.location && (
-            <span className="text-content-muted"> · {entry.location}</span>
-          )}
-        </p>
 
         {points.length > 0 && (
           <>
-            <ul className="mt-3 space-y-1.5">
+            <ul className="mt-5 space-y-2">
               {preview.map((point) => (
                 <li
                   key={point}
-                  className="flex gap-2.5 text-sm leading-relaxed text-content-secondary"
+                  className="flex gap-3 text-sm leading-relaxed text-content-secondary"
                 >
-                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
+                  <span aria-hidden="true" className="mt-2 h-1 w-2 shrink-0 bg-accent" />
                   {point}
                 </li>
               ))}
@@ -106,16 +105,16 @@ function TimelineNode({ entry, index, isEducation = false }) {
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
                       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                      className="space-y-1.5 overflow-hidden"
+                      className="space-y-2 overflow-hidden"
                     >
                       {points.slice(2).map((point) => (
                         <li
                           key={point}
-                          className="flex gap-2.5 pt-1.5 text-sm leading-relaxed text-content-secondary"
+                          className="flex gap-3 pt-2 text-sm leading-relaxed text-content-secondary"
                         >
                           <span
                             aria-hidden="true"
-                            className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent"
+                            className="mt-2 h-1 w-2 shrink-0 bg-accent"
                           />
                           {point}
                         </li>
@@ -129,13 +128,15 @@ function TimelineNode({ entry, index, isEducation = false }) {
                   onClick={() => setOpen((value) => !value)}
                   aria-expanded={open}
                   aria-controls={panelId}
-                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg text-xs font-medium text-accent transition-opacity hover:opacity-75"
+                  className="meta-sm mt-5 inline-flex items-center gap-2 border border-edge px-3 py-2 text-content-secondary transition-colors hover:border-accent hover:text-accent"
                 >
-                  {open ? 'Show less' : `Show ${points.length - 2} more`}
-                  <FiChevronDown
-                    className={`h-3.5 w-3.5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+                  <FiPlus
+                    className={`h-3 w-3 transition-transform duration-300 ${
+                      open ? 'rotate-45' : ''
+                    }`}
                     aria-hidden="true"
                   />
+                  {open ? 'Show less' : `Show ${points.length - 2} more`}
                 </button>
               </>
             )}
@@ -146,20 +147,25 @@ function TimelineNode({ entry, index, isEducation = false }) {
   );
 }
 
-function Timeline({ entries, isEducation }) {
+function Record({ heading, entries, isEducation }) {
   return (
-    <ol className="relative space-y-6">
-      {/* Connector rail, behind the node markers. */}
-      <span
-        aria-hidden="true"
-        className="absolute bottom-4 left-[1.375rem] top-4 w-px bg-gradient-to-b from-accent/40 via-edge to-transparent sm:left-[1.75rem]"
-      />
-      {entries.map((entry, index) => (
-        <Reveal key={`${entry.org}-${entry.period}`} delay={Math.min(index * 0.05, 0.3)}>
-          <TimelineNode entry={entry} index={index} isEducation={isEducation} />
-        </Reveal>
-      ))}
-    </ol>
+    <div>
+      <Reveal>
+        <h3 className="meta border-b-2 border-content-primary pb-3 text-content-muted">
+          {heading}
+        </h3>
+      </Reveal>
+      <ol className="ledger">
+        {entries.map((entry, index) => (
+          <LedgerRow
+            key={`${entry.org}-${entry.period}`}
+            entry={entry}
+            index={index}
+            isEducation={isEducation}
+          />
+        ))}
+      </ol>
+    </div>
   );
 }
 
@@ -167,28 +173,15 @@ export default function Experience() {
   return (
     <Section
       id="experience"
-      eyebrow="Career"
+      index="04"
+      label="Record"
       title="Experience & education"
       description="Nine roles across industry and academia, from full-stack engineering in Malaysia to leading an AI team in Canada."
+      invert
     >
-      <div className="grid gap-12 lg:grid-cols-2 lg:gap-10">
-        <div>
-          <Reveal>
-            <h3 className="mb-6 font-display text-lg font-semibold text-content-primary">
-              Professional experience
-            </h3>
-          </Reveal>
-          <Timeline entries={experience} isEducation={false} />
-        </div>
-
-        <div>
-          <Reveal>
-            <h3 className="mb-6 font-display text-lg font-semibold text-content-primary">
-              Education
-            </h3>
-          </Reveal>
-          <Timeline entries={education} isEducation />
-        </div>
+      <div className="grid gap-16 lg:grid-cols-2 lg:gap-12">
+        <Record heading="Professional experience" entries={experience} isEducation={false} />
+        <Record heading="Education" entries={education} isEducation />
       </div>
     </Section>
   );

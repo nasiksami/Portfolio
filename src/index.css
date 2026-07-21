@@ -3,58 +3,97 @@
 @tailwind utilities;
 
 /* ───────────────────────────────────────────────────────────────────────────
-   Theme tokens.
+   SPECIMEN № — theme tokens.
 
-   Default (:root) is the dark theme; `.light` on <html> flips to light.
-   Values are space-separated RGB channels so Tailwind's `<alpha-value>`
-   syntax can apply opacity, e.g. `bg-surface-raised/60`.
+   Two raw palettes are declared once (paper / ink) and never referenced by
+   components. Semantic tokens alias one of them, and which one they alias is
+   decided by two things:
+
+     1. the page theme  — `.dark` on <html> opts into ink (paper is default)
+     2. `.invert-surface` — flips an individual section to the OPPOSITE palette
+
+   Because (2) is defined relative to (1), the paper↔ink alternation down the
+   page survives the theme toggle without a single conditional in any
+   component: an inverted section is dark on a paper page and light on an ink
+   page. Values are space-separated RGB channels so Tailwind's `<alpha-value>`
+   syntax still works, e.g. `bg-surface-overlay/60`.
    ─────────────────────────────────────────────────────────────────────────── */
 @layer base {
   :root {
-    --surface-base: 9 9 14;
-    --surface-raised: 20 20 29;
-    --surface-overlay: 30 30 42;
-    --content-primary: 244 244 248;
-    --content-secondary: 168 168 184;
-    /* Tuned to clear WCAG AA (4.5:1) on both base and raised surfaces —
-       this token is used on 12px captions, which are not "large text". */
-    --content-muted: 125 125 144;
-    --edge: 44 44 60;
-    --accent: 99 140 255;
-    --accent-soft: 32 42 84;
-    --iris: 167 129 250;
-    --ember: 244 130 96;
-    color-scheme: dark;
+    /* Paper — warm newsprint. */
+    --p-base: 243 240 233;
+    --p-raised: 250 248 243;
+    --p-overlay: 232 228 218;
+    --p-fg: 13 13 13;
+    --p-fg2: 74 72 68;
+    --p-fg3: 100 97 90;
+    --p-edge: 205 200 189;
+    --p-accent: 199 42 12; /* vermilion, darkened for 4.9:1 on paper */
+
+    /* Ink. */
+    --i-base: 13 13 13;
+    --i-raised: 24 24 24;
+    --i-overlay: 34 34 33;
+    --i-fg: 243 240 233;
+    --i-fg2: 176 172 163;
+    --i-fg3: 132 128 120;
+    --i-edge: 56 55 52;
+    --i-accent: 255 90 48; /* vermilion, brightened for 6.3:1 on ink */
   }
 
-  :root.light {
-    --surface-base: 250 250 252;
-    --surface-raised: 255 255 255;
-    --surface-overlay: 244 244 248;
-    --content-primary: 18 18 26;
-    --content-secondary: 82 82 100;
-    --content-muted: 114 114 131;
-    --edge: 224 224 234;
-    --accent: 46 96 220;
-    --accent-soft: 224 233 255;
-    --iris: 122 78 224;
-    --ember: 206 84 44;
+  /* Paper scope: the default page, and inverted sections on an ink page. */
+  :root,
+  :root.dark .invert-surface {
+    --surface-base: var(--p-base);
+    --surface-raised: var(--p-raised);
+    --surface-overlay: var(--p-overlay);
+    --content-primary: var(--p-fg);
+    --content-secondary: var(--p-fg2);
+    --content-muted: var(--p-fg3);
+    --edge: var(--p-edge);
+    --accent: var(--p-accent);
+    --on-accent: 255 255 255;
     color-scheme: light;
   }
 
+  /* Ink scope: the dark page, and inverted sections on a paper page. */
+  :root.dark,
+  .invert-surface {
+    --surface-base: var(--i-base);
+    --surface-raised: var(--i-raised);
+    --surface-overlay: var(--i-overlay);
+    --content-primary: var(--i-fg);
+    --content-secondary: var(--i-fg2);
+    --content-muted: var(--i-fg3);
+    --edge: var(--i-edge);
+    --accent: var(--i-accent);
+    --on-accent: 13 13 13;
+    color-scheme: dark;
+  }
+
+  /* The page background lives on <html>, not <body>, so the fixed grain layer
+     in GridFrame can sit at z-index -1 and still be visible. A background on
+     <body> would propagate to the canvas and bury it. */
   html {
+    background-color: rgb(var(--surface-base));
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-surface-base font-sans text-content-primary antialiased;
-    /* Prevent horizontal scroll from decorative offscreen glows. */
+    @apply font-sans text-content-primary antialiased;
+    /* Backstop only — the fluid clamp() type is what actually prevents
+       overflow. See .display sizes below. */
     overflow-x: hidden;
   }
 
+  /* Inverted sections paint their own (scoped) background over the page. */
+  .invert-surface {
+    background-color: rgb(var(--surface-base));
+  }
+
   h1, h2, h3, h4 {
-    @apply font-display tracking-tight;
+    @apply font-display;
     text-wrap: balance;
   }
 
@@ -63,27 +102,172 @@
   }
 
   section {
-    scroll-margin-top: 6rem;
+    scroll-margin-top: 5rem;
   }
 
-  /* Visible, consistent focus ring for keyboard users only. */
+  /* Visible, consistent focus ring for keyboard users only. Squared off to
+     match the art direction, and it re-resolves per scope so it stays legible
+     inside inverted sections. */
   :focus-visible {
     @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-surface-base;
   }
 
   ::selection {
-    @apply bg-accent/30 text-content-primary;
+    background-color: rgb(var(--accent));
+    color: rgb(var(--on-accent));
   }
 }
 
 @layer components {
-  .card {
-    @apply rounded-2xl border border-edge bg-surface-raised/70 backdrop-blur-xl;
+  /* ── Grid ──────────────────────────────────────────────────────────────
+     The 12-column frame every section is measured against. Column rules are
+     drawn by <ColumnRules /> as real grid children so they land exactly on
+     these tracks at any viewport width. */
+  .frame {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(0.75rem, 1.4vw, 1.5rem);
   }
 
-  /* Thin gradient rule used between major sections. */
-  .hairline {
-    @apply h-px w-full border-0 bg-gradient-to-r from-transparent via-edge to-transparent;
+  .shell {
+    width: 100%;
+    max-width: 96rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 4.5rem);
+  }
+
+  /* ── Rules ─────────────────────────────────────────────────────────────
+     Hairlines are the only "container" in this design — there are no cards. */
+  .rule {
+    border-top: 1px solid rgb(var(--edge));
+  }
+
+  .rule-heavy {
+    border-top: 2px solid rgb(var(--content-primary));
+  }
+
+  /* Ruled list — the only "container" pattern in the design, shared by
+     Experience, Education, Publications, Awards, Skills and Contact. A class
+     rather than a component so each caller keeps its own correct semantics
+     (ol vs ul vs dl) instead of routing them through a prop. */
+  .ledger {
+    border-bottom: 1px solid rgb(var(--edge));
+  }
+
+  .ledger > * {
+    border-top: 1px solid rgb(var(--edge));
+  }
+
+  /* Stat band — a 2-up grid on mobile that becomes 4-up on desktop. The rules
+     have to be driven by nth-child rather than a plain `border-l`, or the
+     first cell of the wrapped second row grows a stray leading rule and the
+     row boundary goes missing. */
+  .stat-band > * {
+    border-left: 1px solid rgb(var(--edge));
+  }
+
+  .stat-band > :nth-child(2n + 1) {
+    border-left: 0;
+  }
+
+  .stat-band > :nth-child(n + 3) {
+    border-top: 1px solid rgb(var(--edge));
+  }
+
+  @media (min-width: 1024px) {
+    .stat-band > :nth-child(2n + 1) {
+      border-left: 1px solid rgb(var(--edge));
+    }
+
+    .stat-band > :first-child {
+      border-left: 0;
+    }
+
+    .stat-band > :nth-child(n + 3) {
+      border-top: 0;
+    }
+  }
+
+  /* ── Type ──────────────────────────────────────────────────────────────
+     Archivo is loaded as a variable font on the width AND weight axes. Both
+     are driven by custom properties so hover/pointer interactions can animate
+     the width axis without re-declaring the font stack. */
+  .display {
+    font-family: Archivo, ui-sans-serif, system-ui, sans-serif;
+    font-variation-settings: 'wdth' var(--wdth, 100), 'wght' var(--wght, 800);
+    text-transform: uppercase;
+    letter-spacing: -0.035em;
+    line-height: 0.88;
+  }
+
+  /* Capped so the widest setting of the variable width axis still fits the
+     8-column wordmark track at mid viewports — see usePointerWidth's bounds
+     in Hero.jsx. */
+  .d-hero  { font-size: clamp(2.75rem, 13.6vw, 11rem); }
+  .d-1     { font-size: clamp(2.125rem, 5.6vw, 4.25rem); }
+  .d-2     { font-size: clamp(1.5rem, 3.1vw, 2.375rem); line-height: 0.96; }
+  .d-3     { font-size: clamp(1.125rem, 1.9vw, 1.5rem); line-height: 1.05; }
+
+  /* Metadata voice: everything that is a label, index, period or venue. */
+  .meta {
+    @apply font-mono uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    line-height: 1.4;
+  }
+
+  .meta-sm {
+    @apply font-mono uppercase;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    line-height: 1.4;
+  }
+
+  /* ── Link with a rule that draws left → right ──────────────────────────
+     Underline is a scaled pseudo-element (transform only, stays on the
+     compositor). The reduced-motion block below collapses the transition. */
+  .link-draw {
+    position: relative;
+    display: inline-block;
+  }
+
+  .link-draw::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.15em;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .link-draw:hover::after,
+  .link-draw:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* ── Duotone portrait ──────────────────────────────────────────────────
+     Pure CSS, no second asset: crush the photo to greyscale with heavy
+     contrast, then tint it toward the ink/paper of whichever scope it is in.
+     The halftone dot screen is a repeating radial-gradient overlay. */
+  .duotone {
+    filter: grayscale(1) contrast(1.28) brightness(1.02);
+  }
+
+  .halftone::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      rgb(var(--surface-base) / 0.55) 32%,
+      transparent 33%
+    );
+    background-size: 4px 4px;
+    mix-blend-mode: overlay;
   }
 }
 
@@ -91,7 +275,7 @@
    Reduced motion.
 
    Framer Motion is told to skip animations via the useReducedMotion hook;
-   this covers CSS-driven animation and smooth scrolling as well.
+   this covers CSS-driven animation, transitions, and smooth scrolling.
    ─────────────────────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html {

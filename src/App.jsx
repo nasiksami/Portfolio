@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import BackToTop from './components/BackToTop';
+import GridFrame from './components/GridFrame';
 import Hero from './sections/Hero';
 import About from './sections/About';
 
@@ -23,27 +24,26 @@ export default function App() {
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:text-white"
+        className="meta sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-accent focus:px-4 focus:py-3 focus:text-on-accent"
       >
         Skip to main content
       </a>
 
+      <GridFrame />
       <Navbar />
 
+      {/*
+        No dividers between sections: the paper↔ink inversion is what separates
+        them, so every boundary is a hard edge rather than a hairline.
+      */}
       <main id="main">
         <Hero />
-        <hr className="hairline" />
         <About />
         <Suspense fallback={<SectionFallback />}>
-          <hr className="hairline" />
           <Projects />
-          <hr className="hairline" />
           <Skills />
-          <hr className="hairline" />
           <Experience />
-          <hr className="hairline" />
           <Publications />
-          <hr className="hairline" />
           <Contact />
         </Suspense>
       </main>

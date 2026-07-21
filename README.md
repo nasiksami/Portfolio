@@ -43,16 +43,20 @@ src/
 │   ├── skills.js        skill groups and proficiency
 │   └── publications.js  papers, venues, links
 ├── components/
-│   ├── ui/          Reusable primitives: Section, Reveal, Button, Badge
+│   ├── ui/          Reusable primitives: Section, Reveal, Button, Tag
 │   ├── Navbar.jsx   Sticky nav, scroll-spy, theme toggle, mobile menu
-│   ├── Footer.jsx
-│   ├── Aurora.jsx   Decorative animated hero background
-│   ├── SkillIcon.jsx  Slug → icon registry, with monogram fallback
+│   ├── Footer.jsx   Colophon + closing wordmark
+│   ├── ColumnRules.jsx The visible 12-column hairline grid
+│   ├── GridFrame.jsx   Fixed paper-grain layer
+│   ├── Marquee.jsx     Credential ticker
+│   ├── SkillIcon.jsx   Slug → icon registry, with monogram fallback
 │   ├── SocialLinks.jsx
 │   └── BackToTop.jsx
 ├── hooks/
-│   ├── useTheme.js     Dark/light with localStorage + OS preference
-│   └── useScrollSpy.js IntersectionObserver-based active section
+│   ├── useTheme.js       Paper/ink with localStorage + OS preference
+│   ├── useScrollSpy.js   Scroll-position-based active section
+│   ├── usePointerWidth.js Pointer → variable-font width axis (hero)
+│   └── useCountUp.js     Stat numerals, reduced-motion safe
 ├── sections/        One component per page section
 └── index.css        Theme tokens, base styles, reduced-motion rules
 ```
@@ -64,19 +68,41 @@ object to `src/data/projects.js` — no component changes required. Skills resol
 their icons by slug through `components/SkillIcon.jsx`; a slug with no
 registered icon renders a styled monogram rather than breaking.
 
-## Design system
+## Design system — "Specimen №"
 
-Colours are **semantic tokens** (`surface-*`, `content-*`, `accent`, `iris`,
-`ember`) defined as RGB channel triplets in `src/index.css` and exposed to
-Tailwind in `tailwind.config.js`. Because they are CSS variables, toggling the
-`.light` class on `<html>` re-themes the entire site with no per-component work.
+A brutalist Swiss editorial specimen sheet: warm newsprint paper and ink black,
+one signal colour (vermilion), no rounded corners, no glass, no gradients. A
+visible 12-column hairline grid runs the page, sections are numbered records
+(`§01`), and typography carries the design — Archivo on its variable **width**
+axis at display scale against 12px monospace metadata.
 
-Dark is the default; `.light` opts into the light theme. An inline script in
-`index.html` applies the stored preference before first paint to avoid a flash
-of the wrong theme.
+### Tokens and the inversion trick
 
-**All text tokens meet WCAG 2.1 AA (≥4.5:1) against both the base and raised
-surfaces, in both themes.** If you change a colour, re-check the contrast.
+`src/index.css` declares two raw palettes (`--p-*` paper, `--i-*` ink) that no
+component ever references. Semantic tokens (`surface-*`, `content-*`, `edge`,
+`accent`, `on-accent`) alias one of them, chosen by two things:
+
+1. the page theme — `.dark` on `<html>` opts into ink (paper is the default);
+2. `.invert-surface` on a section — flips it to the **opposite** palette.
+
+Because (2) is defined relative to (1), the paper↔ink alternation down the page
+survives the theme toggle with no conditional logic in any component: an
+inverted section is ink on a paper page and paper on an ink page.
+
+An inline script in `index.html` applies the stored preference before first
+paint to avoid a flash of the wrong theme. The preference is written only when
+the visitor actually toggles, so an untouched site keeps following the OS.
+
+**All text tokens meet WCAG 2.1 AA (≥4.5:1) against their own surface, in both
+palettes.** If you change a colour, re-check the contrast.
+
+### Typography
+
+`.display` drives Archivo's width and weight axes from `--wdth` / `--wght`, so
+any caller can retune a heading (or animate it) without redeclaring the font
+stack. Sizes are `.d-hero` / `.d-1` / `.d-2` / `.d-3`, all `clamp()`-fluid.
+`.meta` and `.meta-sm` are the monospace metadata voice. `.ledger` is the ruled
+list used by Experience, Publications, Skills and Contact — there are no cards.
 
 ## Accessibility
 
@@ -84,7 +110,7 @@ surfaces, in both themes.** If you change a colour, re-check the contrast.
 - Section headings wired via `aria-labelledby`.
 - Visible focus rings on all interactive elements (`:focus-visible`).
 - Project filtering announces results through an `aria-live` region.
-- Timeline disclosures use `aria-expanded` / `aria-controls`.
+- Record-ledger disclosures use `aria-expanded` / `aria-controls`.
 - Form errors use `aria-invalid`, `aria-describedby`, and `role="alert"`, and
   focus moves to the first invalid field on submit.
 - `prefers-reduced-motion` disables Framer Motion animations, CSS animation,
@@ -95,8 +121,11 @@ surfaces, in both themes.** If you change a colour, re-check the contrast.
 
 - Below-the-fold sections are `React.lazy` code-split; the initial chunk carries
   only the hero and about.
-- Timeline logos are `loading="lazy"`; the hero portrait is `fetchPriority="high"`.
-- Background animation is transform/opacity only, so it stays on the compositor.
+- Ledger logos are `loading="lazy"`; the hero portrait is `fetchPriority="high"`.
+- No `backdrop-blur` anywhere; animation is limited to transform, opacity and
+  clip-path, so it stays on the compositor.
+- The portrait duotone/halftone is pure CSS — no second image asset.
+- The paper grain is an inlined SVG data URI, so it costs no network request.
 
 ## Deployment
 
