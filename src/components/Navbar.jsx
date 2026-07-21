@@ -12,7 +12,7 @@ const SECTION_IDS = navLinks.map((link) => link.id);
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const activeId = useScrollSpy(SECTION_IDS);
+  const { activeId, selectId } = useScrollSpy(SECTION_IDS);
   const { theme, toggle } = useTheme();
 
   // Condense the bar once the hero has scrolled past.
@@ -65,7 +65,8 @@ export default function Navbar() {
               <li key={link.id}>
                 <a
                   href={`#${link.id}`}
-                  aria-current={isActive ? 'true' : undefined}
+                  onClick={() => selectId(link.id)}
+                  aria-current={isActive ? 'page' : undefined}
                   className={`relative rounded-lg px-3 py-2 text-sm transition-colors ${
                     isActive
                       ? 'text-content-primary'
@@ -96,7 +97,12 @@ export default function Navbar() {
             {theme === 'dark' ? <FiSun className="h-4 w-4" /> : <FiMoon className="h-4 w-4" />}
           </button>
 
-          <Button href="#contact" size="sm" className="hidden sm:inline-flex">
+          <Button
+            href="#contact"
+            size="sm"
+            className="hidden sm:inline-flex"
+            onClick={() => selectId('contact')}
+          >
             Get in touch
           </Button>
 
@@ -128,7 +134,11 @@ export default function Navbar() {
                 <li key={link.id}>
                   <a
                     href={`#${link.id}`}
-                    onClick={() => setMenuOpen(false)}
+                    onClick={() => {
+                      selectId(link.id);
+                      setMenuOpen(false);
+                    }}
+                    aria-current={activeId === link.id ? 'page' : undefined}
                     className={`block rounded-lg px-3 py-2.5 text-sm transition-colors ${
                       activeId === link.id
                         ? 'bg-accent/10 text-accent'

@@ -31,23 +31,28 @@ function TimelineNode({ entry, index, isEducation = false }) {
   const panelId = `timeline-panel-${isEducation ? 'edu' : 'exp'}-${index}`;
 
   return (
-    <li className="relative pl-12 sm:pl-16">
-      {/* Node marker */}
+    <li className="relative pl-14 sm:pl-[4.5rem]">
+      {/* Node marker.
+          Every logo ships with its own baked-in margin, so at the old 36/44px
+          the actual mark was only ~half the tile and the wordmarks turned to
+          mush. Bigger tile + object-contain + a uniform white plate keeps them
+          legible and consistent across the set. The DPO asset is masked to a
+          disc in the source file so it matches DHL's circular mark. */}
       <span
         aria-hidden="true"
-        className={`absolute left-0 top-1 flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border bg-surface-raised sm:h-11 sm:w-11 ${
-          entry.current ? 'border-accent' : 'border-edge'
-        }`}
+        className={`absolute left-0 top-1 flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border sm:h-14 sm:w-14 ${
+          entry.logo ? 'bg-white' : 'bg-surface-raised'
+        } ${entry.current ? 'border-accent' : 'border-edge'}`}
       >
         {entry.logo ? (
           <img
             src={entry.logo}
             alt=""
-            width="44"
-            height="44"
+            width="56"
+            height="56"
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain p-1 sm:p-1.5"
           />
         ) : (
           <span className="h-2 w-2 rounded-full bg-accent" />
@@ -147,7 +152,7 @@ function Timeline({ entries, isEducation }) {
       {/* Connector rail, behind the node markers. */}
       <span
         aria-hidden="true"
-        className="absolute bottom-4 left-[1.125rem] top-4 w-px bg-gradient-to-b from-accent/40 via-edge to-transparent sm:left-[1.375rem]"
+        className="absolute bottom-4 left-[1.375rem] top-4 w-px bg-gradient-to-b from-accent/40 via-edge to-transparent sm:left-[1.75rem]"
       />
       {entries.map((entry, index) => (
         <Reveal key={`${entry.org}-${entry.period}`} delay={Math.min(index * 0.05, 0.3)}>

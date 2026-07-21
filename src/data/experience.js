@@ -1,7 +1,7 @@
 import bdmLogo from '../assets/bdm.png';
 import uofrLogo from '../assets/uofr.jpg';
-import dpoLogo from '../assets/dpo.jpg';
-import dhlLogo from '../assets/dhl.jpg';
+import dpoLogo from '../assets/dpo.png';
+import dhlLogo from '../assets/dhl.webp';
 
 export const experience = [
   {
