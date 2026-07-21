@@ -1,70 +1,55 @@
-import React, { useEffect, useRef } from 'react';
+import { lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
-import Home from './sections/Home';
-import About from './sections/About';
-import Resume from './sections/Resume';
-import Projects from './sections/Projects';
-import Publications from './sections/Publications';
-import Contact from './sections/Contact';
-import Timeline from './sections/Timeline';
-import Skills from './sections/Skills';
+import Footer from './components/Footer';
 import BackToTop from './components/BackToTop';
-import ExperienceTimeline from './sections/ExperienceTimeline';
-import EducationTimeline from './sections/EducationTimeline';
+import Hero from './sections/Hero';
+import About from './sections/About';
 
-function useSectionReveal() {
-  const refs = useRef([]);
-  useEffect(() => {
-    const observer = new window.IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-    refs.current.forEach(ref => {
-      if (ref) observer.observe(ref);
-    });
-    return () => observer.disconnect();
-  }, []);
-  return refs;
+// Below-the-fold sections are code-split so the initial bundle only carries
+// what is needed to paint the hero.
+const Projects = lazy(() => import('./sections/Projects'));
+const Skills = lazy(() => import('./sections/Skills'));
+const Experience = lazy(() => import('./sections/Experience'));
+const Publications = lazy(() => import('./sections/Publications'));
+const Contact = lazy(() => import('./sections/Contact'));
+
+/** Reserves vertical space while a lazy section loads, avoiding layout shift. */
+function SectionFallback() {
+  return <div className="min-h-[60vh]" aria-hidden="true" />;
 }
 
-function App() {
-  const sectionRefs = useSectionReveal();
+export default function App() {
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <>
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:text-white"
+      >
+        Skip to main content
+      </a>
+
       <Navbar />
-      <BackToTop />
-      <main className="pt-16 max-w-4xl mx-auto px-4">
-        <section id="home" ref={el => (sectionRefs.current[0] = el)} className="reveal py-6"><Home /></section>
-        <section id="about" ref={el => (sectionRefs.current[1] = el)} className="reveal py-1"><About /></section>
-        <section id="skills" ref={el => (sectionRefs.current[2] = el)} className="reveal py-1"><Skills /></section>
-        <section id="projects" ref={el => (sectionRefs.current[3] = el)} className="reveal py-1"><Projects /></section>
-        <section id="experience-timeline" ref={el => (sectionRefs.current[4] = el)} className="reveal py-1"><ExperienceTimeline /></section>
-        <section id="education-timeline" ref={el => (sectionRefs.current[5] = el)} className="reveal py-1"><EducationTimeline /></section>
-        <section id="resume" ref={el => (sectionRefs.current[6] = el)} className="reveal py-2"><Resume /></section>
-        <section id="publications" ref={el => (sectionRefs.current[7] = el)} className="reveal py-6"><Publications /></section>
-        <section id="contact" ref={el => (sectionRefs.current[8] = el)} className="reveal py-6"><Contact /></section>
+
+      <main id="main">
+        <Hero />
+        <hr className="hairline" />
+        <About />
+        <Suspense fallback={<SectionFallback />}>
+          <hr className="hairline" />
+          <Projects />
+          <hr className="hairline" />
+          <Skills />
+          <hr className="hairline" />
+          <Experience />
+          <hr className="hairline" />
+          <Publications />
+          <hr className="hairline" />
+          <Contact />
+        </Suspense>
       </main>
-      {/* Footer */}
-      <footer className="w-full bg-gray-900/90 border-t border-blue-400/10 py-6 mt-6 flex flex-col items-center text-center">
-        <nav className="mb-2 flex flex-wrap justify-center gap-6 text-sm text-blue-300">
-          <a href="#home" className="hover:text-blue-400 transition">Home</a>
-          <a href="#about" className="hover:text-blue-400 transition">About</a>
-          <a href="#resume" className="hover:text-blue-400 transition">Resume</a>
-          <a href="#projects" className="hover:text-blue-400 transition">Projects</a>
-          <a href="#experience-timeline" className="hover:text-blue-400 transition">Experience</a>
-          <a href="#publications" className="hover:text-blue-400 transition">Publications</a>
-          <a href="#contact" className="hover:text-blue-400 transition">Contact</a>
-        </nav>
-        <div className="text-xs text-gray-400">&copy; {new Date().getFullYear()} Nasik Sami Khan. All rights reserved.</div>
-      </footer>
-    </div>
+
+      <Footer />
+      <BackToTop />
+    </>
   );
 }
-
-export default App; 

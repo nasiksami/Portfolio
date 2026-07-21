@@ -3,23 +3,126 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nasik Sami Khan | Portfolio</title>
-    <meta name="description" content="Portfolio of Nasik Sami Khan - AI/ML Researcher & Full-Stack Developer. Specializing in Generative AI, LLMs, NLP, and scalable software solutions." />
+
+    <title>Nasik Sami Khan — AI/ML Researcher & Full-Stack Developer</title>
+    <meta
+      name="description"
+      content="Portfolio of Nasik Sami Khan, AI/ML Researcher and Full-Stack Developer specialising in Generative AI, LLMs, NLP, and scalable software systems. MSc Computer Science, University of Regina."
+    />
     <meta name="author" content="Nasik Sami Khan" />
-    <meta property="og:title" content="Nasik Sami Khan | Portfolio" />
-    <meta property="og:description" content="Portfolio of Nasik Sami Khan - AI/ML Researcher & Full-Stack Developer." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="/src/assets/Logo.png" />
-    <meta property="og:url" content="https://nasik.ca/" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Nasik Sami Khan | Portfolio" />
-    <meta name="twitter:description" content="Portfolio of Nasik Sami Khan - AI/ML Researcher & Full-Stack Developer." />
-    <meta name="twitter:image" content="/src/assets/Logo.png" />
-    <link rel="icon" type="image/png" href="/src/assets/Logo.png" />
+    <meta name="theme-color" content="#09090e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fafafc" media="(prefers-color-scheme: light)" />
     <link rel="canonical" href="https://nasik.ca/" />
+    <link rel="icon" type="image/png" href="./logo.png" />
+    <link rel="apple-touch-icon" href="./logo.png" />
+
+    <!-- Open Graph / social previews. Absolute URLs are required by crawlers. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Nasik Sami Khan" />
+    <meta property="og:url" content="https://nasik.ca/" />
+    <meta
+      property="og:title"
+      content="Nasik Sami Khan — AI/ML Researcher & Full-Stack Developer"
+    />
+    <meta
+      property="og:description"
+      content="Specialising in Generative AI, LLMs, NLP, and scalable software systems."
+    />
+    <meta property="og:image" content="https://nasik.ca/og-image.jpg" />
+    <meta property="og:image:alt" content="Portrait of Nasik Sami Khan" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:creator" content="@NasikSami" />
+    <meta
+      name="twitter:title"
+      content="Nasik Sami Khan — AI/ML Researcher & Full-Stack Developer"
+    />
+    <meta
+      name="twitter:description"
+      content="Specialising in Generative AI, LLMs, NLP, and scalable software systems."
+    />
+    <meta name="twitter:image" content="https://nasik.ca/og-image.jpg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Structured data: helps search engines resolve the person entity. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Nasik Sami Khan",
+        "url": "https://nasik.ca/",
+        "image": "https://nasik.ca/og-image.jpg",
+        "jobTitle": "AI/ML Researcher & Full-Stack Developer",
+        "email": "mailto:nasiksami@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Saskatoon",
+          "addressRegion": "SK",
+          "addressCountry": "CA"
+        },
+        "alumniOf": [
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "University of Regina",
+            "sameAs": "https://www.uregina.ca/"
+          },
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "International Islamic University Malaysia",
+            "sameAs": "https://www.iium.edu.my/"
+          }
+        ],
+        "knowsAbout": [
+          "Artificial Intelligence",
+          "Machine Learning",
+          "Large Language Models",
+          "Natural Language Processing",
+          "Retrieval-Augmented Generation",
+          "5G Networks",
+          "Full-Stack Development"
+        ],
+        "sameAs": [
+          "https://www.linkedin.com/in/nasiksami",
+          "https://github.com/nasiksami",
+          "https://scholar.google.com/citations?hl=en&user=NCdDTeEAAAAJ",
+          "https://x.com/NasikSami"
+        ]
+      }
+    </script>
+
+    <!--
+      Apply the stored theme before first paint so there is no flash of the
+      wrong colour scheme. Dark is the default; `.light` opts into light.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+          if (stored === 'light' || (!stored && prefersLight)) {
+            document.documentElement.classList.add('light');
+          }
+        } catch (e) {
+          /* Storage blocked — fall through to the dark default. */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <p style="padding: 2rem; font-family: system-ui, sans-serif">
+        This portfolio requires JavaScript. You can still reach me at
+        <a href="mailto:nasiksami@gmail.com">nasiksami@gmail.com</a>.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
