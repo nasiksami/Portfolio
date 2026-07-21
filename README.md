@@ -1,88 +1,120 @@
-# Nasik Sami Khan – Portfolio (www.nasik.ca)
+# Nasik Sami Khan — Portfolio
 
-## 🚀 Overview
+Personal portfolio for **Nasik Sami Khan**, AI/ML Researcher & Full-Stack Developer.
+Live at **[nasik.ca](https://nasik.ca/)**.
 
-This is the personal portfolio website of **Nasik Sami Khan**, MSc in Computer Science, AI/ML researcher, and full-stack developer. The site showcases my work at the intersection of artificial intelligence, machine learning, and software engineering, with a focus on impactful, production-ready solutions.
-
-**Tagline:**
-> Driving Innovation at the Intersection of AI, ML, and Software Engineering
-
-## 🌟 Features
-- Modern, responsive design with dark mode
-- About, Skills, Projects, Experience, Education, Resume, Publications, and Contact sections
-- Detailed project cards with roles, impact, and tech stack
-- Timeline/accordion layouts for experience and education
-- Downloadable resume and awards/scholarships highlights
-- Accessible, animated UI with smooth section reveals
-- Contact form powered by [Formspree](https://formspree.io/) for direct messages
-- Social/contact links: Email, Phone, LinkedIn, GitHub, Google Scholar, X (Twitter)
-
-## 🛠️ Tech Stack
-- **React** (with functional components and hooks)
-- **Tailwind CSS** (utility-first, dark mode enabled)
-- **Vite** (fast dev/build tooling)
-- **@formspree/react** (contact form integration)
-- **SVG & Custom Icons**
-
-## 📂 Main Sections
-- **Home**: Welcome and navigation
-- **About**: Bio, tagline, and skill highlights
-- **Skills & Tools**: Categorized technical skills with icons and levels
-- **Projects**: AI/ML, NLP, cloud, and software engineering projects with impact metrics
-- **Experience**: Timeline of professional roles and achievements
-- **Education**: Academic background in a timeline format
-- **Resume**: Awards and scholarships (see also downloadable PDF)
-- **Publications**: Peer-reviewed papers and conference presentations
-- **Contact**: Form and direct links for networking
-
-## 📄 Resume
-- [Download Resume (PDF)](public/resume.pdf)
-
-## 🚦 Getting Started
-
-### Prerequisites
-- Node.js (v16+ recommended)
-- npm
-
-### Installation
-```bash
-npm install
-```
-
-### Development
-```bash
-npm run dev
-```
-
-### Production Build
-```bash
-npm run build
-```
-
-### Preview Production Build
-```bash
-npm run preview
-```
-
-## 🛠️ Configuration
-- **Tailwind CSS**: See `tailwind.config.js` for dark mode and customizations.
-- **Vite**: See `vite.config.js` for build and asset path settings.
-- **Contact Form**: Uses Formspree. Update the form ID in `src/sections/Contact.jsx` if you fork the project.
-
-## 🌐 Deployment
-- Static site, easily deployable to Vercel, Netlify, GitHub Pages, or any static hosting.
-- Update `vite.config.js` `base` if deploying to a subdirectory.
-
-## 🤝 Contributing & Feedback
-Suggestions for improvements, bug reports, and feature requests are welcome! Feel free to open an issue or submit a pull request.
-
-**Connect with me:**
-- [LinkedIn](https://www.linkedin.com/in/nasiksami)
-- [GitHub](https://github.com/nasiksami)
-- [Google Scholar](https://scholar.google.com/citations?hl=en&user=NCdDTeEAAAAJ)
-- [X (Twitter)](https://x.com/NasikSami)
-- [Email](mailto:nasiksami@gmail.com)
+> Driving innovation at the intersection of AI, ML, and software engineering.
 
 ---
 
-*Built with passion for AI, ML, and software engineering. Let me know how I can make this portfolio even better!* 
+## Tech stack
+
+| Concern   | Choice                                  |
+| --------- | --------------------------------------- |
+| Framework | React 18 (function components + hooks)  |
+| Build     | Vite 4                                  |
+| Styling   | Tailwind CSS 3 with CSS-variable tokens |
+| Animation | Framer Motion                           |
+| Icons     | react-icons (Simple Icons, Feather, FA) |
+| Forms     | Formspree                               |
+| Linting   | ESLint + react-hooks + jsx-a11y         |
+
+## Getting started
+
+Requires **Node.js 18+**.
+
+```bash
+npm install     # install dependencies
+npm run dev     # dev server at http://localhost:5173
+npm run build   # production build to dist/
+npm run preview # serve the production build locally
+npm run lint    # ESLint, including accessibility rules
+```
+
+## Project structure
+
+```
+src/
+├── data/            # ← All site content lives here. Edit these, not components.
+│   ├── profile.js       name, bio, stats, focus areas, socials, nav
+│   ├── projects.js      project cards + filter categories
+│   ├── experience.js    professional timeline
+│   ├── education.js     degrees + awards/scholarships
+│   ├── skills.js        skill groups and proficiency
+│   └── publications.js  papers, venues, links
+├── components/
+│   ├── ui/          Reusable primitives: Section, Reveal, Button, Badge
+│   ├── Navbar.jsx   Sticky nav, scroll-spy, theme toggle, mobile menu
+│   ├── Footer.jsx
+│   ├── Aurora.jsx   Decorative animated hero background
+│   ├── SkillIcon.jsx  Slug → icon registry, with monogram fallback
+│   ├── SocialLinks.jsx
+│   └── BackToTop.jsx
+├── hooks/
+│   ├── useTheme.js     Dark/light with localStorage + OS preference
+│   └── useScrollSpy.js IntersectionObserver-based active section
+├── sections/        One component per page section
+└── index.css        Theme tokens, base styles, reduced-motion rules
+```
+
+### Editing content
+
+All copy and data lives in `src/data/`. Adding a project means appending an
+object to `src/data/projects.js` — no component changes required. Skills resolve
+their icons by slug through `components/SkillIcon.jsx`; a slug with no
+registered icon renders a styled monogram rather than breaking.
+
+## Design system
+
+Colours are **semantic tokens** (`surface-*`, `content-*`, `accent`, `iris`,
+`ember`) defined as RGB channel triplets in `src/index.css` and exposed to
+Tailwind in `tailwind.config.js`. Because they are CSS variables, toggling the
+`.light` class on `<html>` re-themes the entire site with no per-component work.
+
+Dark is the default; `.light` opts into the light theme. An inline script in
+`index.html` applies the stored preference before first paint to avoid a flash
+of the wrong theme.
+
+**All text tokens meet WCAG 2.1 AA (≥4.5:1) against both the base and raised
+surfaces, in both themes.** If you change a colour, re-check the contrast.
+
+## Accessibility
+
+- Semantic landmarks (`header`, `main`, `nav`, `footer`) and a skip link.
+- Section headings wired via `aria-labelledby`.
+- Visible focus rings on all interactive elements (`:focus-visible`).
+- Project filtering announces results through an `aria-live` region.
+- Timeline disclosures use `aria-expanded` / `aria-controls`.
+- Form errors use `aria-invalid`, `aria-describedby`, and `role="alert"`, and
+  focus moves to the first invalid field on submit.
+- `prefers-reduced-motion` disables Framer Motion animations, CSS animation,
+  and smooth scrolling.
+- Decorative visuals are `aria-hidden`.
+
+## Performance
+
+- Below-the-fold sections are `React.lazy` code-split; the initial chunk carries
+  only the hero and about.
+- Timeline logos are `loading="lazy"`; the hero portrait is `fetchPriority="high"`.
+- Background animation is transform/opacity only, so it stays on the compositor.
+
+## Deployment
+
+Static build — `dist/` deploys to any static host.
+
+**Vercel / Netlify:** connect the repo; build command `npm run build`, output
+directory `dist`.
+
+**GitHub Pages:** `vite.config.js` sets `base: './'` for relative asset paths.
+Deploy the contents of `dist/`.
+
+After deploying, update `public/sitemap.xml` and the canonical / Open Graph URLs
+in `index.html` if the domain changes.
+
+## Contact
+
+- [LinkedIn](https://www.linkedin.com/in/nasiksami)
+- [GitHub](https://github.com/nasiksami)
+- [Google Scholar](https://scholar.google.com/citations?hl=en&user=NCdDTeEAAAAJ)
+- [X](https://x.com/NasikSami)
+- [nasiksami@gmail.com](mailto:nasiksami@gmail.com)

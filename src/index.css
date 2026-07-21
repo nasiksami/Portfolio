@@ -2,31 +2,108 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  color-scheme: dark;
-  scroll-behavior: smooth;
-  transition: background 0.15s, color 0.15s;
+/* ───────────────────────────────────────────────────────────────────────────
+   Theme tokens.
 
-}
-body {
-  @apply bg-gray-950 text-gray-100 dark:bg-white dark:text-gray-900 transition-colors duration-100;
+   Default (:root) is the dark theme; `.light` on <html> flips to light.
+   Values are space-separated RGB channels so Tailwind's `<alpha-value>`
+   syntax can apply opacity, e.g. `bg-surface-raised/60`.
+   ─────────────────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    --surface-base: 9 9 14;
+    --surface-raised: 20 20 29;
+    --surface-overlay: 30 30 42;
+    --content-primary: 244 244 248;
+    --content-secondary: 168 168 184;
+    /* Tuned to clear WCAG AA (4.5:1) on both base and raised surfaces —
+       this token is used on 12px captions, which are not "large text". */
+    --content-muted: 125 125 144;
+    --edge: 44 44 60;
+    --accent: 99 140 255;
+    --accent-soft: 32 42 84;
+    --iris: 167 129 250;
+    --ember: 244 130 96;
+    color-scheme: dark;
+  }
+
+  :root.light {
+    --surface-base: 250 250 252;
+    --surface-raised: 255 255 255;
+    --surface-overlay: 244 244 248;
+    --content-primary: 18 18 26;
+    --content-secondary: 82 82 100;
+    --content-muted: 114 114 131;
+    --edge: 224 224 234;
+    --accent: 46 96 220;
+    --accent-soft: 224 233 255;
+    --iris: 122 78 224;
+    --ember: 206 84 44;
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface-base font-sans text-content-primary antialiased;
+    /* Prevent horizontal scroll from decorative offscreen glows. */
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  section {
+    scroll-margin-top: 6rem;
+  }
+
+  /* Visible, consistent focus ring for keyboard users only. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-surface-base;
+  }
+
+  ::selection {
+    @apply bg-accent/30 text-content-primary;
+  }
 }
 
-section {
-  scroll-margin-top: 5rem;
+@layer components {
+  .card {
+    @apply rounded-2xl border border-edge bg-surface-raised/70 backdrop-blur-xl;
+  }
+
+  /* Thin gradient rule used between major sections. */
+  .hairline {
+    @apply h-px w-full border-0 bg-gradient-to-r from-transparent via-edge to-transparent;
+  }
 }
 
-.card {
-  @apply bg-gray-900/80 dark:bg-white/80 rounded-2xl shadow-xl border border-gray-800 dark:border-gray-200 transition-colors duration-100;
-}
+/* ───────────────────────────────────────────────────────────────────────────
+   Reduced motion.
 
-/* Section reveal animation */
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
+   Framer Motion is told to skip animations via the useReducedMotion hook;
+   this covers CSS-driven animation and smooth scrolling as well.
+   ─────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
-.reveal.visible {
-  opacity: 1;
-  transform: none;
-} 
