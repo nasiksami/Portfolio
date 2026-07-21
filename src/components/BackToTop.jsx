@@ -31,10 +31,10 @@ export default function BackToTop() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
           transition={{ duration: 0.2 }}
-          className="meta-sm fixed bottom-6 right-6 z-50 flex items-center gap-2 border border-content-primary bg-surface-base px-3 py-2.5 text-content-primary transition-colors hover:bg-accent hover:border-accent hover:text-on-accent"
+          className="meta-sm tap fixed bottom-6 right-6 z-50 gap-2 border border-content-primary bg-surface-base px-3.5 py-2.5 text-content-primary transition-colors hover:bg-accent hover:border-accent hover:text-on-accent"
         >
           <FiArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
-          <span aria-hidden="true">Top</span>
+          <span aria-hidden="true" className="hidden sm:inline">Top</span>
         </motion.button>
       )}
     </AnimatePresence>

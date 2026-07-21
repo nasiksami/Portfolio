@@ -31,7 +31,7 @@ export default function Publications() {
       title="Publications & awards"
       description="Peer-reviewed work in telecom AI, network security, and applied deep learning."
     >
-      <div className="grid gap-16 lg:grid-cols-[1.45fr_1fr] lg:gap-12">
+      <div className="grid gap-12 lg:grid-cols-[1.45fr_1fr] lg:gap-12">
         {/* ── Bibliography ──────────────────────────────────────────────── */}
         <div>
           <Reveal>
@@ -46,7 +46,7 @@ export default function Publications() {
                 key={pub.title}
                 as="li"
                 delay={Math.min(index * 0.05, 0.25)}
-                className="group grid gap-x-5 gap-y-3 py-7 md:grid-cols-[3rem_minmax(0,1fr)]"
+                className="group grid gap-x-5 gap-y-2 py-5 md:grid-cols-[3rem_minmax(0,1fr)] md:gap-y-3 md:py-6"
               >
                 {/* Reference number, hanging in the margin like a real
                     bibliography entry. */}
@@ -60,7 +60,7 @@ export default function Publications() {
                       href={pub.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="link-draw transition-colors hover:text-accent"
+                      className="link-draw inline-block transition-colors hover:text-accent"
                     >
                       {pub.title}
                       <FiArrowUpRight
@@ -102,7 +102,7 @@ export default function Publications() {
                 key={award.title}
                 as="li"
                 delay={Math.min(index * 0.05, 0.25)}
-                className="flex gap-4 py-5"
+                className="flex gap-4 py-4 md:py-5"
               >
                 <span aria-hidden="true" className="mt-2 h-1.5 w-3 shrink-0 bg-accent" />
                 <div>
@@ -112,7 +112,7 @@ export default function Publications() {
                         href={award.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="link-draw transition-colors hover:text-accent"
+                        className="link-draw inline-block transition-colors hover:text-accent"
                       >
                         {award.title}
                         <span className="sr-only"> (opens in a new tab)</span>

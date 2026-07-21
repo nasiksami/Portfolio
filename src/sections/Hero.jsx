@@ -62,14 +62,14 @@ export default function Hero() {
     >
       <ColumnRules />
 
-      <motion.div ref={widthRef} className="shell relative flex-1 py-10" {...motionProps}>
-        <div className="grid items-center gap-y-12 lg:grid-cols-12 lg:gap-x-6">
+      <motion.div ref={widthRef} className="shell relative flex-1 py-6 md:py-10" {...motionProps}>
+        <div className="grid items-center gap-y-8 lg:grid-cols-12 lg:gap-x-6">
           {/* ── Wordmark ───────────────────────────────────────────────── */}
           <motion.div
             style={parallax}
             className="relative z-10 lg:col-span-8 lg:[will-change:transform,opacity]"
           >
-            <motion.p {...itemProps} className="meta-sm mb-8 flex items-center gap-3">
+            <motion.p {...itemProps} className="meta-sm mb-6 flex items-center gap-3 md:mb-8">
               <span aria-hidden="true" className="h-2 w-2 bg-accent" />
               <span className="text-content-secondary">{profile.currentRole}</span>
             </motion.p>
@@ -111,7 +111,7 @@ export default function Hero() {
 
             <motion.p
               {...itemProps}
-              className="display d-3 mt-10 max-w-2xl text-accent"
+              className="display d-3 mt-6 max-w-2xl text-accent md:mt-10"
               style={{ '--wght': 700 }}
             >
               {profile.role}
@@ -121,7 +121,7 @@ export default function Hero() {
           {/* ── Portrait ───────────────────────────────────────────────── */}
           <motion.div
             {...itemProps}
-            className="relative z-20 mx-auto w-full max-w-xs lg:col-span-4 lg:max-w-none"
+            className="relative z-20 mx-auto w-full max-w-[15rem] sm:max-w-xs lg:col-span-4 lg:max-w-none"
           >
             <div className="halftone relative border border-content-primary">
               <img
@@ -138,7 +138,7 @@ export default function Hero() {
                 className="duotone aspect-[4/5] w-full object-cover object-top"
               />
             </div>
-            <p className="meta-sm mt-3 flex justify-between text-content-muted">
+            <p className="meta-sm mt-3 flex flex-col gap-1 text-content-muted sm:flex-row sm:justify-between sm:gap-4">
               <span>Fig. 01</span>
               <span>{profile.location}</span>
             </p>
@@ -146,7 +146,7 @@ export default function Hero() {
         </div>
 
         {/* ── Specimen data ──────────────────────────────────────────────── */}
-        <div className="mt-16 grid gap-y-10 lg:grid-cols-12 lg:gap-x-6">
+        <div className="mt-8 grid gap-y-6 md:mt-16 lg:grid-cols-12 lg:gap-x-6">
           <motion.div {...itemProps} className="lg:col-span-5">
             <p className="rule pt-5 text-base leading-relaxed text-content-secondary md:text-lg">
               {profile.summary}
@@ -183,7 +183,7 @@ export default function Hero() {
         <motion.a
           {...itemProps}
           href="#about"
-          className="link-draw meta mt-14 hidden w-fit items-center gap-2 text-content-muted transition-colors hover:text-accent md:inline-flex"
+          className="link-draw meta tap mt-12 hidden w-fit gap-2 text-content-muted transition-colors hover:text-accent md:inline-flex"
         >
           <FiArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
           Scroll to explore

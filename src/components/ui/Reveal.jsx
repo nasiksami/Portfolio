@@ -1,6 +1,21 @@
 import { motion, useReducedMotion } from 'framer-motion';
 
 /**
+ * Deliberately asymmetric IntersectionObserver root margin.
+ *
+ * A plain `-60px` means "reveal once you scroll into me", which silently
+ * loses content: jump past an element — a `#section` deep link, an anchor
+ * click, a flick-scroll — and it never intersects, so with `once: true` it
+ * stays at `opacity: 0` permanently.
+ *
+ * Expanding the root a long way UPWARD makes anything already above the
+ * viewport count as intersecting, so scrolled-past content reveals
+ * immediately. The `-60px` bottom edge is untouched, so content below the
+ * fold still waits until it is properly on screen.
+ */
+const REVEAL_MARGIN = '9999px 0px -60px 0px';
+
+/**
  * Scroll-triggered entrance: a left-to-right wipe, as if the line were being
  * printed onto the page.
  *
@@ -37,7 +52,7 @@ export default function Reveal({
       className={className}
       initial={states.hidden}
       whileInView={states.shown}
-      viewport={{ once: true, margin: '-60px' }}
+      viewport={{ once: true, margin: REVEAL_MARGIN }}
       transition={{ duration: 0.75, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}

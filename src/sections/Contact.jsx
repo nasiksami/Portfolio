@@ -58,7 +58,7 @@ export default function Contact() {
       description="Always glad to talk about AI/ML, cloud, telecom, and software engineering. I read every message."
       invert
     >
-      <div className="grid gap-16 lg:grid-cols-2 lg:gap-14">
+      <div className="grid gap-12 lg:grid-cols-2 lg:gap-14">
         {/* ── Direct channels ──────────────────────────────────────────── */}
         <Reveal>
           <div>

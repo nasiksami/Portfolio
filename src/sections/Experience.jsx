@@ -23,7 +23,7 @@ function LedgerRow({ entry, index, isEducation = false }) {
   const panelId = `record-panel-${isEducation ? 'edu' : 'exp'}-${index}`;
 
   return (
-    <li className="grid gap-x-6 gap-y-4 py-8 md:grid-cols-[8.5rem_minmax(0,1fr)]">
+    <li className="grid gap-x-6 gap-y-3 py-5 md:grid-cols-[8.5rem_minmax(0,1fr)] md:gap-y-4 md:py-8">
       {/* Period rail */}
       <div className="flex items-center gap-3 md:block">
         <p className="meta-sm text-accent">{entry.period}</p>
@@ -83,7 +83,7 @@ function LedgerRow({ entry, index, isEducation = false }) {
 
         {points.length > 0 && (
           <>
-            <ul className="mt-5 space-y-2">
+            <ul className="mt-4 space-y-2">
               {preview.map((point) => (
                 <li
                   key={point}
@@ -128,7 +128,7 @@ function LedgerRow({ entry, index, isEducation = false }) {
                   onClick={() => setOpen((value) => !value)}
                   aria-expanded={open}
                   aria-controls={panelId}
-                  className="meta-sm mt-5 inline-flex items-center gap-2 border border-edge px-3 py-2 text-content-secondary transition-colors hover:border-accent hover:text-accent"
+                  className="meta-sm tap mt-4 gap-2 border border-edge px-3.5 py-2 text-content-secondary transition-colors hover:border-accent hover:text-accent"
                 >
                   <FiPlus
                     className={`h-3 w-3 transition-transform duration-300 ${
@@ -179,7 +179,7 @@ export default function Experience() {
       description="Nine roles across industry and academia, from full-stack engineering in Malaysia to leading an AI team in Canada."
       invert
     >
-      <div className="grid gap-16 lg:grid-cols-2 lg:gap-12">
+      <div className="grid gap-12 lg:grid-cols-2 lg:gap-12">
         <Record heading="Professional experience" entries={experience} isEducation={false} />
         <Record heading="Education" entries={education} isEducation />
       </div>

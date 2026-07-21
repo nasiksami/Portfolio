@@ -7,7 +7,7 @@ const VARIANTS = {
   outline:
     'border border-content-primary text-content-primary hover:bg-content-primary hover:text-surface-base',
   // Bare mono label with a rule that draws left → right.
-  bare: 'link-draw text-content-primary hover:text-accent',
+  bare: 'link-draw text-content-primary hover:text-accent',  // display comes from `.tap`
 };
 
 const SIZES = {
@@ -29,8 +29,10 @@ export default function Button({
   external = false,
   ...rest
 }) {
+  // `bare` carries no padding by design, so it needs `.tap` to reach a
+  // usable touch height without a box appearing around it.
   const padding = variant === 'bare' ? '' : SIZES[size] ?? SIZES.md;
-  const classes = `meta inline-flex items-center justify-center gap-2.5 transition-colors duration-200 ${
+  const classes = `meta tap justify-center gap-2.5 transition-colors duration-200 ${
     VARIANTS[variant] ?? VARIANTS.solid
   } ${padding} ${className}`;
 

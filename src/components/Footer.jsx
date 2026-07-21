@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className="relative overflow-hidden border-t-2 border-content-primary">
       <ColumnRules />
 
-      <div className="shell relative py-16">
+      <div className="shell relative py-12 md:py-16">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-6">
           <div className="lg:col-span-5">
             <p className="text-sm leading-relaxed text-content-secondary">
@@ -26,7 +26,7 @@ export default function Footer() {
                 <li key={link.id}>
                   <a
                     href={`#${link.id}`}
-                    className="meta-sm block py-3 text-content-secondary transition-colors hover:text-accent"
+                    className="meta-sm tap-block py-2 text-content-secondary transition-colors hover:text-accent"
                   >
                     {link.label}
                   </a>
@@ -50,7 +50,7 @@ export default function Footer() {
         <a
           href="#top"
           aria-label={`Back to top — ${profile.name}`}
-          className="display mt-16 block w-full text-[clamp(2rem,9vw,7.5rem)] leading-none text-content-primary transition-colors hover:text-accent"
+          className="display mt-10 block w-full md:mt-16 text-[clamp(2rem,9vw,7.5rem)] leading-none text-content-primary transition-colors hover:text-accent"
           style={{ '--wght': 800 }}
         >
           {profile.name}

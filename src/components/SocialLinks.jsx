@@ -21,7 +21,7 @@ const ICONS = {
  */
 export default function SocialLinks({ items = allSocials, className = '' }) {
   return (
-    <ul className={`flex flex-wrap items-center gap-x-6 gap-y-3 ${className}`}>
+    <ul className={`flex flex-wrap items-center gap-x-6 gap-y-1 ${className}`}>
       {items.map((social) => {
         const Icon = ICONS[social.icon] ?? FiMail;
         const isExternal = social.href.startsWith('http');
@@ -31,7 +31,7 @@ export default function SocialLinks({ items = allSocials, className = '' }) {
               href={social.href}
               aria-label={`${social.label}: ${social.value}`}
               {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              className="link-draw meta flex items-center gap-2 text-content-secondary transition-colors hover:text-accent"
+              className="link-draw meta tap gap-2 text-content-secondary transition-colors hover:text-accent"
             >
               <Icon className="h-3.5 w-3.5" aria-hidden="true" />
               {social.label}

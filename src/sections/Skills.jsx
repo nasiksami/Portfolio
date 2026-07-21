@@ -34,7 +34,7 @@ export default function Skills() {
       title="Skills & technologies"
       description="The stack I reach for across research prototypes and production systems."
     >
-      <div className="grid gap-x-10 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-x-10 gap-y-8 md:grid-cols-2 md:gap-y-14 lg:grid-cols-3">
         {skillGroups.map((group, index) => (
           <Reveal key={group.category} delay={index * 0.06}>
             <section aria-label={group.category}>
@@ -50,8 +50,8 @@ export default function Skills() {
 
               <ul className="ledger">
                 {group.items.map((item) => (
-                  <li key={item.name} className="flex items-center gap-3 py-3">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center border border-edge text-content-secondary">
+                  <li key={item.name} className="flex items-center gap-3 py-2 md:py-2.5">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center border border-edge text-content-secondary md:h-7 md:w-7">
                       <SkillIcon icon={item.icon} name={item.name} className="h-4 w-4" />
                     </span>
                     <span className="flex-1 truncate text-sm text-content-secondary">
@@ -68,7 +68,7 @@ export default function Skills() {
 
       {/* Legend, ordered by the canonical level order from data/skills.js. */}
       <Reveal delay={0.15}>
-        <p className="meta-sm mt-16 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-edge pt-6 text-content-muted">
+        <p className="meta-sm mt-12 flex flex-wrap md:mt-16 items-center gap-x-8 gap-y-3 border-t border-edge pt-6 text-content-muted">
           <span className="text-content-secondary">Proficiency</span>
           {levelOrder.map((label) => (
             <span key={label} className="inline-flex items-center gap-2">

@@ -16,7 +16,7 @@ function Stat({ stat }) {
   const [ref, display] = useCountUp(stat.value);
 
   return (
-    <div ref={ref} className="px-5 py-8 md:px-6">
+    <div ref={ref} className="px-4 py-6 sm:px-5 md:px-6 md:py-8">
       <dt className="meta-sm text-content-muted">{stat.label}</dt>
       <dd>
         <span
@@ -48,7 +48,7 @@ export default function About() {
       <div className="ledger">
         {bio.map((paragraph, index) => (
           <Reveal key={paragraph} delay={index * 0.08}>
-            <div className="grid gap-x-6 gap-y-2 py-7 md:grid-cols-[4rem_minmax(0,1fr)]">
+            <div className="grid gap-x-6 gap-y-2 py-5 md:grid-cols-[4rem_minmax(0,1fr)] md:py-6">
               <p aria-hidden="true" className="meta-sm text-accent">
                 ¶{String(index + 1).padStart(2, '0')}
               </p>
@@ -62,7 +62,7 @@ export default function About() {
 
       {/* ── Stat band ────────────────────────────────────────────────────── */}
       <Reveal delay={0.1}>
-        <dl className="stat-band mt-20 grid grid-cols-2 border-y-2 border-content-primary lg:grid-cols-4">
+        <dl className="stat-band mt-14 grid md:mt-20 grid-cols-2 border-y-2 border-content-primary lg:grid-cols-4">
           {stats.map((stat) => (
             <Stat key={stat.label} stat={stat} />
           ))}
@@ -70,7 +70,7 @@ export default function About() {
       </Reveal>
 
       {/* ── What I do ────────────────────────────────────────────────────── */}
-      <div className="mt-20">
+      <div className="mt-14 md:mt-20">
         <Reveal>
           <h3 className="meta mb-6 text-content-muted">What I do</h3>
         </Reveal>
@@ -80,7 +80,7 @@ export default function About() {
             const Icon = FOCUS_ICONS[area.icon] ?? HiOutlineChip;
             return (
               <Reveal key={area.title} as="li" delay={index * 0.07}>
-                <div className="group grid gap-x-6 gap-y-3 py-8 md:grid-cols-[4rem_18rem_minmax(0,1fr)]">
+                <div className="group grid gap-x-6 gap-y-2 py-5 md:grid-cols-[4rem_18rem_minmax(0,1fr)] md:gap-y-3 md:py-8">
                   <p aria-hidden="true" className="meta-sm text-content-muted">
                     {String(index + 1).padStart(2, '0')}
                   </p>

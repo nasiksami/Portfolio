@@ -48,7 +48,7 @@ export default function Navbar() {
       }`}
     >
       <nav aria-label="Primary" className="shell flex h-20 items-center justify-between">
-        <a href="#top" className="display text-lg text-content-primary" style={{ '--wdth': 88 }}>
+        <a href="#top" className="display tap text-lg text-content-primary" style={{ '--wdth': 88 }}>
           Nasik
           <span className="text-accent">⁄</span>
         </a>
@@ -63,7 +63,7 @@ export default function Navbar() {
                   href={`#${link.id}`}
                   onClick={() => selectId(link.id)}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`meta-sm flex items-center gap-1.5 transition-colors ${
+                  className={`meta-sm tap gap-1.5 transition-colors ${
                     isActive
                       ? 'text-content-primary'
                       : 'text-content-muted hover:text-content-primary'
@@ -95,7 +95,7 @@ export default function Navbar() {
             type="button"
             onClick={toggle}
             aria-label={`Switch to ${theme === 'dark' ? 'paper' : 'ink'} theme`}
-            className="meta-sm flex items-center gap-2 text-content-muted transition-colors hover:text-accent"
+            className="meta-sm tap -mx-2 gap-2 px-2 text-content-muted transition-colors hover:text-accent"
           >
             <span
               aria-hidden="true"
@@ -122,7 +122,7 @@ export default function Navbar() {
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
-            className="text-content-primary transition-colors hover:text-accent md:hidden"
+            className="tap -mr-2.5 justify-center px-2.5 text-content-primary transition-colors hover:text-accent md:hidden"
           >
             {menuOpen ? <HiX className="h-6 w-6" /> : <HiMenuAlt3 className="h-6 w-6" />}
           </button>

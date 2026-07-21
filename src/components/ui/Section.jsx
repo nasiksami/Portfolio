@@ -33,14 +33,14 @@ export default function Section({
     <section
       id={id}
       aria-labelledby={headingId}
-      className={`relative overflow-hidden py-20 md:py-28 ${
+      className={`relative overflow-hidden py-12 md:py-24 lg:py-28 ${
         invert ? 'invert-surface' : ''
       } ${className}`}
     >
       <ColumnRules />
 
       <div className="shell relative">
-        <div className="grid grid-cols-1 gap-y-8 lg:grid-cols-[3.5rem_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-0">
+        <div className="grid grid-cols-1 gap-y-6 lg:grid-cols-[3.5rem_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-0">
           {/* Gutter marker */}
           <div className="lg:sticky lg:top-24 lg:self-start">
             <p className="meta-sm flex items-center gap-3 text-content-muted lg:h-48 lg:[writing-mode:vertical-rl] lg:rotate-180">
@@ -52,21 +52,26 @@ export default function Section({
 
           {/* Body */}
           <div>
-            <header className="mb-12 md:mb-20">
+            <header className="mb-8 md:mb-16">
               <Reveal variant="rise">
                 <h2 id={headingId} className="display d-1 text-content-primary">
                   {title}
                 </h2>
               </Reveal>
-              {description && (
-                <Reveal delay={0.08}>
-                  <p className="mt-6 max-w-prose text-base leading-relaxed text-content-secondary md:text-lg">
+              {/* The accent rule shares the description's Reveal rather than
+                  getting its own. On its own it is a 2px-tall target, and
+                  IntersectionObserver only samples at frame boundaries — a
+                  jump-scroll (which is exactly what the nav links do) can move
+                  it from below the viewport to above it between two frames, so
+                  it never registers as intersecting and, with `once: true`,
+                  stays invisible for good. */}
+              <Reveal delay={0.08}>
+                {description && (
+                  <p className="mt-5 max-w-prose text-base leading-relaxed text-content-secondary md:text-lg">
                     {description}
                   </p>
-                </Reveal>
-              )}
-              <Reveal delay={0.14}>
-                <span aria-hidden="true" className="mt-8 block h-0.5 w-24 bg-accent" />
+                )}
+                <span aria-hidden="true" className="mt-7 block h-0.5 w-24 bg-accent" />
               </Reveal>
             </header>
 

@@ -136,6 +136,38 @@
     padding-inline: clamp(1.25rem, 4vw, 4.5rem);
   }
 
+  /* ── Touch targets ─────────────────────────────────────────────────────
+     Monospace labels are only ~15px tall, so the text box alone is far below
+     a usable tap target. `.tap` grows the BOX without moving the text, which
+     is why it uses real min-height rather than an expanded invisible overlay:
+     phantom hit areas on wrapped rows of links overlap and steal each other's
+     taps. 24px satisfies WCAG 2.5.8 everywhere; coarse pointers get the full
+     44px. */
+  .tap {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    min-width: 24px;
+  }
+
+  .tap-block {
+    display: flex;
+    align-items: center;
+    min-height: 24px;
+  }
+
+  @media (pointer: coarse) {
+    .tap,
+    .tap-block {
+      min-height: 44px;
+    }
+
+    /* Short labels ("X") would otherwise be a 14px-wide target. */
+    .tap {
+      min-width: 44px;
+    }
+  }
+
   /* ── Rules ─────────────────────────────────────────────────────────────
      Hairlines are the only "container" in this design — there are no cards. */
   .rule {
@@ -200,13 +232,20 @@
     line-height: 0.88;
   }
 
-  /* Capped so the widest setting of the variable width axis still fits the
-     8-column wordmark track at mid viewports — see usePointerWidth's bounds
-     in Hero.jsx. */
-  .d-hero  { font-size: clamp(2.75rem, 13.6vw, 11rem); }
-  .d-1     { font-size: clamp(2.125rem, 5.6vw, 4.25rem); }
+  /* Two separate curves rather than one clamp. Below `lg` the wordmark owns
+     the full column, so it can run much larger relative to the viewport —
+     one shared curve left it at a timid ~53px on a phone. From `lg` up it
+     shares the row with the portrait and is capped so even the widest
+     setting of the variable width axis still fits its 8-column track. */
+  .d-hero  { font-size: clamp(3.5rem, 19vw, 8rem); }
+
+  @media (min-width: 1024px) {
+    .d-hero { font-size: clamp(5rem, 11.5vw, 11rem); }
+  }
+
+  .d-1     { font-size: clamp(2.375rem, 5.6vw, 4.25rem); }
   .d-2     { font-size: clamp(1.5rem, 3.1vw, 2.375rem); line-height: 0.96; }
-  .d-3     { font-size: clamp(1.125rem, 1.9vw, 1.5rem); line-height: 1.05; }
+  .d-3     { font-size: clamp(1.125rem, 1.9vw, 1.5rem); line-height: 1.12; }
 
   /* Metadata voice: everything that is a label, index, period or venue. */
   .meta {
@@ -226,9 +265,12 @@
   /* ── Link with a rule that draws left → right ──────────────────────────
      Underline is a scaled pseudo-element (transform only, stays on the
      compositor). The reduced-motion block below collapses the transition. */
+  /* Deliberately does NOT set `display`: it is combined with `.tap`, and two
+     component-layer rules both setting display resolve by source order, which
+     silently blockified these links and wrapped their trailing icon. Callers
+     pick the display themselves. */
   .link-draw {
     position: relative;
-    display: inline-block;
   }
 
   .link-draw::after {

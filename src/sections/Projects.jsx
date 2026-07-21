@@ -15,7 +15,7 @@ function ProjectEntry({ project, index }) {
   ].filter(Boolean);
 
   return (
-    <article className="group grid gap-x-6 gap-y-6 py-10 md:grid-cols-12">
+    <article className="group grid gap-x-6 gap-y-4 py-7 md:grid-cols-12 md:gap-y-6 md:py-10">
       {/* Index + category */}
       <div className="flex items-start gap-4 md:col-span-2 md:flex-col md:gap-3">
         <span
@@ -37,19 +37,19 @@ function ProjectEntry({ project, index }) {
           {project.title}
         </h3>
         <p className="meta-sm mt-3 text-content-muted">{project.role}</p>
-        <p className="mt-5 max-w-prose text-sm leading-relaxed text-content-secondary md:text-base">
+        <p className="mt-4 max-w-prose text-sm leading-relaxed text-content-secondary md:text-base">
           {project.description}
         </p>
 
         {links.length > 0 && (
-          <div className="mt-6 flex flex-wrap gap-x-7 gap-y-3">
+          <div className="mt-4 flex flex-wrap gap-x-7">
             {links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="link-draw meta flex items-center gap-1.5 text-accent"
+                className="link-draw meta tap gap-1.5 text-accent"
               >
                 {link.label}
                 <span className="sr-only"> {link.context} (opens in a new tab)</span>
@@ -71,7 +71,7 @@ function ProjectEntry({ project, index }) {
           </div>
         )}
 
-        <p className="meta-sm mt-7 text-content-muted">Stack</p>
+        <p className="meta-sm mt-5 text-content-muted">Stack</p>
         <ul className="mt-3 flex flex-wrap gap-1.5">
           {project.tech.map((tech) => (
             <li key={tech}>
@@ -106,7 +106,7 @@ export default function Projects() {
       <div
         role="tablist"
         aria-label="Filter projects by category"
-        className="mb-4 flex flex-wrap items-center gap-x-8 gap-y-3 border-b border-edge pb-4"
+        className="mb-4 flex flex-wrap items-stretch gap-x-8 border-b border-edge"
       >
         {categories.map((category) => {
           const isActive = active === category;
@@ -117,7 +117,7 @@ export default function Projects() {
               role="tab"
               aria-selected={isActive}
               onClick={() => setActive(category)}
-              className={`meta relative pb-2 transition-colors ${
+              className={`meta tap relative py-3 transition-colors ${
                 isActive
                   ? 'text-accent'
                   : 'text-content-muted hover:text-content-primary'
@@ -128,7 +128,7 @@ export default function Projects() {
                 <motion.span
                   layoutId="project-filter-underline"
                   aria-hidden="true"
-                  className="absolute -bottom-[1.3rem] left-0 right-0 h-0.5 bg-accent"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent"
                   transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                 />
               )}

@@ -17,7 +17,9 @@ const NUMERIC = /^(\d+(?:\.\d+)?)(.*)$/s;
 export function useCountUp(value, { duration = 1200 } = {}) {
   const ref = useRef(null);
   const reduceMotion = useReducedMotion();
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  // Same asymmetric margin as Reveal: a stat jumped past must still resolve
+  // to its real value instead of freezing at 0. See components/ui/Reveal.jsx.
+  const inView = useInView(ref, { once: true, margin: '9999px 0px -80px 0px' });
 
   const match = NUMERIC.exec(value);
   const target = match ? Number(match[1]) : null;
