@@ -1,18 +1,18 @@
 const TONES = {
-  // Differentiation comes from rule weight and the single signal colour, not
-  // from a spread of tinted hues — the palette is monochrome plus vermilion.
-  plain: 'border-edge text-content-secondary',
-  signal: 'border-accent text-accent',
-  solid: 'border-accent bg-accent text-on-accent',
+  plain: 'border-edge/80 bg-surface-raised/45 text-content-secondary',
+  signal: 'border-signal/60 bg-signal/10 text-signal',
+  solid: 'border-signal bg-signal text-on-signal',
 };
 
-/** Rule-boxed monospace label: tech tags, categories, record types, levels. */
+/** Compact technical label used for stacks, categories, years, and levels. */
 export default function Tag({ children, tone = 'plain', className = '' }) {
   return (
     <span
-      className={`meta-sm inline-flex items-center border px-2 py-1 ${
-        TONES[tone] ?? TONES.plain
-      } ${className}`}
+      className={[
+        'meta-sm inline-flex items-center rounded-full border px-2.5 py-1',
+        TONES[tone] ?? TONES.plain,
+        className,
+      ].join(' ')}
     >
       {children}
     </span>

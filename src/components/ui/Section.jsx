@@ -2,24 +2,12 @@ import Reveal from './Reveal';
 import ColumnRules from '../ColumnRules';
 
 /**
- * Standard section shell for the specimen layout.
- *
- * Every section is a numbered record: a `§NN / LABEL` marker set in the left
- * gutter — rotated to run bottom-to-top on desktop, sticky so it tracks you
- * through the section, and flattened to an ordinary horizontal label on
- * mobile. It is one DOM node in both cases (CSS changes `writing-mode`), so
- * screen readers never hear it twice.
- *
- * `invert` flips the section to the opposite palette via `.invert-surface`.
- * Because that class is defined relative to the page theme (see index.css),
- * an inverted section is ink on a paper page and paper on an ink page — the
- * alternation down the page survives the theme toggle with no logic here.
+ * Shared research-atlas section: a sticky coordinate marker and an offset
+ * editorial heading sit on top of the global mapping field.
  */
 export default function Section({
   id,
-  /** Two-digit record number, e.g. "01". */
   index,
-  /** Gutter label, e.g. "About". */
   label,
   title,
   description,
@@ -27,52 +15,48 @@ export default function Section({
   className = '',
   invert = false,
 }) {
-  const headingId = `${id}-heading`;
+  const headingId = id + '-heading';
 
   return (
     <section
       id={id}
       aria-labelledby={headingId}
-      className={`relative overflow-hidden py-12 md:py-24 lg:py-28 ${
-        invert ? 'invert-surface' : ''
-      } ${className}`}
+      className={[
+        'relative isolate overflow-hidden py-20 md:py-28 lg:py-36',
+        invert ? 'invert-surface' : '',
+        className,
+      ].join(' ')}
     >
       <ColumnRules />
+      <span aria-hidden="true" className="section-curve" />
 
       <div className="shell relative">
-        <div className="grid grid-cols-1 gap-y-6 lg:grid-cols-[3.5rem_minmax(0,1fr)] lg:gap-x-10 lg:gap-y-0">
-          {/* Gutter marker */}
-          <div className="lg:sticky lg:top-24 lg:self-start">
-            <p className="meta-sm flex items-center gap-3 text-content-muted lg:h-48 lg:[writing-mode:vertical-rl] lg:rotate-180">
-              <span className="text-accent">§{index}</span>
-              <span aria-hidden="true" className="h-px w-8 bg-edge lg:h-8 lg:w-px" />
-              <span>{label}</span>
+        <div className="grid gap-10 lg:grid-cols-[8rem_minmax(0,1fr)] lg:gap-12">
+          <aside className="lg:sticky lg:top-28 lg:self-start" aria-label={label + ' section'}>
+            <p className="meta flex items-center gap-3 text-content-muted lg:flex-col lg:items-start">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-accent text-accent">
+                {index}
+              </span>
+              <span className="h-px w-8 bg-edge lg:h-10 lg:w-px lg:translate-x-5" aria-hidden="true" />
+              <span className="lg:[writing-mode:vertical-rl]">{label}</span>
             </p>
-          </div>
+          </aside>
 
-          {/* Body */}
           <div>
-            <header className="mb-8 md:mb-16">
+            <header className="mb-12 grid gap-6 md:mb-20 xl:grid-cols-[minmax(0,1fr)_22rem] xl:items-end xl:gap-16">
               <Reveal variant="rise">
                 <h2 id={headingId} className="display d-1 text-content-primary">
                   {title}
                 </h2>
               </Reveal>
-              {/* The accent rule shares the description's Reveal rather than
-                  getting its own. On its own it is a 2px-tall target, and
-                  IntersectionObserver only samples at frame boundaries — a
-                  jump-scroll (which is exactly what the nav links do) can move
-                  it from below the viewport to above it between two frames, so
-                  it never registers as intersecting and, with `once: true`,
-                  stays invisible for good. */}
-              <Reveal delay={0.08}>
-                {description && (
-                  <p className="mt-5 max-w-prose text-base leading-relaxed text-content-secondary md:text-lg">
+
+              {description && (
+                <Reveal delay={0.08}>
+                  <p className="border-l border-accent pl-5 text-base leading-relaxed text-content-secondary md:text-lg">
                     {description}
                   </p>
-                )}
-                <span aria-hidden="true" className="mt-7 block h-0.5 w-24 bg-accent" />
-              </Reveal>
+                </Reveal>
+              )}
             </header>
 
             {children}

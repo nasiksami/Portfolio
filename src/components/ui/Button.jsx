@@ -1,13 +1,9 @@
 const VARIANTS = {
-  // Signal fill. `on-accent` flips with the palette so the label stays legible
-  // against vermilion in both the paper and ink scopes.
   solid:
-    'bg-accent text-on-accent hover:bg-content-primary hover:text-surface-base',
-  // Hairline box that fills with ink on hover.
+    'group rounded-full bg-signal text-on-signal shadow-[0_0_0_1px_rgb(var(--signal))] hover:bg-accent hover:text-on-accent hover:shadow-[0_0_0_5px_rgb(var(--accent)/0.14)]',
   outline:
-    'border border-content-primary text-content-primary hover:bg-content-primary hover:text-surface-base',
-  // Bare mono label with a rule that draws left → right.
-  bare: 'link-draw text-content-primary hover:text-accent',  // display comes from `.tap`
+    'rounded-full border border-edge bg-surface-base/30 text-content-primary hover:border-accent hover:bg-accent/10 hover:text-accent',
+  bare: 'link-draw text-content-primary hover:text-accent',
 };
 
 const SIZES = {
@@ -17,8 +13,8 @@ const SIZES = {
 };
 
 /**
- * Renders an <a> when `href` is present, otherwise a <button>, so links stay
- * real links (middle-click, open-in-new-tab, and screen readers all work).
+ * Renders an anchor when href is present so links retain native browser and
+ * assistive-technology behaviour.
  */
 export default function Button({
   children,
@@ -29,12 +25,13 @@ export default function Button({
   external = false,
   ...rest
 }) {
-  // `bare` carries no padding by design, so it needs `.tap` to reach a
-  // usable touch height without a box appearing around it.
   const padding = variant === 'bare' ? '' : SIZES[size] ?? SIZES.md;
-  const classes = `meta tap justify-center gap-2.5 transition-colors duration-200 ${
-    VARIANTS[variant] ?? VARIANTS.solid
-  } ${padding} ${className}`;
+  const classes = [
+    'meta tap justify-center gap-2.5 transition-all duration-300',
+    VARIANTS[variant] ?? VARIANTS.solid,
+    padding,
+    className,
+  ].join(' ');
 
   if (href) {
     return (

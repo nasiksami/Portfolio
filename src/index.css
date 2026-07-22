@@ -2,46 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ───────────────────────────────────────────────────────────────────────────
-   SPECIMEN № — theme tokens.
-
-   Two raw palettes are declared once (paper / ink) and never referenced by
-   components. Semantic tokens alias one of them, and which one they alias is
-   decided by two things:
-
-     1. the page theme  — `.dark` on <html> opts into ink (paper is default)
-     2. `.invert-surface` — flips an individual section to the OPPOSITE palette
-
-   Because (2) is defined relative to (1), the paper↔ink alternation down the
-   page survives the theme toggle without a single conditional in any
-   component: an inverted section is dark on a paper page and light on an ink
-   page. Values are space-separated RGB channels so Tailwind's `<alpha-value>`
-   syntax still works, e.g. `bg-surface-overlay/60`.
-   ─────────────────────────────────────────────────────────────────────────── */
+/* ──────────────────────────────────────────────────────────────────────────
+   SIGNAL CARTOGRAPHY
+   A research atlas built from semantic colour, orbital geometry, and a
+   continuous route line. Components consume only semantic tokens so light,
+   dark, and inverted sections remain equally legible.
+   ────────────────────────────────────────────────────────────────────────── */
 @layer base {
   :root {
-    /* Paper — warm newsprint. */
-    --p-base: 243 240 233;
-    --p-raised: 250 248 243;
-    --p-overlay: 232 228 218;
-    --p-fg: 13 13 13;
-    --p-fg2: 74 72 68;
-    --p-fg3: 100 97 90;
-    --p-edge: 205 200 189;
-    --p-accent: 199 42 12; /* vermilion, darkened for 4.9:1 on paper */
+    /* Day atlas: mineral ink on warm field paper. */
+    --p-base: 244 242 234;
+    --p-raised: 252 250 244;
+    --p-overlay: 229 232 223;
+    --p-fg: 7 30 33;
+    --p-fg2: 48 72 74;
+    --p-fg3: 78 101 102;
+    --p-edge: 174 188 183;
+    --p-accent: 0 100 110;
+    --p-signal: 83 107 0;
 
-    /* Ink. */
-    --i-base: 13 13 13;
-    --i-raised: 24 24 24;
-    --i-overlay: 34 34 33;
-    --i-fg: 243 240 233;
-    --i-fg2: 176 172 163;
-    --i-fg3: 132 128 120;
-    --i-edge: 56 55 52;
-    --i-accent: 255 90 48; /* vermilion, brightened for 6.3:1 on ink */
+    /* Night atlas: observatory teal with a luminous signal. */
+    --i-base: 5 20 22;
+    --i-raised: 9 31 34;
+    --i-overlay: 15 45 48;
+    --i-fg: 242 244 235;
+    --i-fg2: 184 203 197;
+    --i-fg3: 139 164 158;
+    --i-edge: 45 77 77;
+    --i-accent: 129 230 237;
+    --i-signal: 202 255 69;
   }
 
-  /* Paper scope: the default page, and inverted sections on an ink page. */
   :root,
   :root.dark .invert-surface {
     --surface-base: var(--p-base);
@@ -53,10 +44,11 @@
     --edge: var(--p-edge);
     --accent: var(--p-accent);
     --on-accent: 255 255 255;
+    --signal: var(--p-signal);
+    --on-signal: 255 255 255;
     color-scheme: light;
   }
 
-  /* Ink scope: the dark page, and inverted sections on a paper page. */
   :root.dark,
   .invert-surface {
     --surface-base: var(--i-base);
@@ -67,13 +59,12 @@
     --content-muted: var(--i-fg3);
     --edge: var(--i-edge);
     --accent: var(--i-accent);
-    --on-accent: 13 13 13;
+    --on-accent: 5 20 22;
+    --signal: var(--i-signal);
+    --on-signal: 5 20 22;
     color-scheme: dark;
   }
 
-  /* The page background lives on <html>, not <body>, so the fixed grain layer
-     in GridFrame can sit at z-index -1 and still be visible. A background on
-     <body> would propagate to the canvas and bury it. */
   html {
     background-color: rgb(var(--surface-base));
     scroll-behavior: smooth;
@@ -81,19 +72,13 @@
   }
 
   body {
-    @apply font-sans text-content-primary antialiased;
-    /* Backstop only — the fluid clamp() type is what actually prevents
-       overflow. See .display sizes below. */
-    overflow-x: hidden;
+    @apply min-h-screen overflow-x-hidden bg-surface-base font-sans text-content-primary antialiased;
   }
 
-  /* Inverted sections paint their own (scoped) background over the page. */
-  .invert-surface {
-    background-color: rgb(var(--surface-base));
-  }
-
-  h1, h2, h3, h4 {
-    @apply font-display;
+  h1,
+  h2,
+  h3,
+  h4 {
     text-wrap: balance;
   }
 
@@ -101,174 +86,236 @@
     text-wrap: pretty;
   }
 
+  a {
+    text-underline-offset: 0.22em;
+  }
+
   section {
     scroll-margin-top: 5rem;
   }
 
-  /* Visible, consistent focus ring for keyboard users only. Squared off to
-     match the art direction, and it re-resolves per scope so it stays legible
-     inside inverted sections. */
+  button,
+  a,
+  input,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   :focus-visible {
-    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-surface-base;
+    @apply outline-none ring-2 ring-signal ring-offset-4 ring-offset-surface-base;
   }
 
   ::selection {
-    background-color: rgb(var(--accent));
-    color: rgb(var(--on-accent));
+    background: rgb(var(--signal));
+    color: rgb(var(--on-signal));
   }
 }
 
 @layer components {
-  /* ── Grid ──────────────────────────────────────────────────────────────
-     The 12-column frame every section is measured against. Column rules are
-     drawn by <ColumnRules /> as real grid children so they land exactly on
-     these tracks at any viewport width. */
-  .frame {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: clamp(0.75rem, 1.4vw, 1.5rem);
-  }
-
   .shell {
     width: 100%;
     max-width: 96rem;
     margin-inline: auto;
-    padding-inline: clamp(1.25rem, 4vw, 4.5rem);
+    padding-inline: clamp(1rem, 4vw, 4.5rem);
   }
 
-  /* ── Touch targets ─────────────────────────────────────────────────────
-     Monospace labels are only ~15px tall, so the text box alone is far below
-     a usable tap target. `.tap` grows the BOX without moving the text, which
-     is why it uses real min-height rather than an expanded invisible overlay:
-     phantom hit areas on wrapped rows of links overlap and steal each other's
-     taps. 24px satisfies WCAG 2.5.8 everywhere; coarse pointers get the full
-     44px. */
+  .frame {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(0.75rem, 1.5vw, 1.5rem);
+  }
+
+  /* The quiet coordinate field beneath each major composition. */
+  .atlas-grid {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0.62;
+    mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
+  }
+
+  .atlas-grid::before,
+  .atlas-grid::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .atlas-grid::before {
+    background-image:
+      linear-gradient(rgb(var(--edge) / 0.24) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--edge) / 0.24) 1px, transparent 1px);
+    background-size: clamp(3rem, 7vw, 7.5rem) clamp(3rem, 7vw, 7.5rem);
+  }
+
+  .atlas-grid::after {
+    inset: 10% 8%;
+    border: 1px solid rgb(var(--edge) / 0.48);
+    border-radius: 50%;
+    transform: rotate(-11deg) scale(1.08, 0.72);
+  }
+
+  .atlas-node {
+    position: absolute;
+    width: 0.45rem;
+    height: 0.45rem;
+    border: 1px solid rgb(var(--accent));
+    border-radius: 9999px;
+    box-shadow: 0 0 0 0.35rem rgb(var(--accent) / 0.08);
+  }
+
+  .invert-surface {
+    background-color: rgb(var(--surface-base));
+  }
+
+  .surface-panel {
+    background:
+      linear-gradient(135deg, rgb(var(--surface-raised) / 0.96), rgb(var(--surface-base) / 0.92));
+    border: 1px solid rgb(var(--edge) / 0.75);
+    box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 0.08);
+  }
+
+  .route-line {
+    position: relative;
+  }
+
+  .route-line::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0.55rem;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--accent)) 8%,
+      rgb(var(--edge)) 42%,
+      rgb(var(--edge)) 92%,
+      transparent
+    );
+  }
+
+  .route-node {
+    position: relative;
+  }
+
+  .route-node::before {
+    content: '';
+    position: absolute;
+    left: -2.02rem;
+    top: 0.65rem;
+    width: 0.7rem;
+    height: 0.7rem;
+    border: 2px solid rgb(var(--surface-base));
+    border-radius: 9999px;
+    background: rgb(var(--signal));
+    box-shadow: 0 0 0 1px rgb(var(--signal));
+  }
+
   .tap {
     display: inline-flex;
-    align-items: center;
-    min-height: 24px;
     min-width: 24px;
+    min-height: 24px;
+    align-items: center;
   }
 
   .tap-block {
     display: flex;
-    align-items: center;
     min-height: 24px;
+    align-items: center;
   }
 
-  @media (pointer: coarse) {
-    .tap,
-    .tap-block {
-      min-height: 44px;
-    }
-
-    /* Short labels ("X") would otherwise be a 14px-wide target. */
-    .tap {
-      min-width: 44px;
-    }
-  }
-
-  /* ── Rules ─────────────────────────────────────────────────────────────
-     Hairlines are the only "container" in this design — there are no cards. */
-  .rule {
-    border-top: 1px solid rgb(var(--edge));
-  }
-
-  .rule-heavy {
-    border-top: 2px solid rgb(var(--content-primary));
-  }
-
-  /* Ruled list — the only "container" pattern in the design, shared by
-     Experience, Education, Publications, Awards, Skills and Contact. A class
-     rather than a component so each caller keeps its own correct semantics
-     (ol vs ul vs dl) instead of routing them through a prop. */
-  .ledger {
-    border-bottom: 1px solid rgb(var(--edge));
-  }
-
-  .ledger > * {
-    border-top: 1px solid rgb(var(--edge));
-  }
-
-  /* Stat band — a 2-up grid on mobile that becomes 4-up on desktop. The rules
-     have to be driven by nth-child rather than a plain `border-l`, or the
-     first cell of the wrapped second row grows a stray leading rule and the
-     row boundary goes missing. */
-  .stat-band > * {
-    border-left: 1px solid rgb(var(--edge));
-  }
-
-  .stat-band > :nth-child(2n + 1) {
-    border-left: 0;
-  }
-
-  .stat-band > :nth-child(n + 3) {
-    border-top: 1px solid rgb(var(--edge));
-  }
-
-  @media (min-width: 1024px) {
-    .stat-band > :nth-child(2n + 1) {
-      border-left: 1px solid rgb(var(--edge));
-    }
-
-    .stat-band > :first-child {
-      border-left: 0;
-    }
-
-    .stat-band > :nth-child(n + 3) {
-      border-top: 0;
-    }
-  }
-
-  /* ── Type ──────────────────────────────────────────────────────────────
-     Archivo is loaded as a variable font on the width AND weight axes. Both
-     are driven by custom properties so hover/pointer interactions can animate
-     the width axis without re-declaring the font stack. */
   .display {
-    font-family: Archivo, ui-sans-serif, system-ui, sans-serif;
-    font-variation-settings: 'wdth' var(--wdth, 100), 'wght' var(--wght, 800);
-    text-transform: uppercase;
-    letter-spacing: -0.035em;
-    line-height: 0.88;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 0.9;
   }
 
-  /* Two separate curves rather than one clamp. Below `lg` the wordmark owns
-     the full column, so it can run much larger relative to the viewport —
-     one shared curve left it at a timid ~53px on a phone. From `lg` up it
-     shares the row with the portrait and is capped so even the widest
-     setting of the variable width axis still fits its 8-column track. */
-  .d-hero  { font-size: clamp(3.5rem, 19vw, 8rem); }
-
-  @media (min-width: 1024px) {
-    .d-hero { font-size: clamp(5rem, 11.5vw, 11rem); }
+  .display em {
+    font-weight: 400;
   }
 
-  .d-1     { font-size: clamp(2.375rem, 5.6vw, 4.25rem); }
-  .d-2     { font-size: clamp(1.5rem, 3.1vw, 2.375rem); line-height: 0.96; }
-  .d-3     { font-size: clamp(1.125rem, 1.9vw, 1.5rem); line-height: 1.12; }
+  .d-hero {
+    font-size: clamp(4.5rem, 16vw, 13rem);
+  }
 
-  /* Metadata voice: everything that is a label, index, period or venue. */
-  .meta {
+  .d-1 {
+    font-size: clamp(3rem, 7vw, 6.75rem);
+  }
+
+  .d-2 {
+    font-size: clamp(2rem, 4vw, 3.8rem);
+    line-height: 0.98;
+  }
+
+  .d-3 {
+    font-size: clamp(1.35rem, 2.2vw, 2rem);
+    line-height: 1.08;
+  }
+
+  .meta,
+  .meta-sm {
     @apply font-mono uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.16em;
-    line-height: 1.4;
+    line-height: 1.45;
+  }
+
+  .meta {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
   }
 
   .meta-sm {
-    @apply font-mono uppercase;
-    font-size: 0.6875rem;
-    letter-spacing: 0.18em;
-    line-height: 1.4;
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
   }
 
-  /* ── Link with a rule that draws left → right ──────────────────────────
-     Underline is a scaled pseudo-element (transform only, stays on the
-     compositor). The reduced-motion block below collapses the transition. */
-  /* Deliberately does NOT set `display`: it is combined with `.tap`, and two
-     component-layer rules both setting display resolve by source order, which
-     silently blockified these links and wrapped their trailing icon. Callers
-     pick the display themselves. */
+  .eyebrow {
+    @apply meta inline-flex items-center gap-3 text-content-muted;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 1.6rem;
+    height: 1px;
+    background: rgb(var(--accent));
+  }
+
+  .ledger {
+    border-bottom: 1px solid rgb(var(--edge) / 0.7);
+  }
+
+  .ledger > * {
+    border-top: 1px solid rgb(var(--edge) / 0.7);
+  }
+
+  .stat-band > * {
+    border-color: rgb(var(--edge) / 0.75);
+  }
+
+  .stat-band > :nth-child(2n) {
+    border-left-width: 1px;
+  }
+
+  .stat-band > :nth-child(n + 3) {
+    border-top-width: 1px;
+  }
+
+  .signal-chip {
+    @apply meta-sm inline-flex items-center gap-2 rounded-full border border-edge/80 bg-surface-raised/70 px-3 py-1.5 text-content-secondary;
+  }
+
+  .signal-chip::before {
+    content: '';
+    width: 0.38rem;
+    height: 0.38rem;
+    border-radius: 9999px;
+    background: rgb(var(--signal));
+    box-shadow: 0 0 0 0.25rem rgb(var(--signal) / 0.12);
+  }
+
   .link-draw {
     position: relative;
   }
@@ -276,49 +323,163 @@
   .link-draw::after {
     content: '';
     position: absolute;
-    left: 0;
     right: 0;
-    bottom: -0.15em;
+    bottom: -0.16em;
+    left: 0;
     height: 1px;
-    background-color: currentColor;
+    background: currentColor;
     transform: scaleX(0);
-    transform-origin: left;
+    transform-origin: right;
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .link-draw:hover::after,
   .link-draw:focus-visible::after {
     transform: scaleX(1);
+    transform-origin: left;
   }
 
-  /* ── Duotone portrait ──────────────────────────────────────────────────
-     Pure CSS, no second asset: crush the photo to greyscale with heavy
-     contrast, then tint it toward the ink/paper of whichever scope it is in.
-     The halftone dot screen is a repeating radial-gradient overlay. */
-  .duotone {
-    filter: grayscale(1) contrast(1.28) brightness(1.02);
+  .orbit-frame {
+    position: relative;
+    isolation: isolate;
   }
 
-  .halftone::after {
+  .orbit-frame::before,
+  .orbit-frame::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    border: 1px solid rgb(var(--edge) / 0.72);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .orbit-frame::before {
+    inset: -8%;
+    transform: rotate(13deg) scale(1.04, 0.86);
+  }
+
+  .orbit-frame::after {
+    inset: -16%;
+    border-style: dashed;
+    transform: rotate(-18deg) scale(0.88, 1.08);
+  }
+
+  .portrait-window {
+    position: relative;
+    overflow: hidden;
+    border-radius: 46% 54% 48% 52% / 39% 44% 56% 61%;
+    background: rgb(var(--surface-overlay));
+    box-shadow:
+      0 0 0 1px rgb(var(--edge)),
+      0 2.5rem 7rem rgb(0 0 0 / 0.2);
+  }
+
+  .portrait-window img {
+    filter: grayscale(1) contrast(1.1);
+    transition: filter 0.45s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .portrait-window::after {
     content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image: radial-gradient(
-      rgb(var(--surface-base) / 0.55) 32%,
-      transparent 33%
-    );
-    background-size: 4px 4px;
-    mix-blend-mode: overlay;
+    background:
+      linear-gradient(135deg, rgb(var(--accent) / 0.2), transparent 42%),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 5px,
+        rgb(var(--surface-base) / 0.1) 6px
+      );
+    mix-blend-mode: screen;
+  }
+
+  .portrait-window:hover img {
+    filter: grayscale(0.15) contrast(1.04);
+    transform: scale(1.025);
+  }
+
+  .halftone::after {
+    content: none;
+  }
+
+  .duotone {
+    filter: grayscale(1) contrast(1.1);
+  }
+
+  .signal-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--accent)) transparent;
+  }
+
+  .signal-scroll::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .signal-scroll::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: rgb(var(--accent));
+  }
+
+  .section-curve {
+    position: absolute;
+    right: -12vw;
+    bottom: -16rem;
+    width: min(48rem, 75vw);
+    aspect-ratio: 1;
+    border: 1px solid rgb(var(--edge) / 0.4);
+    border-radius: 50%;
+    pointer-events: none;
   }
 }
 
-/* ───────────────────────────────────────────────────────────────────────────
-   Reduced motion.
+@media (pointer: coarse) {
+  .tap,
+  .tap-block {
+    min-height: 44px;
+  }
 
-   Framer Motion is told to skip animations via the useReducedMotion hook;
-   this covers CSS-driven animation, transitions, and smooth scrolling.
-   ─────────────────────────────────────────────────────────────────────────── */
+  .tap {
+    min-width: 44px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stat-band > :nth-child(2n) {
+    border-left-width: 0;
+  }
+
+  .stat-band > :not(:first-child) {
+    border-left-width: 1px;
+  }
+
+  .stat-band > :nth-child(n + 3) {
+    border-top-width: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .atlas-grid {
+    opacity: 0.38;
+  }
+
+  .atlas-grid::before {
+    background-size: 3.5rem 3.5rem;
+  }
+
+  .atlas-grid::after {
+    inset: 22% -28%;
+  }
+
+  .d-hero {
+    font-size: clamp(4.15rem, 22vw, 7.8rem);
+  }
+}
+
+/* Every moving layer has a static, complete equivalent. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -331,5 +492,9 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .portrait-window img {
+    transform: none !important;
   }
 }

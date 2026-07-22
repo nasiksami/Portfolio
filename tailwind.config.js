@@ -3,32 +3,13 @@ module.exports = {
   darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
-    // Overridden, not extended: squaring off every corner is a load-bearing
-    // part of the art direction, so no `rounded-*` utility can reintroduce a
-    // radius by accident. `full` survives for the few true circles (dots).
-    borderRadius: {
-      none: '0',
-      DEFAULT: '0',
-      sm: '0',
-      md: '0',
-      lg: '0',
-      xl: '0',
-      '2xl': '0',
-      '3xl': '0',
-      full: '9999px',
-    },
     extend: {
       fontFamily: {
-        // Archivo carries both a weight and a WIDTH axis; the width axis is
-        // what the hero and section headers animate. See `.display` in
-        // index.css, which drives both axes from custom properties.
-        display: ['Archivo', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        display: ['"Instrument Serif"', 'Georgia', 'serif'],
+        sans: ['"Space Grotesk"', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
       },
       colors: {
-        // Semantic tokens only. Which raw palette they resolve to depends on
-        // the theme class and `.invert-surface` — see index.css.
         surface: {
           base: 'rgb(var(--surface-base) / <alpha-value>)',
           raised: 'rgb(var(--surface-raised) / <alpha-value>)',
@@ -42,18 +23,35 @@ module.exports = {
         edge: 'rgb(var(--edge) / <alpha-value>)',
         accent: 'rgb(var(--accent) / <alpha-value>)',
         'on-accent': 'rgb(var(--on-accent) / <alpha-value>)',
+        signal: 'rgb(var(--signal) / <alpha-value>)',
+        'on-signal': 'rgb(var(--on-signal) / <alpha-value>)',
       },
       maxWidth: {
-        prose: '38rem',
+        prose: '42rem',
       },
       keyframes: {
         ticker: {
           from: { transform: 'translate3d(0, 0, 0)' },
           to: { transform: 'translate3d(-50%, 0, 0)' },
         },
+        'signal-flow': {
+          from: { strokeDashoffset: '48' },
+          to: { strokeDashoffset: '0' },
+        },
+        orbit: {
+          from: { transform: 'rotate(0deg)' },
+          to: { transform: 'rotate(360deg)' },
+        },
+        breathe: {
+          '0%, 100%': { opacity: '0.38', transform: 'scale(0.96)' },
+          '50%': { opacity: '0.9', transform: 'scale(1.04)' },
+        },
       },
       animation: {
-        ticker: 'ticker 48s linear infinite',
+        ticker: 'ticker 42s linear infinite',
+        'signal-flow': 'signal-flow 1.8s linear infinite',
+        orbit: 'orbit 24s linear infinite',
+        breathe: 'breathe 3.6s ease-in-out infinite',
       },
     },
   },
