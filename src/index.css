@@ -498,3 +498,93 @@
     transform: none !important;
   }
 }
+
+/* ── Signature hero: the identity follows the same route as the research. ── */
+.hero-name > span {
+  display: block;
+  width: fit-content;
+}
+
+.hero-name > span:nth-of-type(2) {
+  margin-left: clamp(1.5rem, 9vw, 8rem);
+}
+
+.hero-name > span:nth-of-type(3) {
+  margin-left: clamp(3.5rem, 20vw, 18rem);
+}
+
+.signal-field {
+  overflow: visible;
+  opacity: 0.82;
+}
+
+.signal-field__contours {
+  fill: none;
+  stroke: rgb(var(--edge) / 0.46);
+  stroke-width: 1;
+  stroke-dasharray: 3 12;
+  transform-origin: 54% 48%;
+  animation: orbit 44s linear infinite;
+}
+
+.signal-field__ghost,
+.signal-field__route,
+.signal-field__tether {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.signal-field__ghost {
+  stroke: rgb(var(--edge) / 0.52);
+  stroke-width: 1;
+}
+
+.signal-field__route {
+  stroke: rgb(var(--accent) / 0.84);
+  stroke-width: 1.65;
+}
+
+.signal-field__node-ring {
+  fill: rgb(var(--surface-base) / 0.18);
+  stroke: rgb(var(--edge) / 0.62);
+  stroke-width: 1;
+}
+
+.signal-field__node {
+  fill: rgb(var(--signal));
+}
+
+.signal-field__tether {
+  stroke: rgb(var(--signal) / 0.62);
+  stroke-width: 1;
+  stroke-dasharray: 5 9;
+  animation: signal-flow 1.8s linear infinite;
+}
+
+.signal-field__focus-ring {
+  fill: none;
+  stroke: rgb(var(--signal) / 0.8);
+  stroke-width: 1;
+}
+
+.signal-field__focus {
+  fill: rgb(var(--signal));
+}
+
+@media (max-width: 1023px) {
+  .signal-field {
+    opacity: 0.5;
+    transform: scale(1.18);
+    transform-origin: center;
+  }
+}
+
+@media (max-width: 639px) {
+  .hero-name > span:nth-of-type(2) {
+    margin-left: 0.55em;
+  }
+
+  .hero-name > span:nth-of-type(3) {
+    margin-left: 1.1em;
+  }
+}

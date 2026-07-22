@@ -1,17 +1,31 @@
 import { Fragment, useRef } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from 'framer-motion';
 import { FiArrowDown, FiDownload } from 'react-icons/fi';
 import { profile, socials, stats } from '../data/profile';
-import { usePointerWidth } from '../hooks/usePointerWidth';
 import ColumnRules from '../components/ColumnRules';
 import Marquee from '../components/Marquee';
+import SignalField from '../components/SignalField';
 import Button from '../components/ui/Button';
 import SocialLinks from '../components/SocialLinks';
 
-/** Staggered entrance for the hero's stacked blocks. */
+const WORDS = profile.name.split(' ');
+const TICKER = [
+  profile.role,
+  profile.location,
+  profile.currentRole,
+  ...stats.map((stat) => stat.value + ' ' + stat.label),
+];
+
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.15 } },
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.12 } },
 };
 
 const item = {
@@ -19,142 +33,115 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
 };
 
-// The wordmark is set from the name itself, so it can never drift out of sync
-// with data/profile.js.
-const WORDS = profile.name.split(' ');
-
-// Ticker copy is assembled from content already on the page — nothing here is
-// authored, so the ticker can never state something the rest of the site does
-// not.
-const TICKER = [
-  profile.role,
-  profile.location,
-  profile.currentRole,
-  ...stats.map((stat) => `${stat.value} ${stat.label}`),
-];
-
 export default function Hero() {
-  const reduceMotion = useReducedMotion();
   const sectionRef = useRef(null);
-
-  // Pointer drives Archivo's width axis; scroll drives parallax. Kept on
-  // separate properties so the two interactions never fight over one value.
-  const widthRef = usePointerWidth();
+  const reduceMotion = useReducedMotion();
+  const pointerX = useMotionValue(910);
+  const pointerY = useMotionValue(260);
+  const focusX = useSpring(pointerX, { stiffness: 100, damping: 22, mass: 0.35 });
+  const focusY = useSpring(pointerY, { stiffness: 100, damping: 22, mass: 0.35 });
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
   });
-  const wordmarkY = useTransform(scrollYProgress, [0, 1], ['0%', '38%']);
-  const wordmarkFade = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+  const fieldY = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const fieldOpacity = useTransform(scrollYProgress, [0, 0.9], [0.82, 0]);
+  const nameY = useTransform(scrollYProgress, [0, 1], [0, -72]);
 
-  const motionProps = reduceMotion
-    ? {}
-    : { variants: container, initial: 'hidden', animate: 'show' };
-  const itemProps = reduceMotion ? {} : { variants: item };
-  const parallax = reduceMotion ? undefined : { y: wordmarkY, opacity: wordmarkFade };
+  const handlePointerMove = (event) => {
+    if (reduceMotion || !window.matchMedia('(pointer: fine)').matches) return;
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    pointerX.set(((event.clientX - rect.left) / rect.width) * 1200);
+    pointerY.set(((event.clientY - rect.top) / rect.height) * 800);
+  };
 
   return (
     <section
       id="top"
       ref={sectionRef}
       aria-labelledby="hero-heading"
-      className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-20"
+      onPointerMove={handlePointerMove}
+      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden pt-20"
     >
-      <ColumnRules />
+      <ColumnRules className="opacity-80" />
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={reduceMotion ? undefined : { y: fieldY, opacity: fieldOpacity }}
+      >
+        <SignalField focusX={focusX} focusY={focusY} reduceMotion={reduceMotion} />
+      </motion.div>
 
-      <motion.div ref={widthRef} className="shell relative flex-1 py-6 md:py-10" {...motionProps}>
-        <div className="grid items-center gap-y-8 lg:grid-cols-12 lg:gap-x-6">
-          {/* ── Wordmark ───────────────────────────────────────────────── */}
-          <motion.div
-            style={parallax}
-            className="relative z-10 lg:col-span-8 lg:[will-change:transform,opacity]"
-          >
-            <motion.p {...itemProps} className="meta-sm mb-6 flex items-center gap-3 md:mb-8">
-              <span aria-hidden="true" className="h-2 w-2 bg-accent" />
-              <span className="text-content-secondary">{profile.currentRole}</span>
+      <motion.div
+        className="shell relative flex flex-1 flex-col justify-center py-10 md:py-16"
+        variants={container}
+        initial={reduceMotion ? false : 'hidden'}
+        animate="show"
+      >
+        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
+          <div className="relative z-10 lg:col-span-8">
+            <motion.p variants={item} className="signal-chip mb-7 w-fit">
+              {profile.currentRole}
             </motion.p>
 
             <motion.h1
-              {...itemProps}
               id="hero-heading"
-              className="display d-hero text-content-primary"
+              variants={item}
+              className="hero-name display d-hero text-content-primary"
+              style={reduceMotion ? undefined : { y: nameY }}
             >
-              {WORDS.map((word, index) => {
-                const isLast = index === WORDS.length - 1;
-                return (
-                  <Fragment key={word}>
-                    {/* Real whitespace between the words so the accessible
-                        name is "Nasik Sami Khan" regardless of how a given
-                        engine treats block boundaries. It collapses to
-                        nothing visually. */}
-                    {index > 0 && ' '}
-                    {isLast ? (
-                      // Reversed out of an ink band that bleeds off the right
-                      // edge. The band is clipped by the section's
-                      // overflow-hidden, so it never creates a scrollbar.
-                      <span className="relative block">
-                        <span
-                          aria-hidden="true"
-                          className="absolute -inset-y-[0.04em] -left-[6vw] right-[-60vw] bg-content-primary"
-                        />
-                        <span className="relative block pl-[1vw] text-surface-base">
-                          {word}
-                        </span>
-                      </span>
-                    ) : (
-                      <span className="block">{word}</span>
-                    )}
-                  </Fragment>
-                );
-              })}
+              {WORDS.map((word, index) => (
+                <Fragment key={word}>
+                  {index > 0 && ' '}
+                  <span className={index === 1 ? 'italic text-accent' : ''}>{word}</span>
+                </Fragment>
+              ))}
             </motion.h1>
 
-            <motion.p
-              {...itemProps}
-              className="display d-3 mt-6 max-w-2xl text-accent md:mt-10"
-              style={{ '--wght': 700 }}
+            <motion.div
+              variants={item}
+              className="mt-8 flex flex-col gap-4 border-l border-accent pl-5 md:mt-10 md:flex-row md:items-end md:justify-between"
             >
-              {profile.role}
-            </motion.p>
-          </motion.div>
+              <p className="max-w-xl text-lg font-medium leading-snug text-content-primary md:text-xl">
+                {profile.role}
+              </p>
+              <p className="meta-sm text-content-muted">{profile.location}</p>
+            </motion.div>
+          </div>
 
-          {/* ── Portrait ───────────────────────────────────────────────── */}
-          <motion.div
-            {...itemProps}
-            className="relative z-20 mx-auto w-full max-w-[15rem] sm:max-w-xs lg:col-span-4 lg:max-w-none"
+          <motion.figure
+            variants={item}
+            className="orbit-frame relative z-20 mx-auto w-[min(72vw,20rem)] lg:col-span-4 lg:w-full lg:max-w-[24rem]"
           >
-            <div className="halftone relative border border-content-primary">
+            <div className="portrait-window aspect-[4/5]">
               <img
                 src={profile.headshot}
-                alt={`Portrait of ${profile.name}`}
+                alt={'Portrait of ' + profile.name}
                 width="640"
                 height="640"
                 loading="eager"
-                // React 18.2 logs a dev-only casing warning for this prop but
-                // still emits it, and HTML attributes are case-insensitive, so
-                // the browser honours it. Lowercase would silence the warning
-                // but trips eslint-plugin-react, which is the CI gate.
                 fetchPriority="high"
-                className="duotone aspect-[4/5] w-full object-cover object-top"
+                className="h-full w-full object-cover object-top"
               />
             </div>
-            <p className="meta-sm mt-3 flex flex-col gap-1 text-content-muted sm:flex-row sm:justify-between sm:gap-4">
+            <figcaption className="meta-sm mt-5 flex justify-between gap-4 text-content-muted">
               <span>Fig. 01</span>
               <span>{profile.location}</span>
-            </p>
-          </motion.div>
+            </figcaption>
+          </motion.figure>
         </div>
 
-        {/* ── Specimen data ──────────────────────────────────────────────── */}
-        <div className="mt-8 grid gap-y-6 md:mt-16 lg:grid-cols-12 lg:gap-x-6">
-          <motion.div {...itemProps} className="lg:col-span-5">
-            <p className="rule pt-5 text-base leading-relaxed text-content-secondary md:text-lg">
-              {profile.summary}
-            </p>
-          </motion.div>
+        <div className="mt-14 grid gap-8 border-t border-edge/70 pt-8 lg:grid-cols-12 lg:gap-8">
+          <motion.p
+            variants={item}
+            className="max-w-prose text-base leading-relaxed text-content-secondary md:text-lg lg:col-span-5"
+          >
+            {profile.summary}
+          </motion.p>
 
-          <motion.div {...itemProps} className="lg:col-span-5 lg:col-start-7">
-            <div className="rule flex flex-wrap items-center gap-x-3 gap-y-3 pt-5">
+          <motion.div variants={item} className="lg:col-span-6 lg:col-start-7">
+            <div className="flex flex-wrap items-center gap-3">
               <Button href="#projects" variant="solid">
                 View my work
               </Button>
@@ -175,15 +162,15 @@ export default function Hero() {
 
             <SocialLinks
               items={socials.filter((social) => social.icon !== 'phone')}
-              className="mt-8"
+              className="mt-7"
             />
           </motion.div>
         </div>
 
         <motion.a
-          {...itemProps}
+          variants={item}
           href="#about"
-          className="link-draw meta tap mt-12 hidden w-fit gap-2 text-content-muted transition-colors hover:text-accent md:inline-flex"
+          className="meta tap mt-12 w-fit gap-2 text-content-muted transition-colors hover:text-accent"
         >
           <FiArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
           Scroll to explore

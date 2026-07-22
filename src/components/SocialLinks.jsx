@@ -11,17 +11,9 @@ const ICONS = {
   x: FaXTwitter,
 };
 
-/**
- * Row of social links set as monospace labels rather than icon-only buttons —
- * in this design the label is the mark.
- *
- * Because the label is visible text each link already has an accessible name;
- * `aria-label` adds the value (handle, address) that sighted visitors get from
- * the Contact ledger, and the icon stays decorative.
- */
 export default function SocialLinks({ items = allSocials, className = '' }) {
   return (
-    <ul className={`flex flex-wrap items-center gap-x-6 gap-y-1 ${className}`}>
+    <ul className={['flex flex-wrap items-center gap-2', className].join(' ')}>
       {items.map((social) => {
         const Icon = ICONS[social.icon] ?? FiMail;
         const isExternal = social.href.startsWith('http');
@@ -29,9 +21,9 @@ export default function SocialLinks({ items = allSocials, className = '' }) {
           <li key={social.label}>
             <a
               href={social.href}
-              aria-label={`${social.label}: ${social.value}`}
+              aria-label={social.label + ': ' + social.value}
               {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              className="link-draw meta tap gap-2 text-content-secondary transition-colors hover:text-accent"
+              className="meta-sm tap gap-2 rounded-full border border-edge/70 bg-surface-base/45 px-3 text-content-secondary transition-all hover:-translate-y-0.5 hover:border-accent hover:text-accent"
             >
               <Icon className="h-3.5 w-3.5" aria-hidden="true" />
               {social.label}
