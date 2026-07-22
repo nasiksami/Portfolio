@@ -1,0 +1,59 @@
+.publication-entry::after {
+  content: attr(data-year);
+  position: absolute;
+  right: -0.03em;
+  bottom: -0.32em;
+  color: rgb(var(--edge) / 0.12);
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 9rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.publication-entry::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: rgb(var(--signal));
+  transition: width 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.publication-entry:hover::before,
+.publication-entry:focus-within::before {
+  width: 100%;
+}
+
+.award-orbit {
+  position: relative;
+}
+
+.award-orbit::before {
+  content: '';
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  left: 0.88rem;
+  width: 1px;
+  background: linear-gradient(to bottom, rgb(var(--signal)), rgb(var(--edge)), transparent);
+}
+
+.award-orbit__node {
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  width: 1.8rem;
+  height: 1.8rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(var(--signal));
+  border-radius: 9999px;
+  background: rgb(var(--surface-base));
+  color: rgb(var(--signal));
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.52rem;
+}
