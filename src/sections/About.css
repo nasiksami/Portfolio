@@ -1,0 +1,26 @@
+.about-prose::first-letter {
+  color: rgb(var(--content-primary));
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.9em;
+  line-height: 0;
+}
+
+.stat-orbit + .stat-orbit {
+  border-left: 1px solid rgb(var(--edge) / 0.75);
+}
+
+@media (max-width: 1023px) {
+  .stat-orbit:nth-child(odd) {
+    border-left: 0;
+  }
+
+  .stat-orbit:nth-child(n + 3) {
+    border-top: 1px solid rgb(var(--edge) / 0.75);
+  }
+}
+
+@media (max-width: 639px) {
+  .stat-orbit {
+    min-height: 12.5rem;
+  }
+}
