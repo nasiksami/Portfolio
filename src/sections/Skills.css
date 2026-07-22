@@ -1,0 +1,36 @@
+.skill-group__index {
+  position: absolute;
+  right: 0;
+  top: -0.16em;
+  color: rgb(var(--edge) / 0.2);
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(7rem, 13vw, 12rem);
+  line-height: 1;
+  letter-spacing: -0.08em;
+  transition: color 0.45s ease, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.skill-group:hover .skill-group__index,
+.skill-group:focus-within .skill-group__index {
+  color: rgb(var(--accent) / 0.13);
+  transform: translateX(-0.05em);
+}
+
+.skill-level {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 0.2rem;
+}
+
+.skill-level__node {
+  width: 0.42rem;
+  height: 0.42rem;
+  border: 1px solid rgb(var(--edge));
+  border-radius: 9999px;
+}
+
+.skill-level__node.is-filled {
+  border-color: rgb(var(--signal));
+  background: rgb(var(--signal));
+  box-shadow: 0 0 0 0.14rem rgb(var(--signal) / 0.1);
+}
