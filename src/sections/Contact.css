@@ -1,0 +1,36 @@
+.contact-console__orbit {
+  position: absolute;
+  right: -14rem;
+  bottom: -19rem;
+  width: 38rem;
+  height: 38rem;
+  border: 1px solid rgb(var(--signal) / 0.24);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 5rem rgb(var(--signal) / 0.025),
+    0 0 0 10rem rgb(var(--accent) / 0.018);
+  pointer-events: none;
+}
+
+.contact-channel {
+  position: relative;
+}
+
+.contact-channel::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: rgb(var(--signal));
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-channel:hover::after,
+.contact-channel:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
