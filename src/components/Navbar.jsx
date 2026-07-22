@@ -63,6 +63,15 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    const closeAtDesktop = (event) => {
+      if (event.matches) setMenuOpen(false);
+    };
+    desktop.addEventListener('change', closeAtDesktop);
+    return () => desktop.removeEventListener('change', closeAtDesktop);
+  }, []);
+
+  useEffect(() => {
     if (!menuOpen) return undefined;
 
     const previous = document.body.style.overflow;
@@ -74,7 +83,7 @@ export default function Navbar() {
         ) ?? []
       );
 
-    requestAnimationFrame(() => focusable()[0]?.focus());
+    const focusFrame = requestAnimationFrame(() => focusable()[0]?.focus());
 
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -101,6 +110,7 @@ export default function Navbar() {
     window.addEventListener('keydown', onKeyDown);
     return () => {
       document.body.style.overflow = previous;
+      cancelAnimationFrame(focusFrame);
       window.removeEventListener('keydown', onKeyDown);
     };
   }, [menuOpen]);
