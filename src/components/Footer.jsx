@@ -1,43 +1,45 @@
 import { navLinks, profile } from '../data/profile';
 import SocialLinks from './SocialLinks';
 import ColumnRules from './ColumnRules';
+import './Footer.css';
 
-/** Colophon: the closing plate of the specimen. */
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t-2 border-content-primary">
+    <footer className="footer-orbit relative isolate overflow-hidden border-t border-edge/70">
       <ColumnRules />
+      <span aria-hidden="true" className="footer-orbit__ring" />
 
-      <div className="shell relative py-12 md:py-16">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-6">
+      <div className="shell relative py-16 md:py-24">
+        <div className="grid gap-14 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-5">
-            <p className="text-sm leading-relaxed text-content-secondary">
+            <p className="max-w-md text-base leading-relaxed text-content-secondary md:text-lg">
               {profile.role} based in {profile.location}.
             </p>
-            <SocialLinks className="mt-7" />
+            <SocialLinks className="mt-8" />
           </div>
 
           <nav aria-label="Footer" className="lg:col-span-4 lg:col-start-9">
-            <h2 className="meta-sm border-b border-edge pb-3 text-content-muted">
-              Navigate
-            </h2>
-            <ul className="ledger grid grid-cols-2">
+            <div className="mb-5 flex items-center gap-4">
+              <h2 className="eyebrow shrink-0">Navigate</h2>
+              <span aria-hidden="true" className="h-px flex-1 bg-edge/70" />
+            </div>
+            <ul className="grid grid-cols-2 border-b border-edge/70">
               {navLinks.map((link) => (
-                <li key={link.id}>
+                <li key={link.id} className="border-t border-edge/70">
                   <a
-                    href={`#${link.id}`}
-                    className="meta-sm tap-block py-2 text-content-secondary transition-colors hover:text-accent"
+                    href={'#' + link.id}
+                    className="meta-sm tap-block py-3 text-content-secondary transition-colors hover:text-accent"
                   >
                     {link.label}
                   </a>
                 </li>
               ))}
-              <li>
+              <li className="border-t border-edge/70">
                 <a
                   href={profile.resumeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="meta-sm block py-3 text-content-secondary transition-colors hover:text-accent"
+                  className="meta-sm tap-block py-3 text-content-secondary transition-colors hover:text-accent"
                 >
                   Resume
                 </a>
@@ -46,17 +48,15 @@ export default function Footer() {
           </nav>
         </div>
 
-        {/* Closing wordmark, set edge to edge as the final plate. */}
         <a
           href="#top"
-          aria-label={`Back to top — ${profile.name}`}
-          className="display mt-10 block w-full md:mt-16 text-[clamp(2rem,9vw,7.5rem)] leading-none text-content-primary transition-colors hover:text-accent"
-          style={{ '--wght': 800 }}
+          aria-label={'Back to top — ' + profile.name}
+          className="footer-name display mt-20 block w-full text-content-primary transition-colors hover:text-accent md:mt-28"
         >
           {profile.name}
         </a>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-edge pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-3 border-t border-edge/70 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="meta-sm text-content-muted">
             © {new Date().getFullYear()} {profile.name}. All rights reserved.
           </p>

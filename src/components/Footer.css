@@ -1,0 +1,30 @@
+.footer-orbit {
+  background:
+    radial-gradient(circle at 78% 18%, rgb(var(--accent) / 0.08), transparent 28rem),
+    rgb(var(--surface-base));
+}
+
+.footer-orbit__ring {
+  position: absolute;
+  right: -10rem;
+  top: -20rem;
+  width: 44rem;
+  height: 44rem;
+  border: 1px solid rgb(var(--edge) / 0.48);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 5rem rgb(var(--edge) / 0.05),
+    0 0 0 10rem rgb(var(--edge) / 0.025);
+  pointer-events: none;
+}
+
+.footer-name {
+  font-size: clamp(4rem, 13vw, 12.5rem);
+  line-height: 0.72;
+  letter-spacing: -0.065em;
+}
+
+.footer-name:hover,
+.footer-name:focus-visible {
+  font-style: italic;
+}
