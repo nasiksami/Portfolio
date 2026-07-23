@@ -35,7 +35,7 @@ export default function Section({
           <div className="lg:sticky lg:top-28 lg:self-start">
             <p className="meta flex items-center gap-3 text-content-muted lg:flex-col lg:items-start">
               <span className="flex h-10 w-10 items-center justify-center rounded-full border border-accent text-accent">
-                {index}
+                §{index}
               </span>
               <span className="h-px w-8 bg-edge lg:h-10 lg:w-px lg:translate-x-5" aria-hidden="true" />
               <span className="lg:[writing-mode:vertical-rl]">{label}</span>

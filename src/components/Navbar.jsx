@@ -28,7 +28,7 @@ function NavItems({ activeId, selectId, onSelect, compact = false }) {
           ].join(' ')}
         >
           <span className={['meta-sm', isActive ? 'text-signal' : 'text-content-muted'].join(' ')}>
-            {recordNumber(index)}
+            §{recordNumber(index)}
           </span>
           <span className={compact ? 'display text-4xl' : 'meta-sm'}>{link.label}</span>
           {compact && (
@@ -184,7 +184,7 @@ export default function Navbar() {
       </header>
 
       <nav
-        aria-label="Section index"
+        aria-label="Navigate"
         className="fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 rounded-full border border-edge/70 bg-surface-base/85 p-2 shadow-2xl backdrop-blur-xl xl:block"
       >
         <ul className="flex flex-col items-center gap-1">
@@ -204,7 +204,7 @@ export default function Navbar() {
                       : 'text-content-muted hover:bg-surface-overlay hover:text-content-primary',
                   ].join(' ')}
                 >
-                  {recordNumber(index)}
+                  §{recordNumber(index)}
                   <span className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-full bg-content-primary px-3 py-1.5 text-surface-base group-hover:block">
                     {link.label}
                   </span>
@@ -222,7 +222,7 @@ export default function Navbar() {
             id="mobile-menu"
             role="dialog"
             aria-modal="true"
-            aria-label="Site navigation"
+            aria-label="Navigate"
             initial={reduceMotion ? false : { opacity: 0, clipPath: 'circle(0% at 92% 0%)' }}
             animate={{ opacity: 1, clipPath: 'circle(150% at 92% 0%)' }}
             exit={reduceMotion ? undefined : { opacity: 0, clipPath: 'circle(0% at 92% 0%)' }}
