@@ -21,20 +21,30 @@ const FOCUS_ICONS = {
 // take the same labels.
 const QUARTERS = ['NW', 'NE', 'SW', 'SE'];
 
-/** A stat as a survey post: a line rising from the horizon with the number on it. */
+/**
+ * A stat as a survey post: a line rising from the horizon with the number on
+ * it. Each post is a valid dl group — a dt and a dd only — with the number
+ * shown first through flex order so the markup stays term-then-description.
+ */
 function Stat({ stat, index }) {
   const [ref, display] = useCountUp(stat.value);
 
   return (
-    <div ref={ref} className="relative border-l border-edge pl-5 pt-2 md:pl-6">
-      <span aria-hidden="true" className="meta-sm absolute -top-7 left-0 text-content-muted">
-        {String(index + 1).padStart(2, '0')}
-      </span>
-      <dd className="display text-[clamp(3rem,6.5vw,6rem)] leading-none text-accent">{display}</dd>
-      <dt className="meta-sm mt-4 text-content-primary">{stat.label}</dt>
-      <p className="mt-2 max-w-[13rem] text-sm leading-relaxed text-content-secondary">
+    <div ref={ref} className="relative flex flex-col border-l border-edge pl-5 pt-2 md:pl-6">
+      <dt className="meta-sm order-2 mt-4 text-content-primary">
+        <span aria-hidden="true" className="meta-sm absolute -top-7 left-0 text-content-muted">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        {stat.label}
+      </dt>
+      <dd className="order-1 m-0">
+        <span className="display block text-[clamp(3rem,6.5vw,6rem)] leading-none text-accent">
+          {display}
+        </span>
+      </dd>
+      <dd className="order-3 m-0 mt-2 max-w-[13rem] text-sm leading-relaxed text-content-secondary">
         {stat.detail}
-      </p>
+      </dd>
     </div>
   );
 }
