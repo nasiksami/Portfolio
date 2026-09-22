@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import BackToTop from './components/BackToTop';
-import GridFrame from './components/GridFrame';
+import SkyField from './components/SkyField';
 import { useHashScroll } from './hooks/useHashScroll';
 import { useSky } from './hooks/useSky';
 import Hero from './sections/Hero';
@@ -37,12 +37,13 @@ export default function App() {
         Skip to main content
       </a>
 
-      <GridFrame />
+      <SkyField />
       <Navbar />
 
       {/*
-        No dividers between sections: the paper↔ink inversion is what separates
-        them, so every boundary is a hard edge rather than a hairline.
+        Sections are sky → horizon rule → ground. The ground dissolves back
+        into the sky at its foot, so the only hard edge between sections is
+        the next horizon.
       */}
       <main id="main">
         <Hero />
