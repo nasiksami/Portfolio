@@ -4,8 +4,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Fraunces', 'Georgia', 'serif'],
-        sans: ['"Public Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Fraunces', '"Fraunces Fallback Georgia"', '"Fraunces Fallback"', '"Fraunces Fallback DejaVu"', 'Georgia', 'serif'],
+        sans: ['"Public Sans"', '"Public Sans Fallback"', 'system-ui', '-apple-system', 'sans-serif'],
       },
       // Every colour reads a channel triple that index.css derives from the
       // single `--sky` position, so utilities never know what time it is.

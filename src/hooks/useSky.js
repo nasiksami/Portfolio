@@ -16,9 +16,10 @@ const LINE = 0.5;
  * interpolated across the section under the viewport line, so adjacent
  * sections sharing a boundary value make the sky continuous.
  *
- * Nothing here touches React state: the writer sets one custom property once
- * per animation frame, and the value is quantised to GRID so the hard ink
- * flips in the stylesheet are never sampled mid-step.
+ * Nothing here touches React state: the writer sets one custom property at
+ * most once per animation frame, only when it has changed, and the value is
+ * quantised to GRID so the hard ink flips in the stylesheet are never sampled
+ * mid-step.
  *
  * When the sky is pinned (`data-sky-pin` on <html>) the stylesheet supplies a
  * fixed value, so the inline property is removed rather than written.
@@ -32,6 +33,8 @@ export function useSky() {
   useEffect(() => {
     const root = document.documentElement;
     let frame = 0;
+    // Every write restyles the whole document, so never repeat an unchanged value.
+    let last = null;
 
     const nearestKnot = (t) =>
       KNOTS.reduce((best, k) => (Math.abs(k - t) < Math.abs(best - t) ? k : best), KNOTS[0]);
@@ -41,6 +44,7 @@ export function useSky() {
 
       if (root.dataset.skyPin) {
         root.style.removeProperty('--sky');
+        last = null;
         return;
       }
 
@@ -72,7 +76,10 @@ export function useSky() {
       t = Math.round(t / GRID) * GRID;
       t = Math.min(Math.max(t, 0), 1);
 
-      root.style.setProperty('--sky', t.toFixed(4));
+      const next = t.toFixed(4);
+      if (next === last) return;
+      last = next;
+      root.style.setProperty('--sky', next);
     };
 
     const schedule = () => {

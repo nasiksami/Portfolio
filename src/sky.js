@@ -7,8 +7,13 @@ export const KNOTS = [0.0, 0.11, 0.14, 0.3, 0.46, 0.49, 0.78, 1.0];
 /** Where the ink family flips: sunrise and sunset. Sections end on these. */
 export const FLIPS = { sunrise: 0.12171, sunset: 0.48198 };
 
-/** Quantisation step for `--sky`, so the flips are never sampled mid-step. */
-export const GRID = 0.0005;
+/**
+ * Quantisation step for `--sky`. Every multiple of it is also a multiple of
+ * the 0.0005 grid the contrast sweep in scripts/sky-tokens.py verifies, so the
+ * AA guarantee carries over; the coarser step means a restyle every ~16px of
+ * scroll instead of every ~4px. Neither flip position lies on either grid.
+ */
+export const GRID = 0.002;
 
 /** Fixed positions for the pinned skies. Night is starlight, not aurora. */
 export const PINS = { day: 0.3, night: 0.78 };

@@ -95,14 +95,16 @@ export default function Hero() {
               {profile.currentRole}
             </motion.p>
 
+            {/* Each line is non-wrapping so the line count cannot change while
+                the display face is still loading. */}
             <motion.h1
               id="hero-heading"
               variants={item}
               style={reduceMotion ? undefined : { y: nameY }}
               className="display d-hero -mb-[0.06em] text-content-primary"
             >
-              <span className="block">{GIVEN}</span>
-              <span className="block italic text-accent">{FAMILY}</span>
+              <span className="block whitespace-nowrap">{GIVEN}</span>
+              <span className="block whitespace-nowrap italic text-accent">{FAMILY}</span>
             </motion.h1>
           </div>
 

@@ -218,19 +218,33 @@ def css():
 
     L.append("    /* Surfaces interpolate continuously. */")
     for tok, name in (('sky', 'sky'), ('ground', 'ground'), ('overlay', 'overlay'), ('edge', 'edge')):
-        L.append(f"    --{name}-rgb: calc({S(tok, 0, 'w')}) calc({S(tok, 1, 'w')}) calc({S(tok, 2, 'w')});")
+        for c, ch in enumerate('rgb'):
+            L.append(f"    --{name}-{ch}: calc({S(tok, c, 'w')});")
     L.append("    /* Primary ink. */")
     for c, ch in enumerate('rgb'):
         L.append(f"    --ink-{ch}: calc(({S('fg', c, 'v')}) * (1 - var(--fold)) + var(--pure) * var(--fold));")
-    L.append("    --ink-rgb: var(--ink-r) var(--ink-g) var(--ink-b);")
     L.append("    /* Inks that fold toward primary near a flip. */")
     for tok, name in (('fg2', 'ink2'), ('fg3', 'ink3'), ('accent', 'accent'), ('signal', 'signal')):
-        parts = [f"calc(({S(tok, c, 'v')}) * (1 - var(--danger)) + var(--ink-{ch}) * var(--danger))" for c, ch in enumerate('rgb')]
-        L.append(f"    --{name}-rgb: {' '.join(parts)};")
+        for c, ch in enumerate('rgb'):
+            L.append(f"    --{name}-{ch}: calc(({S(tok, c, 'v')}) * (1 - var(--danger)) + var(--ink-{ch}) * var(--danger));")
     L.append("    /* Text on accent and signal fills. */")
     for tok, name in (('onaccent', 'on-accent'), ('onsignal', 'on-signal')):
-        L.append(f"    --{name}-rgb: calc({S(tok, 0, 'v')}) calc({S(tok, 1, 'v')}) calc({S(tok, 2, 'v')});")
+        for c, ch in enumerate('rgb'):
+            L.append(f"    --{name}-{ch}: calc({S(tok, c, 'v')});")
+    L.append("    /* Triples for Tailwind's rgb(var(--x) / <alpha-value>). */")
+    for name in TOKEN_NAMES:
+        L.append(f"    --{name}-rgb: var(--{name}-r) var(--{name}-g) var(--{name}-b);")
     return "\n".join(L) + "\n"
+
+
+TOKEN_NAMES = ('sky', 'ground', 'overlay', 'edge', 'ink', 'ink2', 'ink3', 'accent', 'signal', 'on-accent', 'on-signal')
+
+
+def properties():
+    """@property registrations: each number resolves once at the root."""
+    names = ['sky'] + [f'w{i}' for i in range(N)] + ['flip-a', 'flip-b'] + [f'v{i}' for i in range(N)] + \
+            ['ink-family', 'danger', 'fold', 'pure'] + [f'{n}-{ch}' for n in TOKEN_NAMES for ch in 'rgb']
+    return "".join(f"@property --{n} {{\n  syntax: '<number>';\n  inherits: true;\n  initial-value: 0;\n}}\n\n" for n in names)
 
 
 def write():
@@ -239,6 +253,9 @@ def write():
     start, end = '    /* GENERATED: sky tokens — start */\n', '    /* GENERATED: sky tokens — end */\n'
     assert start in s and end in s, 'markers missing in src/index.css'
     s = s[:s.index(start) + len(start)] + css() + s[s.index(end):]
+    pstart, pend = '/* GENERATED: sky properties — start */\n', '/* GENERATED: sky properties — end */\n'
+    assert pstart in s and pend in s, 'property markers missing in src/index.css'
+    s = s[:s.index(pstart) + len(pstart)] + properties() + s[s.index(pend):]
     css_path.write_text(s)
     js_path = ROOT / 'src' / 'sky.js'
     j = js_path.read_text()
@@ -253,4 +270,4 @@ if __name__ == '__main__':
     if '--write' in sys.argv:
         write()
     else:
-        print("\n" + css())
+        print("\n" + properties() + css())

@@ -33,10 +33,384 @@
    so Tailwind's `rgb(var(--x) / <alpha-value>)` colours keep working and
    opacity modifiers are free.
 
+   TYPED, SO CHEAP. Every weight, step and channel is registered with
+   @property as a <number>. A registered property is computed to a value
+   once, at the root, and descendants inherit the number — without that,
+   every element using a token would re-evaluate the whole calc chain, and
+   one --sky write cost ~50ms on a desktop CPU.
+
    The block between the GENERATED markers is written by scripts/sky-tokens.py
    from its knot table. Edit the table and re-run with --write; do not edit
    the numbers by hand.
    ────────────────────────────────────────────────────────────────────────── */
+/* Metric-matched fallbacks so text does not reflow when the web fonts arrive.
+   Ratios measured against the loaded fonts: Fraunces is 75.7% the width of
+   Times-metric serifs (Georgia is wider, estimated 70%); Public Sans is 91.9%
+   the width of Arial-metric sans faces. Line heights are set explicitly
+   everywhere, so width is the only metric that needs matching. */
+@font-face {
+  font-family: 'Fraunces Fallback Georgia';
+  src: local('Georgia');
+  size-adjust: 70%;
+}
+
+@font-face {
+  font-family: 'Fraunces Fallback';
+  src: local('Times New Roman'), local('Liberation Serif'), local('Times');
+  size-adjust: 75.7%;
+}
+
+@font-face {
+  font-family: 'Fraunces Fallback DejaVu';
+  src: local('DejaVu Serif');
+  size-adjust: 73.6%;
+}
+
+@font-face {
+  font-family: 'Public Sans Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica'), local('Liberation Sans'), local('DejaVu Sans');
+  size-adjust: 91.9%;
+}
+
+/* GENERATED: sky properties — start */
+@property --sky {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --w0 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --w1 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --w2 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --w3 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --w4 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --w5 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --w6 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --w7 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --flip-a {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --flip-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --v0 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --v1 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --v2 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --v3 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --v4 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --v5 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --v6 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --v7 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ink-family {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --danger {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --fold {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --pure {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --sky-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --sky-g {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --sky-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ground-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ground-g {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ground-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --overlay-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --overlay-g {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --overlay-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --edge-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --edge-g {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --edge-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ink-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ink-g {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ink-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ink2-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ink2-g {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ink2-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ink3-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ink3-g {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --ink3-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --accent-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --accent-g {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --accent-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --signal-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --signal-g {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --signal-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --on-accent-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --on-accent-g {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --on-accent-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --on-signal-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --on-signal-g {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --on-signal-b {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+/* GENERATED: sky properties — end */
+
 @layer base {
   :root {
     --sky: 0;
@@ -71,23 +445,54 @@
     --pure: calc(255 * var(--ink-family));
 
     /* Surfaces interpolate continuously. */
-    --sky-rgb: calc(var(--w0)*14 + var(--w1)*59 + var(--w2)*244 + var(--w3)*230 + var(--w4)*239 + var(--w5)*126 + var(--w6)*10 + var(--w7)*6) calc(var(--w0)*18 + var(--w1)*36 + var(--w2)*231 + var(--w3)*239 + var(--w4)*230 + var(--w5)*58 + var(--w6)*20 + var(--w7)*17) calc(var(--w0)*38 + var(--w1)*68 + var(--w2)*212 + var(--w3)*246 + var(--w4)*214 + var(--w5)*55 + var(--w6)*32 + var(--w7)*15);
-    --ground-rgb: calc(var(--w0)*23 + var(--w1)*56 + var(--w2)*239 + var(--w3)*244 + var(--w4)*242 + var(--w5)*119 + var(--w6)*17 + var(--w7)*12) calc(var(--w0)*27 + var(--w1)*37 + var(--w2)*232 + var(--w3)*239 + var(--w4)*230 + var(--w5)*60 + var(--w6)*28 + var(--w7)*26) calc(var(--w0)*51 + var(--w1)*68 + var(--w2)*219 + var(--w3)*225 + var(--w4)*204 + var(--w5)*74 + var(--w6)*41 + var(--w7)*23);
-    --overlay-rgb: calc(var(--w0)*35 + var(--w1)*58 + var(--w2)*234 + var(--w3)*227 + var(--w4)*229 + var(--w5)*94 + var(--w6)*24 + var(--w7)*19) calc(var(--w0)*40 + var(--w1)*40 + var(--w2)*223 + var(--w3)*220 + var(--w4)*214 + var(--w5)*49 + var(--w6)*38 + var(--w7)*41) calc(var(--w0)*72 + var(--w1)*70 + var(--w2)*202 + var(--w3)*199 + var(--w4)*181 + var(--w5)*64 + var(--w6)*54 + var(--w7)*36);
-    --edge-rgb: calc(var(--w0)*58 + var(--w1)*106 + var(--w2)*201 + var(--w3)*185 + var(--w4)*198 + var(--w5)*162 + var(--w6)*43 + var(--w7)*35) calc(var(--w0)*63 + var(--w1)*74 + var(--w2)*184 + var(--w3)*198 + var(--w4)*179 + var(--w5)*100 + var(--w6)*61 + var(--w7)*64) calc(var(--w0)*94 + var(--w1)*114 + var(--w2)*158 + var(--w3)*207 + var(--w4)*145 + var(--w5)*95 + var(--w6)*80 + var(--w7)*58);
+    --sky-r: calc(var(--w0)*14 + var(--w1)*59 + var(--w2)*244 + var(--w3)*230 + var(--w4)*239 + var(--w5)*126 + var(--w6)*10 + var(--w7)*6);
+    --sky-g: calc(var(--w0)*18 + var(--w1)*36 + var(--w2)*231 + var(--w3)*239 + var(--w4)*230 + var(--w5)*58 + var(--w6)*20 + var(--w7)*17);
+    --sky-b: calc(var(--w0)*38 + var(--w1)*68 + var(--w2)*212 + var(--w3)*246 + var(--w4)*214 + var(--w5)*55 + var(--w6)*32 + var(--w7)*15);
+    --ground-r: calc(var(--w0)*23 + var(--w1)*56 + var(--w2)*239 + var(--w3)*244 + var(--w4)*242 + var(--w5)*119 + var(--w6)*17 + var(--w7)*12);
+    --ground-g: calc(var(--w0)*27 + var(--w1)*37 + var(--w2)*232 + var(--w3)*239 + var(--w4)*230 + var(--w5)*60 + var(--w6)*28 + var(--w7)*26);
+    --ground-b: calc(var(--w0)*51 + var(--w1)*68 + var(--w2)*219 + var(--w3)*225 + var(--w4)*204 + var(--w5)*74 + var(--w6)*41 + var(--w7)*23);
+    --overlay-r: calc(var(--w0)*35 + var(--w1)*58 + var(--w2)*234 + var(--w3)*227 + var(--w4)*229 + var(--w5)*94 + var(--w6)*24 + var(--w7)*19);
+    --overlay-g: calc(var(--w0)*40 + var(--w1)*40 + var(--w2)*223 + var(--w3)*220 + var(--w4)*214 + var(--w5)*49 + var(--w6)*38 + var(--w7)*41);
+    --overlay-b: calc(var(--w0)*72 + var(--w1)*70 + var(--w2)*202 + var(--w3)*199 + var(--w4)*181 + var(--w5)*64 + var(--w6)*54 + var(--w7)*36);
+    --edge-r: calc(var(--w0)*58 + var(--w1)*106 + var(--w2)*201 + var(--w3)*185 + var(--w4)*198 + var(--w5)*162 + var(--w6)*43 + var(--w7)*35);
+    --edge-g: calc(var(--w0)*63 + var(--w1)*74 + var(--w2)*184 + var(--w3)*198 + var(--w4)*179 + var(--w5)*100 + var(--w6)*61 + var(--w7)*64);
+    --edge-b: calc(var(--w0)*94 + var(--w1)*114 + var(--w2)*158 + var(--w3)*207 + var(--w4)*145 + var(--w5)*95 + var(--w6)*80 + var(--w7)*58);
     /* Primary ink. */
     --ink-r: calc((var(--v0)*243 + var(--v1)*251 + var(--v2)*28 + var(--v3)*20 + var(--v4)*36 + var(--v5)*255 + var(--v6)*238 + var(--v7)*238) * (1 - var(--fold)) + var(--pure) * var(--fold));
     --ink-g: calc((var(--v0)*239 + var(--v1)*243 + var(--v2)*36 + var(--v3)*32 + var(--v4)*31 + var(--v5)*243 + var(--v6)*242 + var(--v7)*244) * (1 - var(--fold)) + var(--pure) * var(--fold));
     --ink-b: calc((var(--v0)*230 + var(--v1)*234 + var(--v2)*48 + var(--v3)*44 + var(--v4)*26 + var(--v5)*234 + var(--v6)*244 + var(--v7)*238) * (1 - var(--fold)) + var(--pure) * var(--fold));
-    --ink-rgb: var(--ink-r) var(--ink-g) var(--ink-b);
     /* Inks that fold toward primary near a flip. */
-    --ink2-rgb: calc((var(--v0)*203 + var(--v1)*230 + var(--v2)*69 + var(--v3)*61 + var(--v4)*74 + var(--v5)*248 + var(--v6)*191 + var(--v7)*188) * (1 - var(--danger)) + var(--ink-r) * var(--danger)) calc((var(--v0)*200 + var(--v1)*214 + var(--v2)*77 + var(--v3)*74 + var(--v4)*68 + var(--v5)*223 + var(--v6)*202 + var(--v7)*203) * (1 - var(--danger)) + var(--ink-g) * var(--danger)) calc((var(--v0)*192 + var(--v1)*207 + var(--v2)*88 + var(--v3)*87 + var(--v4)*60 + var(--v5)*211 + var(--v6)*211 + var(--v7)*193) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
-    --ink3-rgb: calc((var(--v0)*166 + var(--v1)*209 + var(--v2)*91 + var(--v3)*85 + var(--v4)*95 + var(--v5)*241 + var(--v6)*148 + var(--v7)*147) * (1 - var(--danger)) + var(--ink-r) * var(--danger)) calc((var(--v0)*165 + var(--v1)*189 + var(--v2)*101 + var(--v3)*99 + var(--v4)*88 + var(--v5)*207 + var(--v6)*163 + var(--v7)*168) * (1 - var(--danger)) + var(--ink-g) * var(--danger)) calc((var(--v0)*184 + var(--v1)*184 + var(--v2)*112 + var(--v3)*112 + var(--v4)*79 + var(--v5)*194 + var(--v6)*176 + var(--v7)*154) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
-    --accent-rgb: calc((var(--v0)*240 + var(--v1)*255 + var(--v2)*154 + var(--v3)*26 + var(--v4)*138 + var(--v5)*255 + var(--v6)*159 + var(--v7)*126) * (1 - var(--danger)) + var(--ink-r) * var(--danger)) calc((var(--v0)*168 + var(--v1)*179 + var(--v2)*69 + var(--v3)*94 + var(--v4)*63 + var(--v5)*208 + var(--v6)*211 + var(--v7)*240) * (1 - var(--danger)) + var(--ink-g) * var(--danger)) calc((var(--v0)*104 + var(--v1)*122 + var(--v2)*18 + var(--v3)*140 + var(--v4)*30 + var(--v5)*143 + var(--v6)*255 + var(--v7)*194) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
-    --signal-rgb: calc((var(--v0)*232 + var(--v1)*255 + var(--v2)*107 + var(--v3)*125 + var(--v4)*107 + var(--v5)*255 + var(--v6)*255 + var(--v7)*201) * (1 - var(--danger)) + var(--ink-r) * var(--danger)) calc((var(--v0)*210 + var(--v1)*212 + var(--v2)*83 + var(--v3)*84 + var(--v4)*82 + var(--v5)*230 + var(--v6)*220 + var(--v7)*166) * (1 - var(--danger)) + var(--ink-g) * var(--danger)) calc((var(--v0)*122 + var(--v1)*121 + var(--v2)*0 + var(--v3)*0 + var(--v4)*0 + var(--v5)*163 + var(--v6)*138 + var(--v7)*255) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    --ink2-r: calc((var(--v0)*203 + var(--v1)*230 + var(--v2)*69 + var(--v3)*61 + var(--v4)*74 + var(--v5)*248 + var(--v6)*191 + var(--v7)*188) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
+    --ink2-g: calc((var(--v0)*200 + var(--v1)*214 + var(--v2)*77 + var(--v3)*74 + var(--v4)*68 + var(--v5)*223 + var(--v6)*202 + var(--v7)*203) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
+    --ink2-b: calc((var(--v0)*192 + var(--v1)*207 + var(--v2)*88 + var(--v3)*87 + var(--v4)*60 + var(--v5)*211 + var(--v6)*211 + var(--v7)*193) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    --ink3-r: calc((var(--v0)*166 + var(--v1)*209 + var(--v2)*91 + var(--v3)*85 + var(--v4)*95 + var(--v5)*241 + var(--v6)*148 + var(--v7)*147) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
+    --ink3-g: calc((var(--v0)*165 + var(--v1)*189 + var(--v2)*101 + var(--v3)*99 + var(--v4)*88 + var(--v5)*207 + var(--v6)*163 + var(--v7)*168) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
+    --ink3-b: calc((var(--v0)*184 + var(--v1)*184 + var(--v2)*112 + var(--v3)*112 + var(--v4)*79 + var(--v5)*194 + var(--v6)*176 + var(--v7)*154) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    --accent-r: calc((var(--v0)*240 + var(--v1)*255 + var(--v2)*154 + var(--v3)*26 + var(--v4)*138 + var(--v5)*255 + var(--v6)*159 + var(--v7)*126) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
+    --accent-g: calc((var(--v0)*168 + var(--v1)*179 + var(--v2)*69 + var(--v3)*94 + var(--v4)*63 + var(--v5)*208 + var(--v6)*211 + var(--v7)*240) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
+    --accent-b: calc((var(--v0)*104 + var(--v1)*122 + var(--v2)*18 + var(--v3)*140 + var(--v4)*30 + var(--v5)*143 + var(--v6)*255 + var(--v7)*194) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    --signal-r: calc((var(--v0)*232 + var(--v1)*255 + var(--v2)*107 + var(--v3)*125 + var(--v4)*107 + var(--v5)*255 + var(--v6)*255 + var(--v7)*201) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
+    --signal-g: calc((var(--v0)*210 + var(--v1)*212 + var(--v2)*83 + var(--v3)*84 + var(--v4)*82 + var(--v5)*230 + var(--v6)*220 + var(--v7)*166) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
+    --signal-b: calc((var(--v0)*122 + var(--v1)*121 + var(--v2)*0 + var(--v3)*0 + var(--v4)*0 + var(--v5)*163 + var(--v6)*138 + var(--v7)*255) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
     /* Text on accent and signal fills. */
-    --on-accent-rgb: calc(var(--v0)*14 + var(--v1)*43 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*58 + var(--v6)*10 + var(--v7)*6) calc(var(--v0)*18 + var(--v1)*20 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*26 + var(--v6)*20 + var(--v7)*17) calc(var(--v0)*38 + var(--v1)*32 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*23 + var(--v6)*32 + var(--v7)*15);
-    --on-signal-rgb: calc(var(--v0)*14 + var(--v1)*43 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*58 + var(--v6)*10 + var(--v7)*6) calc(var(--v0)*18 + var(--v1)*20 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*26 + var(--v6)*20 + var(--v7)*17) calc(var(--v0)*38 + var(--v1)*32 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*23 + var(--v6)*32 + var(--v7)*15);
+    --on-accent-r: calc(var(--v0)*14 + var(--v1)*43 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*58 + var(--v6)*10 + var(--v7)*6);
+    --on-accent-g: calc(var(--v0)*18 + var(--v1)*20 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*26 + var(--v6)*20 + var(--v7)*17);
+    --on-accent-b: calc(var(--v0)*38 + var(--v1)*32 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*23 + var(--v6)*32 + var(--v7)*15);
+    --on-signal-r: calc(var(--v0)*14 + var(--v1)*43 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*58 + var(--v6)*10 + var(--v7)*6);
+    --on-signal-g: calc(var(--v0)*18 + var(--v1)*20 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*26 + var(--v6)*20 + var(--v7)*17);
+    --on-signal-b: calc(var(--v0)*38 + var(--v1)*32 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*23 + var(--v6)*32 + var(--v7)*15);
+    /* Triples for Tailwind's rgb(var(--x) / <alpha-value>). */
+    --sky-rgb: var(--sky-r) var(--sky-g) var(--sky-b);
+    --ground-rgb: var(--ground-r) var(--ground-g) var(--ground-b);
+    --overlay-rgb: var(--overlay-r) var(--overlay-g) var(--overlay-b);
+    --edge-rgb: var(--edge-r) var(--edge-g) var(--edge-b);
+    --ink-rgb: var(--ink-r) var(--ink-g) var(--ink-b);
+    --ink2-rgb: var(--ink2-r) var(--ink2-g) var(--ink2-b);
+    --ink3-rgb: var(--ink3-r) var(--ink3-g) var(--ink3-b);
+    --accent-rgb: var(--accent-r) var(--accent-g) var(--accent-b);
+    --signal-rgb: var(--signal-r) var(--signal-g) var(--signal-b);
+    --on-accent-rgb: var(--on-accent-r) var(--on-accent-g) var(--on-accent-b);
+    --on-signal-rgb: var(--on-signal-r) var(--on-signal-g) var(--on-signal-b);
     /* GENERATED: sky tokens — end */
   }
 
@@ -177,7 +582,7 @@
   /* Fraunces at display optical size with its quirks on. SOFT is driven by
      the sky: terminals round off through the warm hours and sharpen at night. */
   .display {
-    font-family: Fraunces, Georgia, serif;
+    font-family: Fraunces, 'Fraunces Fallback Georgia', 'Fraunces Fallback', 'Fraunces Fallback DejaVu', Georgia, serif;
     font-weight: 400;
     line-height: 0.92;
     letter-spacing: -0.03em;
@@ -218,7 +623,7 @@
   /* Metadata voice: Public Sans, tracked caps, tabular figures. */
   .meta,
   .meta-sm {
-    font-family: 'Public Sans', system-ui, sans-serif;
+    font-family: 'Public Sans', 'Public Sans Fallback', system-ui, sans-serif;
     font-weight: 500;
     text-transform: uppercase;
     font-variant-numeric: tabular-nums;
