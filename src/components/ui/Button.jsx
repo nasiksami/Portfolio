@@ -1,8 +1,8 @@
 const VARIANTS = {
   solid:
-    'group rounded-full bg-signal text-on-signal shadow-[0_0_0_1px_rgb(var(--signal))] hover:bg-accent hover:text-on-accent hover:shadow-[0_0_0_5px_rgb(var(--accent)/0.14)]',
+    'bg-signal text-on-signal border border-signal hover:bg-content-primary hover:border-content-primary hover:text-surface-base',
   outline:
-    'rounded-full border border-edge bg-surface-base/30 text-content-primary hover:border-accent hover:bg-accent/10 hover:text-accent',
+    'border border-content-primary/40 text-content-primary hover:border-content-primary hover:bg-content-primary hover:text-surface-base',
   bare: 'link-draw text-content-primary hover:text-accent',
 };
 
@@ -27,7 +27,7 @@ export default function Button({
 }) {
   const padding = variant === 'bare' ? '' : SIZES[size] ?? SIZES.md;
   const classes = [
-    'meta tap justify-center gap-2.5 transition-all duration-300',
+    'meta tap justify-center gap-2.5 rounded-[0.35rem] transition-colors duration-300',
     VARIANTS[variant] ?? VARIANTS.solid,
     padding,
     className,
