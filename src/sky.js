@@ -5,7 +5,7 @@
 export const KNOTS = [0.0, 0.11, 0.14, 0.3, 0.46, 0.49, 0.78, 1.0];
 
 /** Where the ink family flips: sunrise and sunset. Sections end on these. */
-export const FLIPS = { sunrise: 0.1217, sunset: 0.4820 };
+export const FLIPS = { sunrise: 0.12171, sunset: 0.48198 };
 
 /** Quantisation step for `--sky`, so the flips are never sampled mid-step. */
 export const GRID = 0.0005;
