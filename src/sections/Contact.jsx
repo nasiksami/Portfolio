@@ -2,15 +2,59 @@ import { useState } from 'react';
 import { useForm, ValidationError } from '@formspree/react';
 import { FiArrowUpRight, FiCheck, FiSend } from 'react-icons/fi';
 import { profile, socials } from '../data/profile';
+import { ARC } from '../sky';
+import Aurora from '../components/Aurora';
 import Section from '../components/ui/Section';
 import Reveal from '../components/ui/Reveal';
 import Button from '../components/ui/Button';
-import './Contact.css';
 
 const FORMSPREE_ID = 'xyzjrdao';
 
 const FIELD_CLASS =
-  'w-full rounded-2xl border bg-surface-base/45 px-4 py-3.5 text-base text-content-primary placeholder:text-content-muted transition-colors focus:border-accent';
+  'w-full rounded-[0.35rem] border bg-surface-base/40 px-4 py-3.5 text-base text-content-primary placeholder:text-content-muted transition-colors focus:border-content-primary';
+
+/** Direct channels, listed in the sky. */
+function Channels() {
+  return (
+    <div className="mt-16 grid gap-8 md:mt-24 lg:grid-cols-12 lg:gap-8">
+      <Reveal className="lg:col-span-4">
+        <p className="eyebrow">Reach me directly</p>
+        <p className="mt-5 max-w-xs text-base leading-relaxed text-content-secondary">
+          Based in {profile.location}. Happy to talk about research, engineering, or anything in
+          between.
+        </p>
+      </Reveal>
+
+      <Reveal delay={0.08} className="lg:col-span-8">
+        <ul className="border-b border-edge">
+          {socials.map((social) => {
+            const isExternal = social.href.startsWith('http');
+            return (
+              <li key={social.label} className="border-t border-edge">
+                <a
+                  href={social.href}
+                  {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  className="group grid gap-1 py-4 transition-colors hover:text-accent sm:grid-cols-[9rem_minmax(0,1fr)_auto] sm:items-center sm:gap-4"
+                >
+                  <span className="meta-sm text-content-muted transition-colors group-hover:text-accent">
+                    {social.label}
+                  </span>
+                  <span className="min-w-0 truncate text-sm text-content-primary transition-colors group-hover:text-accent md:text-base">
+                    {social.value}
+                  </span>
+                  <FiArrowUpRight
+                    className="hidden h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:block"
+                    aria-hidden="true"
+                  />
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </Reveal>
+    </div>
+  );
+}
 
 export default function Contact() {
   const [state, handleSubmit] = useForm(FORMSPREE_ID);
@@ -44,71 +88,30 @@ export default function Contact() {
     handleSubmit(event);
   }
 
+  const field = (name) => [FIELD_CLASS, errors[name] ? 'border-signal' : 'border-edge'].join(' ');
+
   return (
     <Section
       id="contact"
       index="06"
       label="Contact"
+      arc={ARC.contact}
       title="Let’s build something"
       description="Always glad to talk about AI/ML, cloud, telecom, and software engineering. I read every message."
-      invert
+      backdrop={<Aurora />}
+      sky={<Channels />}
+      ground="solid"
     >
-      <div className="contact-console relative grid overflow-hidden rounded-[2rem] border border-edge/70 bg-surface-raised/35 lg:grid-cols-2">
-        <span aria-hidden="true" className="contact-console__orbit" />
-
-        <Reveal className="relative z-10 p-6 md:p-10 lg:p-12">
-          <div>
-            <div className="mb-8 flex items-center gap-5">
-              <h3 className="eyebrow shrink-0">Reach me directly</h3>
-              <span aria-hidden="true" className="h-px flex-1 bg-edge/70" />
-            </div>
-
-            <p className="max-w-prose text-base leading-relaxed text-content-secondary">
-              Based in {profile.location}. Happy to talk about research, engineering, or
-              anything in between.
-            </p>
-
-            <ul className="mt-10 border-b border-edge/70">
-              {socials.map((social) => {
-                const isExternal = social.href.startsWith('http');
-                return (
-                  <li key={social.label} className="border-t border-edge/70">
-                    <a
-                      href={social.href}
-                      {...(isExternal
-                        ? { target: '_blank', rel: 'noopener noreferrer' }
-                        : {})}
-                      className="contact-channel group grid gap-2 py-4 transition-colors hover:text-accent sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-center"
-                    >
-                      <span className="meta-sm text-content-muted transition-colors group-hover:text-accent">
-                        {social.label}
-                      </span>
-                      <span className="min-w-0 truncate text-sm text-content-primary transition-colors group-hover:text-accent">
-                        {social.value}
-                      </span>
-                      <FiArrowUpRight
-                        className="hidden h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:block"
-                        aria-hidden="true"
-                      />
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+      <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
+        <Reveal className="lg:col-span-4">
+          <p className="eyebrow">Send a message</p>
         </Reveal>
 
-        <Reveal
-          delay={0.1}
-          className="relative z-10 border-t border-edge/70 bg-surface-base/30 p-6 md:p-10 lg:border-l lg:border-t-0 lg:p-12"
-        >
+        <Reveal delay={0.08} className="lg:col-span-8">
           {state.succeeded ? (
-            <div
-              role="status"
-              className="flex min-h-[30rem] flex-col items-start justify-center"
-            >
-              <span className="mb-7 flex h-16 w-16 items-center justify-center rounded-full border border-signal bg-signal/10 text-signal">
-                <FiCheck className="h-7 w-7" aria-hidden="true" />
+            <div role="status" className="flex min-h-[24rem] flex-col items-start justify-center">
+              <span className="mb-7 flex h-14 w-14 items-center justify-center rounded-full border border-signal text-signal">
+                <FiCheck className="h-6 w-6" aria-hidden="true" />
               </span>
               <h3 className="display d-2 text-content-primary">Message sent</h3>
               <p className="mt-5 max-w-prose text-sm leading-relaxed text-content-secondary">
@@ -116,64 +119,55 @@ export default function Contact() {
               </p>
             </div>
           ) : (
-            <form onSubmit={onSubmit} noValidate aria-busy={state.submitting}>
-              <div className="mb-8 flex items-center gap-5">
-                <h3 className="eyebrow shrink-0">Send a message</h3>
-                <span aria-hidden="true" className="h-px flex-1 bg-edge/70" />
-              </div>
-
+            <form onSubmit={onSubmit} noValidate aria-busy={state.submitting} className="max-w-2xl">
               <div className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="meta-sm mb-2.5 block text-content-muted">
-                    Name
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    autoComplete="name"
-                    placeholder="Your name"
-                    value={values.name}
-                    onChange={handleChange}
-                    aria-invalid={Boolean(errors.name)}
-                    aria-describedby={errors.name ? 'name-error' : undefined}
-                    className={[
-                      FIELD_CLASS,
-                      errors.name ? 'border-signal' : 'border-edge/80',
-                    ].join(' ')}
-                  />
-                  {errors.name && (
-                    <p id="name-error" role="alert" className="meta-sm mt-2 text-signal">
-                      {errors.name}
-                    </p>
-                  )}
-                </div>
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="name" className="meta-sm mb-2.5 block text-content-muted">
+                      Name
+                    </label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      autoComplete="name"
+                      placeholder="Your name"
+                      value={values.name}
+                      onChange={handleChange}
+                      aria-invalid={Boolean(errors.name)}
+                      aria-describedby={errors.name ? 'name-error' : undefined}
+                      className={field('name')}
+                    />
+                    {errors.name && (
+                      <p id="name-error" role="alert" className="meta-sm mt-2 text-signal">
+                        {errors.name}
+                      </p>
+                    )}
+                  </div>
 
-                <div>
-                  <label htmlFor="email" className="meta-sm mb-2.5 block text-content-muted">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                    value={values.email}
-                    onChange={handleChange}
-                    aria-invalid={Boolean(errors.email)}
-                    aria-describedby={errors.email ? 'email-error' : undefined}
-                    className={[
-                      FIELD_CLASS,
-                      errors.email ? 'border-signal' : 'border-edge/80',
-                    ].join(' ')}
-                  />
-                  {errors.email && (
-                    <p id="email-error" role="alert" className="meta-sm mt-2 text-signal">
-                      {errors.email}
-                    </p>
-                  )}
-                  <ValidationError prefix="Email" field="email" errors={state.errors} />
+                  <div>
+                    <label htmlFor="email" className="meta-sm mb-2.5 block text-content-muted">
+                      Email
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="you@example.com"
+                      value={values.email}
+                      onChange={handleChange}
+                      aria-invalid={Boolean(errors.email)}
+                      aria-describedby={errors.email ? 'email-error' : undefined}
+                      className={field('email')}
+                    />
+                    {errors.email && (
+                      <p id="email-error" role="alert" className="meta-sm mt-2 text-signal">
+                        {errors.email}
+                      </p>
+                    )}
+                    <ValidationError prefix="Email" field="email" errors={state.errors} />
+                  </div>
                 </div>
 
                 <div>
@@ -183,17 +177,13 @@ export default function Contact() {
                   <textarea
                     id="message"
                     name="message"
-                    rows={5}
+                    rows={6}
                     placeholder="What would you like to talk about?"
                     value={values.message}
                     onChange={handleChange}
                     aria-invalid={Boolean(errors.message)}
                     aria-describedby={errors.message ? 'message-error' : undefined}
-                    className={[
-                      FIELD_CLASS,
-                      'resize-y',
-                      errors.message ? 'border-signal' : 'border-edge/80',
-                    ].join(' ')}
+                    className={[field('message'), 'resize-y'].join(' ')}
                   />
                   {errors.message && (
                     <p id="message-error" role="alert" className="meta-sm mt-2 text-signal">
@@ -203,20 +193,15 @@ export default function Contact() {
                   <ValidationError prefix="Message" field="message" errors={state.errors} />
                 </div>
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full"
-                  disabled={state.submitting}
-                >
+                <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={state.submitting}>
                   <FiSend className="h-4 w-4" aria-hidden="true" />
                   {state.submitting ? 'Sending…' : 'Send message'}
                 </Button>
 
                 {state.errors && state.errors.length > 0 && (
                   <p role="alert" className="text-sm text-signal">
-                    Something went wrong sending your message. Please try again, or email
-                    me directly.
+                    Something went wrong sending your message. Please try again, or email me
+                    directly.
                   </p>
                 )}
               </div>

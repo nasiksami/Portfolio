@@ -19,6 +19,7 @@ export default function Section({
   description,
   arc,
   sky,
+  backdrop,
   ground = 'fade',
   children,
   className = '',
@@ -32,9 +33,10 @@ export default function Section({
       aria-labelledby={headingId}
       data-sky-in={skyIn}
       data-sky-out={skyOut}
-      className={['relative', className].join(' ')}
+      className={['relative isolate', className].join(' ')}
     >
       <div className="horizon-sky">
+        {backdrop}
         <div className="shell pb-12 pt-24 md:pb-16 md:pt-32 lg:pt-40">
           <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
             <Reveal className="lg:col-span-2">
