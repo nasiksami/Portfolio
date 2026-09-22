@@ -23,7 +23,7 @@ export default function SocialLinks({ items = allSocials, className = '' }) {
               href={social.href}
               aria-label={social.label + ': ' + social.value}
               {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              className="meta-sm tap gap-2 rounded-full border border-edge/70 bg-surface-base/45 px-3 text-content-secondary transition-all hover:-translate-y-0.5 hover:border-accent hover:text-accent"
+              className="meta-sm tap gap-2 rounded-[0.35rem] border border-edge px-3 text-content-secondary transition-colors hover:border-content-primary hover:text-content-primary"
             >
               <Icon className="h-3.5 w-3.5" aria-hidden="true" />
               {social.label}
