@@ -1,57 +1,33 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       fontFamily: {
-        display: ['"Instrument Serif"', 'Georgia', 'serif'],
-        sans: ['"Space Grotesk"', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+        display: ['Fraunces', 'Georgia', 'serif'],
+        sans: ['"Public Sans"', 'system-ui', '-apple-system', 'sans-serif'],
       },
+      // Every colour reads a channel triple that index.css derives from the
+      // single `--sky` position, so utilities never know what time it is.
       colors: {
         surface: {
-          base: 'rgb(var(--surface-base) / <alpha-value>)',
-          raised: 'rgb(var(--surface-raised) / <alpha-value>)',
-          overlay: 'rgb(var(--surface-overlay) / <alpha-value>)',
+          base: 'rgb(var(--sky-rgb) / <alpha-value>)',
+          raised: 'rgb(var(--ground-rgb) / <alpha-value>)',
+          overlay: 'rgb(var(--overlay-rgb) / <alpha-value>)',
         },
         content: {
-          primary: 'rgb(var(--content-primary) / <alpha-value>)',
-          secondary: 'rgb(var(--content-secondary) / <alpha-value>)',
-          muted: 'rgb(var(--content-muted) / <alpha-value>)',
+          primary: 'rgb(var(--ink-rgb) / <alpha-value>)',
+          secondary: 'rgb(var(--ink2-rgb) / <alpha-value>)',
+          muted: 'rgb(var(--ink3-rgb) / <alpha-value>)',
         },
-        edge: 'rgb(var(--edge) / <alpha-value>)',
-        accent: 'rgb(var(--accent) / <alpha-value>)',
-        'on-accent': 'rgb(var(--on-accent) / <alpha-value>)',
-        signal: 'rgb(var(--signal) / <alpha-value>)',
-        'on-signal': 'rgb(var(--on-signal) / <alpha-value>)',
+        edge: 'rgb(var(--edge-rgb) / <alpha-value>)',
+        accent: 'rgb(var(--accent-rgb) / <alpha-value>)',
+        'on-accent': 'rgb(var(--on-accent-rgb) / <alpha-value>)',
+        signal: 'rgb(var(--signal-rgb) / <alpha-value>)',
+        'on-signal': 'rgb(var(--on-signal-rgb) / <alpha-value>)',
       },
       maxWidth: {
         prose: '42rem',
-      },
-      keyframes: {
-        ticker: {
-          from: { transform: 'translate3d(0, 0, 0)' },
-          to: { transform: 'translate3d(-50%, 0, 0)' },
-        },
-        'signal-flow': {
-          from: { strokeDashoffset: '48' },
-          to: { strokeDashoffset: '0' },
-        },
-        orbit: {
-          from: { transform: 'rotate(0deg)' },
-          to: { transform: 'rotate(360deg)' },
-        },
-        breathe: {
-          '0%, 100%': { opacity: '0.38', transform: 'scale(0.96)' },
-          '50%': { opacity: '0.9', transform: 'scale(1.04)' },
-        },
-      },
-      animation: {
-        ticker: 'ticker 42s linear infinite',
-        'signal-flow': 'signal-flow 1.8s linear infinite',
-        orbit: 'orbit 24s linear infinite',
-        breathe: 'breathe 3.6s ease-in-out infinite',
       },
     },
   },

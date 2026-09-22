@@ -4,6 +4,7 @@ import Footer from './components/Footer';
 import BackToTop from './components/BackToTop';
 import GridFrame from './components/GridFrame';
 import { useHashScroll } from './hooks/useHashScroll';
+import { useSky } from './hooks/useSky';
 import Hero from './sections/Hero';
 import About from './sections/About';
 
@@ -24,6 +25,8 @@ export default function App() {
   // Deep links (nasik.ca/#projects) resolve before React has rendered, so the
   // browser's own jump is dropped. Re-run it once the target exists.
   useHashScroll();
+  // The only writer of `--sky`, which every colour on the page derives from.
+  useSky();
 
   return (
     <>

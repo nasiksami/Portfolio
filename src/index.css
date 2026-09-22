@@ -3,70 +3,102 @@
 @tailwind utilities;
 
 /* ──────────────────────────────────────────────────────────────────────────
-   SIGNAL CARTOGRAPHY
-   A research atlas built from semantic colour, orbital geometry, and a
-   continuous route line. Components consume only semantic tokens so light,
-   dark, and inverted sections remain equally legible.
+   HORIZON
+   A Saskatchewan prairie sky read as one continuous document. The page is a
+   single horizon line; the sky above it moves through a day as the visitor
+   scrolls, and every colour on the page derives from where on that arc the
+   viewport sits.
+
+   ONE INPUT. `--sky` (0 → 1) is written onto <html> by hooks/useSky.js. It
+   is the only thing that ever changes the palette. Nothing below is
+   per-component.
+
+   EIGHT KNOTS. The arc is a piecewise-linear blend between eight palette
+   knots — pre-dawn, dawn, morning, noon, afternoon, dusk, night, aurora —
+   at the positions in src/sky.js. `--w0…--w7` are tent-shaped weights that
+   sum to 1 at every position. The two brightness crossings (dawn → morning,
+   afternoon → dusk) each occupy 0.03 of the arc, so the sky spends almost all
+   of its time near a verified knot and crosses mid-luminance quickly.
+
+   SURFACES BLEND, INK FLIPS. Sky, ground, overlay and edge interpolate
+   continuously. Text cannot: a colour path from dark-ink-on-light to
+   light-ink-on-dark must pass through 1:1 contrast. So ink uses `--v0…--v7`,
+   the same weights with a hard step at each flip. The flip sits exactly where
+   pure white and pure black both clear 4.5:1 against the sky, and within
+   ±0.03 of it the lower-contrast inks fold into primary while primary folds
+   to pure. Sampled on the writer's 0.0005 grid, no position falls below
+   4.58:1 for any ink on either surface. See DESIGN_NOTES_FABLE.md.
+
+   TOKENS ARE TRIPLES. Every output is a space-separated RGB channel triple,
+   so Tailwind's `rgb(var(--x) / <alpha-value>)` colours keep working and
+   opacity modifiers are free.
+
+   The `--w*`/`--v*`/`--*-rgb` block is generated from the knot table by the
+   script described in the design notes. Edit the table, not the numbers.
    ────────────────────────────────────────────────────────────────────────── */
 @layer base {
   :root {
-    /* Day atlas: mineral ink on warm field paper. */
-    --p-base: 244 242 234;
-    --p-raised: 252 250 244;
-    --p-overlay: 229 232 223;
-    --p-fg: 7 30 33;
-    --p-fg2: 48 72 74;
-    --p-fg3: 78 101 102;
-    --p-edge: 174 188 183;
-    --p-accent: 0 100 110;
-    --p-signal: 83 107 0;
+    --sky: 0;
 
-    /* Night atlas: observatory teal with a luminous signal. */
-    --i-base: 5 20 22;
-    --i-raised: 9 31 34;
-    --i-overlay: 15 45 48;
-    --i-fg: 242 244 235;
-    --i-fg2: 184 203 197;
-    --i-fg3: 139 164 158;
-    --i-edge: 45 77 77;
-    --i-accent: 129 230 237;
-    --i-signal: 202 255 69;
+    /* Tent weights: each knot's influence peaks at its own arc position. */
+    --w0: clamp(0, (0.11 - var(--sky)) / 0.11, 1);
+    --w1: clamp(0, min((var(--sky) - 0.0) / 0.11, (0.14 - var(--sky)) / 0.03), 1);
+    --w2: clamp(0, min((var(--sky) - 0.11) / 0.03, (0.3 - var(--sky)) / 0.16), 1);
+    --w3: clamp(0, min((var(--sky) - 0.14) / 0.16, (0.46 - var(--sky)) / 0.16), 1);
+    --w4: clamp(0, min((var(--sky) - 0.3) / 0.16, (0.49 - var(--sky)) / 0.03), 1);
+    --w5: clamp(0, min((var(--sky) - 0.46) / 0.03, (0.78 - var(--sky)) / 0.29), 1);
+    --w6: clamp(0, min((var(--sky) - 0.49) / 0.29, (1.0 - var(--sky)) / 0.22), 1);
+    --w7: clamp(0, (var(--sky) - 0.78) / 0.22, 1);
+
+    /* Ink flips: hard steps at the arc positions where both pure inks clear AA. */
+    --flip-a: clamp(0, (var(--sky) - 0.1217) * 1000000, 1);
+    --flip-b: clamp(0, (var(--sky) - 0.4820) * 1000000, 1);
+    --v0: var(--w0);
+    --v1: calc((var(--w1) + var(--w2)) * (1 - var(--flip-a)));
+    --v2: calc((var(--w1) + var(--w2)) * var(--flip-a));
+    --v3: var(--w3);
+    --v4: calc((var(--w4) + var(--w5)) * (1 - var(--flip-b)));
+    --v5: calc((var(--w4) + var(--w5)) * var(--flip-b));
+    --v6: var(--w6);
+    --v7: var(--w7);
+    --ink-family: calc(1 - var(--flip-a) + var(--flip-b)); /* 1 light ink, 0 dark ink */
+
+    /* Near a flip, lower-contrast inks fold into primary and primary folds to pure. */
+    --danger: max(0, 1 - max(var(--sky) - 0.1217, 0.1217 - var(--sky)) / 0.03, 1 - max(var(--sky) - 0.4820, 0.4820 - var(--sky)) / 0.03);
+    --fold: clamp(0, var(--danger) * 1.6, 1);
+    --pure: calc(255 * var(--ink-family));
+
+    /* Surfaces interpolate continuously. */
+    --sky-rgb: calc(var(--w0)*14 + var(--w1)*59 + var(--w2)*244 + var(--w3)*230 + var(--w4)*239 + var(--w5)*126 + var(--w6)*10 + var(--w7)*6) calc(var(--w0)*18 + var(--w1)*36 + var(--w2)*231 + var(--w3)*239 + var(--w4)*230 + var(--w5)*58 + var(--w6)*20 + var(--w7)*17) calc(var(--w0)*38 + var(--w1)*68 + var(--w2)*212 + var(--w3)*246 + var(--w4)*214 + var(--w5)*55 + var(--w6)*32 + var(--w7)*15);
+    --ground-rgb: calc(var(--w0)*23 + var(--w1)*56 + var(--w2)*239 + var(--w3)*244 + var(--w4)*242 + var(--w5)*119 + var(--w6)*17 + var(--w7)*12) calc(var(--w0)*27 + var(--w1)*37 + var(--w2)*232 + var(--w3)*239 + var(--w4)*230 + var(--w5)*60 + var(--w6)*28 + var(--w7)*26) calc(var(--w0)*51 + var(--w1)*68 + var(--w2)*219 + var(--w3)*225 + var(--w4)*204 + var(--w5)*74 + var(--w6)*41 + var(--w7)*23);
+    --overlay-rgb: calc(var(--w0)*35 + var(--w1)*58 + var(--w2)*234 + var(--w3)*227 + var(--w4)*229 + var(--w5)*94 + var(--w6)*24 + var(--w7)*19) calc(var(--w0)*40 + var(--w1)*40 + var(--w2)*223 + var(--w3)*220 + var(--w4)*214 + var(--w5)*49 + var(--w6)*38 + var(--w7)*41) calc(var(--w0)*72 + var(--w1)*70 + var(--w2)*202 + var(--w3)*199 + var(--w4)*181 + var(--w5)*64 + var(--w6)*54 + var(--w7)*36);
+    --edge-rgb: calc(var(--w0)*58 + var(--w1)*106 + var(--w2)*201 + var(--w3)*185 + var(--w4)*198 + var(--w5)*162 + var(--w6)*43 + var(--w7)*35) calc(var(--w0)*63 + var(--w1)*74 + var(--w2)*184 + var(--w3)*198 + var(--w4)*179 + var(--w5)*100 + var(--w6)*61 + var(--w7)*64) calc(var(--w0)*94 + var(--w1)*114 + var(--w2)*158 + var(--w3)*207 + var(--w4)*145 + var(--w5)*95 + var(--w6)*80 + var(--w7)*58);
+    /* Primary ink. */
+    --ink-r: calc((var(--v0)*243 + var(--v1)*251 + var(--v2)*28 + var(--v3)*20 + var(--v4)*36 + var(--v5)*255 + var(--v6)*238 + var(--v7)*238) * (1 - var(--fold)) + var(--pure) * var(--fold));
+    --ink-g: calc((var(--v0)*239 + var(--v1)*243 + var(--v2)*36 + var(--v3)*32 + var(--v4)*31 + var(--v5)*243 + var(--v6)*242 + var(--v7)*244) * (1 - var(--fold)) + var(--pure) * var(--fold));
+    --ink-b: calc((var(--v0)*230 + var(--v1)*234 + var(--v2)*48 + var(--v3)*44 + var(--v4)*26 + var(--v5)*234 + var(--v6)*244 + var(--v7)*238) * (1 - var(--fold)) + var(--pure) * var(--fold));
+    --ink-rgb: var(--ink-r) var(--ink-g) var(--ink-b);
+    /* Inks that fold toward primary near a flip. */
+    --ink2-rgb: calc((var(--v0)*203 + var(--v1)*230 + var(--v2)*69 + var(--v3)*61 + var(--v4)*74 + var(--v5)*248 + var(--v6)*191 + var(--v7)*188) * (1 - var(--danger)) + var(--ink-r) * var(--danger)) calc((var(--v0)*200 + var(--v1)*214 + var(--v2)*77 + var(--v3)*74 + var(--v4)*68 + var(--v5)*223 + var(--v6)*202 + var(--v7)*203) * (1 - var(--danger)) + var(--ink-g) * var(--danger)) calc((var(--v0)*192 + var(--v1)*207 + var(--v2)*88 + var(--v3)*87 + var(--v4)*60 + var(--v5)*211 + var(--v6)*211 + var(--v7)*193) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    --ink3-rgb: calc((var(--v0)*166 + var(--v1)*209 + var(--v2)*91 + var(--v3)*85 + var(--v4)*95 + var(--v5)*241 + var(--v6)*148 + var(--v7)*147) * (1 - var(--danger)) + var(--ink-r) * var(--danger)) calc((var(--v0)*165 + var(--v1)*189 + var(--v2)*101 + var(--v3)*99 + var(--v4)*88 + var(--v5)*207 + var(--v6)*163 + var(--v7)*168) * (1 - var(--danger)) + var(--ink-g) * var(--danger)) calc((var(--v0)*184 + var(--v1)*184 + var(--v2)*112 + var(--v3)*112 + var(--v4)*79 + var(--v5)*194 + var(--v6)*176 + var(--v7)*154) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    --accent-rgb: calc((var(--v0)*240 + var(--v1)*255 + var(--v2)*154 + var(--v3)*26 + var(--v4)*138 + var(--v5)*255 + var(--v6)*159 + var(--v7)*126) * (1 - var(--danger)) + var(--ink-r) * var(--danger)) calc((var(--v0)*168 + var(--v1)*179 + var(--v2)*69 + var(--v3)*94 + var(--v4)*63 + var(--v5)*208 + var(--v6)*211 + var(--v7)*240) * (1 - var(--danger)) + var(--ink-g) * var(--danger)) calc((var(--v0)*104 + var(--v1)*122 + var(--v2)*18 + var(--v3)*140 + var(--v4)*30 + var(--v5)*143 + var(--v6)*255 + var(--v7)*194) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    --signal-rgb: calc((var(--v0)*232 + var(--v1)*255 + var(--v2)*107 + var(--v3)*125 + var(--v4)*107 + var(--v5)*255 + var(--v6)*255 + var(--v7)*201) * (1 - var(--danger)) + var(--ink-r) * var(--danger)) calc((var(--v0)*210 + var(--v1)*212 + var(--v2)*83 + var(--v3)*84 + var(--v4)*82 + var(--v5)*230 + var(--v6)*220 + var(--v7)*166) * (1 - var(--danger)) + var(--ink-g) * var(--danger)) calc((var(--v0)*122 + var(--v1)*121 + var(--v2)*0 + var(--v3)*0 + var(--v4)*0 + var(--v5)*163 + var(--v6)*138 + var(--v7)*255) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    /* Text on accent and signal fills. */
+    --on-accent-rgb: calc(var(--v0)*14 + var(--v1)*43 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*58 + var(--v6)*10 + var(--v7)*6) calc(var(--v0)*18 + var(--v1)*20 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*26 + var(--v6)*20 + var(--v7)*17) calc(var(--v0)*38 + var(--v1)*32 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*23 + var(--v6)*32 + var(--v7)*15);
+    --on-signal-rgb: calc(var(--v0)*14 + var(--v1)*43 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*58 + var(--v6)*10 + var(--v7)*6) calc(var(--v0)*18 + var(--v1)*20 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*26 + var(--v6)*20 + var(--v7)*17) calc(var(--v0)*38 + var(--v1)*32 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*23 + var(--v6)*32 + var(--v7)*15);
   }
 
-  :root,
-  :root.dark .invert-surface {
-    --surface-base: var(--p-base);
-    --surface-raised: var(--p-raised);
-    --surface-overlay: var(--p-overlay);
-    --content-primary: var(--p-fg);
-    --content-secondary: var(--p-fg2);
-    --content-muted: var(--p-fg3);
-    --edge: var(--p-edge);
-    --accent: var(--p-accent);
-    --on-accent: 255 255 255;
-    --signal: var(--p-signal);
-    --on-signal: 255 255 255;
-    color-scheme: light;
+  /* Pinned skies: the stylesheet supplies the value and the writer stands down. */
+  :root[data-sky-pin='day'] {
+    --sky: 0.3;
   }
 
-  :root.dark,
-  .invert-surface {
-    --surface-base: var(--i-base);
-    --surface-raised: var(--i-raised);
-    --surface-overlay: var(--i-overlay);
-    --content-primary: var(--i-fg);
-    --content-secondary: var(--i-fg2);
-    --content-muted: var(--i-fg3);
-    --edge: var(--i-edge);
-    --accent: var(--i-accent);
-    --on-accent: 5 20 22;
-    --signal: var(--i-signal);
-    --on-signal: 5 20 22;
-    color-scheme: dark;
+  :root[data-sky-pin='night'] {
+    --sky: 0.78;
   }
 
   html {
-    background-color: rgb(var(--surface-base));
+    background-color: rgb(var(--sky-rgb));
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
   }
@@ -101,13 +133,17 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Outline, not box-shadow: it survives overflow:hidden ancestors and reads
+     against every sky. */
   :focus-visible {
-    @apply outline-none ring-2 ring-signal ring-offset-4 ring-offset-surface-base;
+    outline: 2px solid rgb(var(--signal-rgb));
+    outline-offset: 4px;
+    border-radius: 2px;
   }
 
   ::selection {
-    background: rgb(var(--signal));
-    color: rgb(var(--on-signal));
+    background: rgb(var(--signal-rgb));
+    color: rgb(var(--on-signal-rgb));
   }
 }
 
@@ -119,101 +155,7 @@
     padding-inline: clamp(1rem, 4vw, 4.5rem);
   }
 
-  .frame {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: clamp(0.75rem, 1.5vw, 1.5rem);
-  }
-
-  /* The quiet coordinate field beneath each major composition. */
-  .atlas-grid {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    opacity: 0.62;
-    mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
-  }
-
-  .atlas-grid::before,
-  .atlas-grid::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
-
-  .atlas-grid::before {
-    background-image:
-      linear-gradient(rgb(var(--edge) / 0.24) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(var(--edge) / 0.24) 1px, transparent 1px);
-    background-size: clamp(3rem, 7vw, 7.5rem) clamp(3rem, 7vw, 7.5rem);
-  }
-
-  .atlas-grid::after {
-    inset: 10% 8%;
-    border: 1px solid rgb(var(--edge) / 0.48);
-    border-radius: 50%;
-    transform: rotate(-11deg) scale(1.08, 0.72);
-  }
-
-  .atlas-node {
-    position: absolute;
-    width: 0.45rem;
-    height: 0.45rem;
-    border: 1px solid rgb(var(--accent));
-    border-radius: 9999px;
-    box-shadow: 0 0 0 0.35rem rgb(var(--accent) / 0.08);
-  }
-
-  .invert-surface {
-    background-color: rgb(var(--surface-base));
-  }
-
-  .surface-panel {
-    background:
-      linear-gradient(135deg, rgb(var(--surface-raised) / 0.96), rgb(var(--surface-base) / 0.92));
-    border: 1px solid rgb(var(--edge) / 0.75);
-    box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 0.08);
-  }
-
-  .route-line {
-    position: relative;
-  }
-
-  .route-line::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0.55rem;
-    width: 1px;
-    background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--accent)) 8%,
-      rgb(var(--edge)) 42%,
-      rgb(var(--edge)) 92%,
-      transparent
-    );
-  }
-
-  .route-node {
-    position: relative;
-  }
-
-  .route-node::before {
-    content: '';
-    position: absolute;
-    left: -2.02rem;
-    top: 0.65rem;
-    width: 0.7rem;
-    height: 0.7rem;
-    border: 2px solid rgb(var(--surface-base));
-    border-radius: 9999px;
-    background: rgb(var(--signal));
-    box-shadow: 0 0 0 1px rgb(var(--signal));
-  }
-
+  /* Touch targets. */
   .tap {
     display: inline-flex;
     min-width: 24px;
@@ -227,23 +169,37 @@
     align-items: center;
   }
 
+  /* ── Type ─────────────────────────────────────────────────────────────── */
+
+  /* Fraunces at display optical size with its quirks on. SOFT is driven by
+     the sky: terminals round off through the warm hours and sharpen at night. */
   .display {
-    font-family: 'Instrument Serif', Georgia, serif;
+    font-family: Fraunces, Georgia, serif;
     font-weight: 400;
-    letter-spacing: -0.045em;
-    line-height: 0.9;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    font-optical-sizing: none;
+    font-variation-settings:
+      'opsz' 144,
+      'SOFT' calc(var(--w1) * 60 + var(--w2) * 25 + var(--w4) * 45 + var(--w5) * 100 + var(--w7) * 15),
+      'WONK' 1;
   }
 
-  .display em {
+  .display em,
+  .display i {
+    font-style: italic;
     font-weight: 400;
   }
 
   .d-hero {
-    font-size: clamp(4.5rem, 16vw, 13rem);
+    font-size: clamp(3.4rem, 15vw, 14rem);
+    line-height: 0.88;
+    letter-spacing: -0.045em;
   }
 
   .d-1 {
-    font-size: clamp(3rem, 7vw, 6.75rem);
+    font-size: clamp(2.75rem, 7vw, 7rem);
+    letter-spacing: -0.04em;
   }
 
   .d-2 {
@@ -252,13 +208,17 @@
   }
 
   .d-3 {
-    font-size: clamp(1.35rem, 2.2vw, 2rem);
-    line-height: 1.08;
+    font-size: clamp(1.4rem, 2.2vw, 2.1rem);
+    line-height: 1.06;
   }
 
+  /* Metadata voice: Public Sans, tracked caps, tabular figures. */
   .meta,
   .meta-sm {
-    @apply font-mono uppercase;
+    font-family: 'Public Sans', system-ui, sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
     line-height: 1.45;
   }
 
@@ -280,40 +240,7 @@
     content: '';
     width: 1.6rem;
     height: 1px;
-    background: rgb(var(--accent));
-  }
-
-  .ledger {
-    border-bottom: 1px solid rgb(var(--edge) / 0.7);
-  }
-
-  .ledger > * {
-    border-top: 1px solid rgb(var(--edge) / 0.7);
-  }
-
-  .stat-band > * {
-    border-color: rgb(var(--edge) / 0.75);
-  }
-
-  .stat-band > :nth-child(2n) {
-    border-left-width: 1px;
-  }
-
-  .stat-band > :nth-child(n + 3) {
-    border-top-width: 1px;
-  }
-
-  .signal-chip {
-    @apply meta-sm inline-flex items-center gap-2 rounded-full border border-edge/80 bg-surface-raised/70 px-3 py-1.5 text-content-secondary;
-  }
-
-  .signal-chip::before {
-    content: '';
-    width: 0.38rem;
-    height: 0.38rem;
-    border-radius: 9999px;
-    background: rgb(var(--signal));
-    box-shadow: 0 0 0 0.25rem rgb(var(--signal) / 0.12);
+    background: rgb(var(--accent-rgb));
   }
 
   .link-draw {
@@ -339,100 +266,71 @@
     transform-origin: left;
   }
 
-  .orbit-frame {
+  /* ── The horizon ───────────────────────────────────────────────────────── */
+
+  /* A section is three rows: sky content, the rule, ground content. The sky
+     row is transparent so the page background — the sky — shows through. */
+  .horizon-sky {
     position: relative;
-    isolation: isolate;
   }
 
-  .orbit-frame::before,
-  .orbit-frame::after {
+  /* The line itself, with a glow above it that is strongest at dawn and dusk
+     and gone at noon. */
+  .horizon-rule {
+    position: relative;
+    height: 1px;
+    background: rgb(var(--edge-rgb));
+  }
+
+  .horizon-rule::before {
     content: '';
     position: absolute;
-    z-index: -1;
-    border: 1px solid rgb(var(--edge) / 0.72);
-    border-radius: 50%;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: clamp(8rem, 22vh, 18rem);
     pointer-events: none;
+    background: linear-gradient(
+      to top,
+      rgb(var(--accent-rgb) / calc(0.06 + 0.22 * (var(--w1) + var(--w5)) + 0.08 * var(--w0))),
+      transparent
+    );
   }
 
-  .orbit-frame::before {
-    inset: -8%;
-    transform: rotate(13deg) scale(1.04, 0.86);
-  }
-
-  .orbit-frame::after {
-    inset: -16%;
-    border-style: dashed;
-    transform: rotate(-18deg) scale(0.88, 1.08);
-  }
-
-  .portrait-window {
+  /* Ground fills from the rule down, then dissolves back into the sky at the
+     bottom so the next section's horizon is the only hard edge on the page. */
+  .horizon-ground {
+    --fade: 12rem;
     position: relative;
-    overflow: hidden;
-    border-radius: 46% 54% 48% 52% / 39% 44% 56% 61%;
-    background: rgb(var(--surface-overlay));
-    box-shadow:
-      0 0 0 1px rgb(var(--edge)),
-      0 2.5rem 7rem rgb(0 0 0 / 0.2);
+    z-index: 1;
+    background: linear-gradient(
+      to bottom,
+      rgb(var(--ground-rgb)) 0,
+      rgb(var(--ground-rgb)) calc(100% - var(--fade)),
+      rgb(var(--sky-rgb)) 100%
+    );
   }
 
-  .portrait-window img {
-    filter: grayscale(1) contrast(1.1);
-    transition: filter 0.45s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  .horizon-ground--solid {
+    --fade: 0px;
   }
 
-  .portrait-window::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-      linear-gradient(135deg, rgb(var(--accent) / 0.2), transparent 42%),
-      repeating-linear-gradient(
-        0deg,
-        transparent 0,
-        transparent 5px,
-        rgb(var(--surface-base) / 0.1) 6px
-      );
-    mix-blend-mode: screen;
-  }
-
-  .portrait-window:hover img {
-    filter: grayscale(0.15) contrast(1.04);
-    transform: scale(1.025);
-  }
-
-  .halftone::after {
-    content: none;
-  }
-
-  .duotone {
-    filter: grayscale(1) contrast(1.1);
-  }
-
-  .signal-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: rgb(var(--accent)) transparent;
-  }
-
-  .signal-scroll::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
-
-  .signal-scroll::-webkit-scrollbar-thumb {
-    border-radius: 9999px;
-    background: rgb(var(--accent));
-  }
-
-  .section-curve {
-    position: absolute;
-    right: -12vw;
-    bottom: -16rem;
-    width: min(48rem, 75vw);
-    aspect-ratio: 1;
-    border: 1px solid rgb(var(--edge) / 0.4);
-    border-radius: 50%;
-    pointer-events: none;
+  /* A soft field of stars that only appears when the sky is dark. */
+  .sky-stars {
+    opacity: calc(var(--w0) * 0.9 + var(--w1) * 0.35 + var(--w6) * 1 + var(--w7) * 0.85);
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, rgb(var(--ink-rgb) / 0.9) 50%, transparent 51%),
+      radial-gradient(1px 1px at 68% 9%, rgb(var(--ink-rgb) / 0.8) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 41% 31%, rgb(var(--ink-rgb) / 0.7) 50%, transparent 51%),
+      radial-gradient(1px 1px at 88% 27%, rgb(var(--ink-rgb) / 0.85) 50%, transparent 51%),
+      radial-gradient(1px 1px at 27% 52%, rgb(var(--ink-rgb) / 0.55) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 57% 44%, rgb(var(--ink-rgb) / 0.75) 50%, transparent 51%),
+      radial-gradient(1px 1px at 79% 61%, rgb(var(--ink-rgb) / 0.5) 50%, transparent 51%),
+      radial-gradient(1px 1px at 8% 73%, rgb(var(--ink-rgb) / 0.6) 50%, transparent 51%),
+      radial-gradient(1px 1px at 94% 82%, rgb(var(--ink-rgb) / 0.7) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 35% 88%, rgb(var(--ink-rgb) / 0.45) 50%, transparent 51%);
+    background-size: 42rem 42rem;
+    mask-image: linear-gradient(to bottom, black 0, black 55%, transparent 100%);
   }
 }
 
@@ -447,35 +345,9 @@
   }
 }
 
-@media (min-width: 1024px) {
-  .stat-band > :nth-child(2n) {
-    border-left-width: 0;
-  }
-
-  .stat-band > :not(:first-child) {
-    border-left-width: 1px;
-  }
-
-  .stat-band > :nth-child(n + 3) {
-    border-top-width: 0;
-  }
-}
-
 @media (max-width: 767px) {
-  .atlas-grid {
-    opacity: 0.38;
-  }
-
-  .atlas-grid::before {
-    background-size: 3.5rem 3.5rem;
-  }
-
-  .atlas-grid::after {
-    inset: 22% -28%;
-  }
-
   .d-hero {
-    font-size: clamp(4.15rem, 22vw, 7.8rem);
+    font-size: clamp(3.2rem, 19vw, 7rem);
   }
 }
 
@@ -492,99 +364,5 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-
-  .portrait-window img {
-    transform: none !important;
-  }
-}
-
-/* ── Signature hero: the identity follows the same route as the research. ── */
-.hero-name > span {
-  display: block;
-  width: fit-content;
-}
-
-.hero-name > span:nth-of-type(2) {
-  margin-left: clamp(1.5rem, 9vw, 8rem);
-}
-
-.hero-name > span:nth-of-type(3) {
-  margin-left: clamp(3.5rem, 20vw, 18rem);
-}
-
-.signal-field {
-  overflow: visible;
-  opacity: 0.82;
-}
-
-.signal-field__contours {
-  fill: none;
-  stroke: rgb(var(--edge) / 0.46);
-  stroke-width: 1;
-  stroke-dasharray: 3 12;
-  transform-origin: 54% 48%;
-  animation: orbit 44s linear infinite;
-}
-
-.signal-field__ghost,
-.signal-field__route,
-.signal-field__tether {
-  fill: none;
-  vector-effect: non-scaling-stroke;
-}
-
-.signal-field__ghost {
-  stroke: rgb(var(--edge) / 0.52);
-  stroke-width: 1;
-}
-
-.signal-field__route {
-  stroke: rgb(var(--accent) / 0.84);
-  stroke-width: 1.65;
-}
-
-.signal-field__node-ring {
-  fill: rgb(var(--surface-base) / 0.18);
-  stroke: rgb(var(--edge) / 0.62);
-  stroke-width: 1;
-}
-
-.signal-field__node {
-  fill: rgb(var(--signal));
-}
-
-.signal-field__tether {
-  stroke: rgb(var(--signal) / 0.62);
-  stroke-width: 1;
-  stroke-dasharray: 5 9;
-  animation: signal-flow 1.8s linear infinite;
-}
-
-.signal-field__focus-ring {
-  fill: none;
-  stroke: rgb(var(--signal) / 0.8);
-  stroke-width: 1;
-}
-
-.signal-field__focus {
-  fill: rgb(var(--signal));
-}
-
-@media (max-width: 1023px) {
-  .signal-field {
-    opacity: 0.5;
-    transform: scale(1.18);
-    transform-origin: center;
-  }
-}
-
-@media (max-width: 639px) {
-  .hero-name > span:nth-of-type(2) {
-    margin-left: 0.55em;
-  }
-
-  .hero-name > span:nth-of-type(3) {
-    margin-left: 1.1em;
   }
 }

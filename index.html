@@ -10,8 +10,7 @@
       content="Portfolio of Nasik Sami Khan, AI/ML Researcher and Full-Stack Developer specialising in Generative AI, LLMs, NLP, and scalable software systems. MSc Computer Science, University of Regina."
     />
     <meta name="author" content="Nasik Sami Khan" />
-    <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1226" />
     <link rel="canonical" href="https://nasik.ca/" />
     <link rel="icon" type="image/png" href="./logo.png" />
     <link rel="apple-touch-icon" href="./logo.png" />
@@ -46,11 +45,11 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Signal Cartography pairs an editorial display face with a geometric
-         sans and a compact technical mono. Only the weights used by the UI
-         are requested. -->
+    <!-- Horizon pairs Fraunces (display; optical-size, weight, softness and
+         wonk axes) with Public Sans (text). Only the ranges used by the UI are
+         requested. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap"
       rel="stylesheet"
     />
 
@@ -101,19 +100,19 @@
     </script>
 
     <!--
-      Apply the stored theme before first paint so there is no flash of the
-      wrong colour scheme. Paper (light) is the default; `.dark` opts into ink.
+      Apply a stored sky pin before first paint so there is no flash of the
+      wrong palette. No pin means the sky follows the scroll arc, starting at
+      pre-dawn. Stored values stay 'light' | 'dark' for compatibility with
+      preferences saved by the earlier designs.
     -->
     <script>
       (function () {
         try {
           var stored = localStorage.getItem('theme');
-          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (stored === 'dark' || (!stored && prefersDark)) {
-            document.documentElement.classList.add('dark');
-          }
+          if (stored === 'dark') document.documentElement.setAttribute('data-sky-pin', 'night');
+          else if (stored === 'light') document.documentElement.setAttribute('data-sky-pin', 'day');
         } catch (e) {
-          /* Storage blocked — fall through to the paper default. */
+          /* Storage blocked — the sky simply follows the arc. */
         }
       })();
     </script>
