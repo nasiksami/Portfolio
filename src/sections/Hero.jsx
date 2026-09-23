@@ -77,9 +77,6 @@ export default function Hero() {
                 className="h-full w-full object-cover object-[50%_16%]"
               />
             </div>
-            <figcaption className="sr-only">
-              {profile.name}, {profile.location}
-            </figcaption>
           </motion.figure>
 
           <div className="lg:col-span-8 lg:col-start-5">
