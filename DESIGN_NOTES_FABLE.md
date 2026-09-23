@@ -32,12 +32,25 @@ loaded fonts in Chromium) so text does not reflow when the web fonts arrive.
 
 ## The token system
 
-**One input.** `--sky` (0 → 1) is written onto `<html>` by
-`src/hooks/useSky.js`. Each section declares the span of the day it covers
-with `data-sky-in` / `data-sky-out` (from `ARC` in `src/sky.js`); the writer
-interpolates across the section under the viewport centre. Adjacent sections
-share boundary values, so the sky is continuous. No React state is involved,
-and unchanged values are never rewritten.
+**One input.** `--sky` (0 → 1) is the only thing that decides a palette.
+Each section is placed on the arc **once, at render**, by `skyProps()` in
+`src/sky.js`: its `--sky` fixes its palette, and its `--sky-grad` paints its
+stretch of the sky as a gradient with a stop at every knot it passes, so
+adjacent sections join seamlessly and the day is literally painted down the
+page. Scrolling restyles nothing.
+
+Sections that cross sunrise (About) or sunset (Experience) open with an 88px
+band in their top padding, where there is no text, that carries the sky
+across the brightness crossing.
+
+Only the floating chrome, wrapped in `[data-sky-live]`, follows the scroll:
+`src/hooks/useSky.js` writes `--sky` onto that one small subtree, at most once
+per frame and only when it changes, using the same mapping as the gradients so
+the header matches the sky beneath it.
+
+*Why not one live value on `<html>`?* That was the first implementation. Each
+write restyled all ~1,770 nodes, 16ms a frame, and scrolling dropped 39 of 600
+frames. Now the page drops none, and a chrome write costs 0.7ms.
 
 **Eight knots.**
 
@@ -90,10 +103,11 @@ python3 scripts/sky-tokens.py --write   # regenerate after editing the table
 - Every knot: all five inks ≥ 4.5:1 on sky and ground; on-accent and on-signal
   ≥ 6.49:1.
 - Generator sweep, 2001 positions at 0.0005: worst **4.58:1**, none below AA.
-- In-browser sweep (Chromium computing the real CSS), same 2001 positions:
-  worst **4.589:1** (ink on ground at 0.482), **0 failures**.
-- The writer quantises to 0.002, a subset of the swept grid; neither flip lies
-  on it.
+- In-browser, per section: each section's inks against 101 samples of its own
+  painted sky and against its ground. Worst **4.83:1** (About, muted ink at the
+  foot of the sunrise band).
+- In-browser, live chrome: every 0.001 step the writer can produce. Worst
+  **4.58:1**.
 
 ## Pin the sky
 
@@ -108,8 +122,8 @@ first paint.
 **Changed semantics:** unpinned visitors follow the arc, not the OS colour
 scheme. `prefers-color-scheme` no longer applies unless the visitor pins.
 
-**Reduced motion:** `--sky` snaps to the nearest knot for the section in view
-instead of gliding, so those visitors only ever see a verified palette. All
+**Reduced motion:** each section's palette and the chrome snap to the nearest
+knot, so those visitors only ever see a verified keyframe palette. All
 CSS animation and transition durations are zeroed, and every Framer Motion
 entry, parallax and weather layer falls back to a static composition.
 
@@ -117,11 +131,11 @@ entry, parallax and weather layer falls back to a static composition.
 
 | § | Section | Arc | Relation to the line | Move |
 |---|---|---|---|---|
-| 00 | Hero | 0 → sunrise | Name stands on the rule; role, summary and actions on the ground | The portrait is the sun: a disc half below the line that crests as you scroll. Three haze bands drift against the pointer at different depths; a grass fringe leans with pointer velocity. MotionValues only. |
-| 01 | About | sunrise → 0.30 | Tagline in the sky, everything else on the ground | Stats stand below the rule as survey posts and count up. Focus areas form a quarter section: NW, NE, SW, SE. |
+| 00 | Hero | 0 → dawn | Name stands on the rule; role, summary and actions on the ground | The portrait is the sun. At desktop widths it stands on the horizon, its lower 30% clipped by the line, and climbs as you scroll; below lg it has risen into the open sky above the name. Three haze bands drift against the pointer at different depths; a grass fringe leans with pointer velocity. MotionValues only. |
+| 01 | About | sunrise band → 0.30 | Tagline in the sky, everything else on the ground | Stats stand below the rule as survey posts and count up. Focus areas form a quarter section: NW, NE, SW, SE. |
 | 02 | Projects | 0.30 → 0.40 | Filter and skyline in the sky, records on the ground | A skyline of grain elevators, one per visible project, stands on the rule and links to each record. |
-| 03 | Skills | 0.40 → sunset | Fully below the line | Six ruled furrows; proficiency is three seeds. |
-| 04 | Experience | sunset → 0.66 | Timeline drops from the rule | A plumb line falls from the horizon; entries hang from it. Education sticky beside at wide viewports. |
+| 03 | Skills | 0.40 → 0.46 | Fully below the line | Six ruled furrows; proficiency is three seeds. |
+| 04 | Experience | sunset band → 0.66 | Timeline drops from the rule | A plumb line falls from the horizon; entries hang from it. Education sticky beside at wide viewports. |
 | 05 | Publications | 0.66 → 0.84 | Sky-heavy | Papers in the night sky with years set large as the first stars; awards as a constellation on the ground. |
 | 06 | Contact | 0.84 → 1 | Channels in the sky, form on solid ground | Aurora bands drift across the sky, visible only at the end of the arc. The footer continues the ground; the name stands on a final horizon. |
 
@@ -152,6 +166,11 @@ Lighthouse 12, Playwright Chromium, static `dist/` served over localhost.
 | `redesign` (baseline) | desktop | 96 | 100 | 100 | 100 | 1.3 s | 0 | 0 ms |
 | `redesign-fable` | mobile | **74** | **100** | **100** | **100** | 4.9 s | 0.006 | 10 ms |
 | `redesign-fable` | desktop | **96** | **100** | **100** | **100** | 1.3 s | 0.001 | 0 ms |
+| `redesign-fable`, painted sky | mobile | **74** | **100** | **100** | **100** | 5.0 s | 0 | 10 ms |
+| `redesign-fable`, painted sky | desktop | **96** | **100** | **100** | **100** | 1.3 s | 0 | 0 ms |
+
+Scripted scroll, top to bottom at 24px a frame: live `<html>` sky dropped 39 of
+600 frames; the painted sky drops 0 at 1440 and 390 wide.
 
 Both builds carry one zero-weight informational audit,
 `label-content-name-mismatch` (the resume link's accessible name differs from
@@ -174,8 +193,9 @@ untouched.
 
 ## Known limits
 
-- The two ink flips are hard cuts by design. Scrolling slowly past sunrise or
-  sunset, text colour switches in one frame.
+- Section palettes are fixed per section, so text colour changes at section
+  boundaries rather than gliding. The sky itself stays continuous.
+- The header's text flips in one frame as it passes sunrise or sunset.
 - `README.md` on this branch still describes "Specimen №". It was left alone
   so this branch's diff stays to the redesign itself.
 
