@@ -8,13 +8,18 @@ import {
 import { FaAws, FaCss3Alt, FaDatabase } from 'react-icons/fa';
 import { DiHeroku } from 'react-icons/di';
 import { VscVscode } from 'react-icons/vsc';
+import {
+  TbApi, TbBoxMultiple, TbChartBar, TbChartPie, TbDatabase, TbFileSpreadsheet, TbGitMerge,
+  TbStack2,
+} from 'react-icons/tb';
 
 /**
  * Slug → icon component.
  *
  * Simple Icons has removed several brand marks (Oracle, Tableau, Power BI,
  * AWS, Heroku, CSS3) over trademark policy, so those come from the Font
- * Awesome / Devicons / VS Code sets, or fall back to a monogram below.
+ * Awesome / Devicons / VS Code sets. Concepts and marks no set carries use a
+ * generic Tabler symbol; anything else falls back to a monogram below.
  */
 const ICONS = {
   python: SiPython,
@@ -52,6 +57,15 @@ const ICONS = {
   vscode: VscVscode,
   wireshark: SiWireshark,
   colab: SiGooglecolab,
+  llamaindex: TbStack2,
+  vba: TbFileSpreadsheet,
+  entityframework: TbDatabase,
+  dapper: TbDatabase,
+  rest: TbApi,
+  microservices: TbBoxMultiple,
+  cicd: TbGitMerge,
+  tableau: TbChartBar,
+  powerbi: TbChartPie,
 };
 
 /** Deterministic monogram for skills with no brand mark available. */
