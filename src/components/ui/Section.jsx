@@ -1,3 +1,5 @@
+import { useReducedMotion } from 'framer-motion';
+import { skyProps } from '../../sky';
 import Reveal from './Reveal';
 import HorizonRule from '../HorizonRule';
 
@@ -7,9 +9,9 @@ import HorizonRule from '../HorizonRule';
  * The heading and anything passed as `sky` sit in the sky row, which is
  * transparent so the page background shows through. `children` sit on the
  * ground, which fills from the rule down and dissolves back into the sky at
- * its foot unless `ground="solid"`. `arc` is the [in, out] span of the day
- * this section covers; adjacent sections share a boundary value so the sky
- * is continuous across them (see src/sky.js).
+ * its foot unless `ground="solid"`. `arc` is this section's stretch of the
+ * day from ARC in src/sky.js: it fixes the palette and paints the sky once,
+ * so scrolling never restyles the section.
  */
 export default function Section({
   id,
@@ -25,16 +27,16 @@ export default function Section({
   className = '',
 }) {
   const headingId = id + '-heading';
-  const [skyIn, skyOut] = arc ?? [];
+  const reduceMotion = useReducedMotion();
 
   return (
     <section
       id={id}
       aria-labelledby={headingId}
-      data-sky-in={skyIn}
-      data-sky-out={skyOut}
+      {...skyProps(arc, reduceMotion)}
       className={['relative isolate', className].join(' ')}
     >
+      <div aria-hidden="true" className="sky-stars pointer-events-none absolute inset-0 -z-10" />
       <div className="horizon-sky">
         {backdrop}
         <div className="shell pb-12 pt-24 md:pb-16 md:pt-32 lg:pt-40">

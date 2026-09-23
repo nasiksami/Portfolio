@@ -164,7 +164,7 @@ export default function Navbar() {
 
   const headerClass = [
     'fixed inset-x-0 top-0 z-50 transition-colors duration-300',
-    scrolled ? 'border-b border-edge/60 bg-surface-base/85 backdrop-blur-md' : 'bg-transparent',
+    scrolled ? 'border-b border-edge/60 bg-surface-base/95' : 'bg-transparent',
   ].join(' ');
 
   return (

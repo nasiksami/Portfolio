@@ -29,7 +29,7 @@ export default function BackToTop() {
           animate={{ opacity: 1, y: 0 }}
           exit={reduceMotion ? undefined : { opacity: 0, y: 8 }}
           transition={{ duration: 0.22 }}
-          className="meta-sm tap fixed bottom-5 right-5 z-50 justify-center gap-2 rounded-[0.35rem] border border-edge bg-surface-raised/90 px-3.5 py-3 text-content-primary backdrop-blur-md transition-colors hover:border-content-primary md:bottom-7 md:right-7"
+          className="meta-sm tap fixed bottom-5 right-5 z-50 justify-center gap-2 rounded-[0.35rem] border border-edge bg-surface-raised px-3.5 py-3 text-content-primary transition-colors hover:border-content-primary md:bottom-7 md:right-7"
         >
           <FiArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
           <span aria-hidden="true" className="hidden sm:inline">

@@ -1,39 +1,32 @@
 import { useEffect } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { GRID, KNOTS } from '../sky';
+import { ARC, KNOTS, arcAtOffset } from '../sky';
 
-// Fraction of the viewport height used as the "where am I in the day" line.
-// The centre is the natural reading position and keeps both halves of the
-// viewport equally close to the value being shown.
-const LINE = 0.5;
+// The header's reading line: just under its bottom edge.
+const HEADER_LINE = 72;
 
 /**
- * Writes the time-of-day position `--sky` (0 → 1) onto <html>.
+ * Keeps the floating chrome — header, mobile menu, back-to-top — on the same
+ * point of the day as the sky beneath it.
  *
- * Every colour token in index.css is derived from this one number, so this is
- * the only place the page's palette is ever driven from. Sections declare the
- * span of the arc they cover with `data-sky-in` / `data-sky-out`; the value is
- * interpolated across the section under the viewport line, so adjacent
- * sections sharing a boundary value make the sky continuous.
+ * Sections carry their own fixed palette and paint their own sky, so the page
+ * itself never restyles on scroll. Only `[data-sky-live]` follows the scroll:
+ * `--sky` is written onto that one small subtree, at most once per frame and
+ * only when it changes. Writing it on <html> instead restyles every node on
+ * the page and cost 10–16ms a frame.
  *
- * Nothing here touches React state: the writer sets one custom property at
- * most once per animation frame, only when it has changed, and the value is
- * quantised to GRID so the hard ink flips in the stylesheet are never sampled
- * mid-step.
- *
- * When the sky is pinned (`data-sky-pin` on <html>) the stylesheet supplies a
- * fixed value, so the inline property is removed rather than written.
- *
- * Under prefers-reduced-motion the value snaps to the nearest knot so the
- * palette changes in discrete, verified steps instead of gliding.
+ * When the sky is pinned the stylesheet supplies the value and the writer
+ * stands down. Under reduced motion the value snaps to the nearest knot.
  */
 export function useSky() {
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const root = document.documentElement;
+    const live = document.querySelector('[data-sky-live]');
+    if (!live) return undefined;
+
     let frame = 0;
-    // Every write restyles the whole document, so never repeat an unchanged value.
     let last = null;
 
     const nearestKnot = (t) =>
@@ -43,43 +36,25 @@ export function useSky() {
       frame = 0;
 
       if (root.dataset.skyPin) {
-        root.style.removeProperty('--sky');
+        live.style.removeProperty('--sky');
         last = null;
         return;
       }
 
-      const sections = document.querySelectorAll('[data-sky-in]');
-      if (!sections.length) return;
-
-      const line = window.scrollY + window.innerHeight * LINE;
-      let t = null;
-
-      for (const el of sections) {
-        const top = el.getBoundingClientRect().top + window.scrollY;
-        const height = el.offsetHeight;
-        const from = Number(el.dataset.skyIn);
-        const to = Number(el.dataset.skyOut);
-        if (line < top) {
-          // Above this section: the previous one (or the very start) applies.
-          if (t === null) t = from;
-          break;
-        }
-        if (line <= top + height) {
-          t = from + ((line - top) / height) * (to - from);
-          break;
-        }
-        t = to;
+      let t = 0;
+      for (const el of document.querySelectorAll('[data-sky]')) {
+        const arc = ARC[el.dataset.sky];
+        if (!arc) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top > HEADER_LINE) break;
+        t = arcAtOffset(arc, HEADER_LINE - rect.top, rect.height);
       }
-
-      if (t === null) t = Number(sections[0].dataset.skyIn);
       if (reduceMotion) t = nearestKnot(t);
-      t = Math.round(t / GRID) * GRID;
-      t = Math.min(Math.max(t, 0), 1);
 
-      const next = t.toFixed(4);
+      const next = t.toFixed(3);
       if (next === last) return;
       last = next;
-      root.style.setProperty('--sky', next);
+      live.style.setProperty('--sky', next);
     };
 
     const schedule = () => {
@@ -91,8 +66,7 @@ export function useSky() {
     window.addEventListener('resize', schedule, { passive: true });
     window.addEventListener('skypin', schedule);
 
-    // Lazy sections change the page height as they mount; recompute on that
-    // so a #hash deep link lands with the right sky.
+    // Lazy sections change the page height as they mount.
     const observer = new ResizeObserver(schedule);
     observer.observe(document.body);
 

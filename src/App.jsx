@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import BackToTop from './components/BackToTop';
-import SkyField from './components/SkyField';
 import { useHashScroll } from './hooks/useHashScroll';
 import { useSky } from './hooks/useSky';
 import Hero from './sections/Hero';
@@ -25,7 +24,7 @@ export default function App() {
   // Deep links (nasik.ca/#projects) resolve before React has rendered, so the
   // browser's own jump is dropped. Re-run it once the target exists.
   useHashScroll();
-  // The only writer of `--sky`, which every colour on the page derives from.
+  // Keeps the header chrome on the same point of the day as the sky under it.
   useSky();
 
   return (
@@ -37,8 +36,11 @@ export default function App() {
         Skip to main content
       </a>
 
-      <SkyField />
-      <Navbar />
+      {/* The floating chrome follows the scroll; see useSky. */}
+      <div data-sky-live className="contents">
+        <Navbar />
+        <BackToTop />
+      </div>
 
       {/*
         Sections are sky → horizon rule → ground. The ground dissolves back
@@ -58,7 +60,6 @@ export default function App() {
       </main>
 
       <Footer />
-      <BackToTop />
     </>
   );
 }

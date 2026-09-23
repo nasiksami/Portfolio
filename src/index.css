@@ -9,9 +9,11 @@
    scrolls, and every colour on the page derives from where on that arc the
    viewport sits.
 
-   ONE INPUT. `--sky` (0 → 1) is written onto <html> by hooks/useSky.js. It
-   is the only thing that ever changes the palette. Nothing below is
-   per-component.
+   ONE INPUT. `--sky` (0 → 1) is the only thing that decides a palette.
+   Each section is placed on the arc once, at render, by skyProps() in
+   src/sky.js: its --sky fixes its palette and its --sky-grad paints its
+   stretch of the sky. Scrolling restyles nothing. Only the header chrome
+   ([data-sky-live]) follows the scroll, written by hooks/useSky.js.
 
    EIGHT KNOTS. The arc is a piecewise-linear blend between eight palette
    knots — pre-dawn, dawn, morning, noon, afternoon, dusk, night, aurora —
@@ -412,9 +414,13 @@
 /* GENERATED: sky properties — end */
 
 @layer base {
-  :root {
-    --sky: 0;
-
+  /* Every element on the arc computes its own palette from its own --sky:
+     <html> (the chrome outside sections), each section, and the live
+     wrapper around the header. Registered properties inherit as numbers, so
+     descendants never re-evaluate the chain. */
+  :root,
+  [data-sky],
+  [data-sky-live] {
     /* GENERATED: sky tokens — start */
     /* Tent weights: each knot's influence peaks at its own arc position. */
     --w0: clamp(0, (0.11 - var(--sky)) / 0.11, 1);
@@ -496,13 +502,27 @@
     /* GENERATED: sky tokens — end */
   }
 
-  /* Pinned skies: the stylesheet supplies the value and the writer stands down. */
-  :root[data-sky-pin='day'] {
-    --sky: 0.3;
+  /* Each section paints its own stretch of the day; see skyGradient(). */
+  [data-sky] {
+    background: var(--sky-grad, rgb(var(--sky-rgb)));
   }
 
-  :root[data-sky-pin='night'] {
-    --sky: 0.78;
+  /* Pinned skies: the stylesheet supplies the value everywhere, overriding
+     each section's inline position, and every sky is a flat colour. */
+  :root[data-sky-pin='day'],
+  :root[data-sky-pin='day'] [data-sky],
+  :root[data-sky-pin='day'] [data-sky-live] {
+    --sky: 0.3 !important;
+  }
+
+  :root[data-sky-pin='night'],
+  :root[data-sky-pin='night'] [data-sky],
+  :root[data-sky-pin='night'] [data-sky-live] {
+    --sky: 0.78 !important;
+  }
+
+  :root[data-sky-pin] [data-sky] {
+    background: rgb(var(--sky-rgb));
   }
 
   html {
@@ -590,6 +610,15 @@
     font-variation-settings:
       'opsz' 144,
       'SOFT' calc(var(--w1) * 60 + var(--w2) * 25 + var(--w4) * 45 + var(--w5) * 100 + var(--w7) * 15),
+      'WONK' 1;
+  }
+
+  /* The floating chrome re-reads --sky as the page scrolls; a changing
+     variation axis would reshape its text every frame, so it keeps one. */
+  [data-sky-live] .display {
+    font-variation-settings:
+      'opsz' 144,
+      'SOFT' 30,
       'WONK' 1;
   }
 
@@ -705,8 +734,8 @@
     );
   }
 
-  /* Ground fills from the rule down, then dissolves back into the sky at the
-     bottom so the next section's horizon is the only hard edge on the page. */
+  /* Ground fills from the rule down, then dissolves into the section's own
+     painted sky at its foot, so the next horizon is the only hard edge. */
   .horizon-ground {
     --fade: 12rem;
     position: relative;
@@ -715,7 +744,7 @@
       to bottom,
       rgb(var(--ground-rgb)) 0,
       rgb(var(--ground-rgb)) calc(100% - var(--fade)),
-      rgb(var(--sky-rgb)) 100%
+      rgb(var(--ground-rgb) / 0) 100%
     );
   }
 

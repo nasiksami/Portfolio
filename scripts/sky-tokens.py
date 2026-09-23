@@ -261,6 +261,7 @@ def write():
     j = js_path.read_text()
     j = re.sub(r'export const KNOTS = \[.*?\];', f'export const KNOTS = {json.dumps(T)};', j)
     j = re.sub(r'export const FLIPS = \{.*?\};', f'export const FLIPS = {{ sunrise: {FA:.5f}, sunset: {FB:.5f} }};', j)
+    j = re.sub(r'export const SKY = \[.*?\];', 'export const SKY = ' + json.dumps([col(k, 'sky') for k in KN]) + ';', j)
     js_path.write_text(j)
     print(f"wrote {css_path.relative_to(ROOT)} and {js_path.relative_to(ROOT)}")
 

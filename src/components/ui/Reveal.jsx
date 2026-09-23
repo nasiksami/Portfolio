@@ -3,7 +3,8 @@ import { motion, useReducedMotion } from 'framer-motion';
 const REVEAL_MARGIN = '9999px 0px -60px 0px';
 
 /**
- * Scroll-triggered atlas reveal. The expanded top margin guarantees that hash
+ * Scroll-triggered reveal: opacity and transform only, so it stays on the
+ * compositor. The expanded top margin guarantees that hash
  * navigation and fast scrolling can never leave content hidden.
  */
 export default function Reveal({
@@ -25,8 +26,8 @@ export default function Reveal({
     variant === 'rise'
       ? { hidden: { opacity: 0, y: 32 }, shown: { opacity: 1, y: 0 } }
       : {
-          hidden: { opacity: 0, x: -14, y: 14, filter: 'blur(7px)' },
-          shown: { opacity: 1, x: 0, y: 0, filter: 'blur(0px)' },
+          hidden: { opacity: 0, x: -14, y: 14 },
+          shown: { opacity: 1, x: 0, y: 0 },
         };
 
   return (

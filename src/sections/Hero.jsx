@@ -9,7 +9,7 @@ import {
 } from 'framer-motion';
 import { FiArrowDown, FiDownload } from 'react-icons/fi';
 import { profile, socials } from '../data/profile';
-import { ARC } from '../sky';
+import { ARC, skyProps } from '../sky';
 import Weather from '../components/Weather';
 import HorizonRule from '../components/HorizonRule';
 import Button from '../components/ui/Button';
@@ -70,12 +70,12 @@ export default function Hero() {
       id="top"
       ref={sectionRef}
       aria-labelledby="hero-heading"
-      data-sky-in={ARC.top[0]}
-      data-sky-out={ARC.top[1]}
+      {...skyProps(ARC.top, reduceMotion)}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       className="relative isolate flex min-h-[100svh] flex-col"
     >
+      <div aria-hidden="true" className="sky-stars pointer-events-none absolute inset-0 -z-10" />
       {/* Sky */}
       <motion.div
         className="horizon-sky relative flex flex-1 flex-col justify-end pt-24 md:pt-28"

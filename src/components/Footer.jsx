@@ -1,6 +1,7 @@
 import { navLinks, profile } from '../data/profile';
 import SocialLinks from './SocialLinks';
 import HorizonRule from './HorizonRule';
+import { ARC, skyProps } from '../sky';
 
 /**
  * The last of the ground. The name stands on one final horizon at wordmark
@@ -8,7 +9,7 @@ import HorizonRule from './HorizonRule';
  */
 export default function Footer() {
   return (
-    <footer className="relative">
+    <footer {...skyProps(ARC.footer)} className="relative">
       <div className="bg-surface-raised">
         <div className="shell pb-10 pt-6 md:pb-14">
           <div className="grid gap-12 border-t border-edge pt-12 lg:grid-cols-12 lg:gap-8">
