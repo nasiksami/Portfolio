@@ -7,6 +7,7 @@ import { ARC } from '../sky';
 import Section from '../components/ui/Section';
 import Reveal from '../components/ui/Reveal';
 import Tag from '../components/ui/Tag';
+import Emphasis from '../components/ui/Emphasis';
 
 function TimelineEntry({ entry, index, isEducation = false }) {
   const [open, setOpen] = useState(index === 0);
@@ -63,13 +64,13 @@ function TimelineEntry({ entry, index, isEducation = false }) {
 
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2.5">
-                <h4 className="display text-[clamp(1.5rem,2.6vw,2.25rem)] leading-none text-content-primary transition-colors group-hover:text-accent">
+                <h4 className="display d-3 text-content-primary transition-colors group-hover:text-accent">
                   {title}
                 </h4>
                 {entry.type && <Tag>{entry.type}</Tag>}
                 {entry.grade && <Tag tone="signal">{entry.grade}</Tag>}
               </div>
-              <p className="mt-3 text-sm text-content-secondary">
+              <p className="mt-3 text-base text-content-secondary">
                 {entry.org}
                 {entry.location && <span className="text-content-muted"> · {entry.location}</span>}
               </p>
@@ -80,9 +81,11 @@ function TimelineEntry({ entry, index, isEducation = false }) {
             <>
               <ul className="mt-6 space-y-3">
                 {preview.map((point) => (
-                  <li key={point} className="flex gap-3 text-sm leading-relaxed text-content-secondary">
-                    <span aria-hidden="true" className="mt-[0.55rem] h-1 w-3 shrink-0 bg-accent" />
-                    {point}
+                  <li key={point} className="flex max-w-prose gap-3 text-base text-content-secondary">
+                    <span aria-hidden="true" className="mt-[0.75em] h-1 w-3 shrink-0 bg-accent" />
+                    <span>
+                      <Emphasis>{point}</Emphasis>
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -102,10 +105,12 @@ function TimelineEntry({ entry, index, isEducation = false }) {
                         {points.slice(2).map((point) => (
                           <li
                             key={point}
-                            className="flex gap-3 pt-3 text-sm leading-relaxed text-content-secondary"
+                            className="flex max-w-prose gap-3 pt-3 text-base text-content-secondary"
                           >
-                            <span aria-hidden="true" className="mt-[0.55rem] h-1 w-3 shrink-0 bg-accent" />
-                            {point}
+                            <span aria-hidden="true" className="mt-[0.75em] h-1 w-3 shrink-0 bg-accent" />
+                            <span>
+                              <Emphasis>{point}</Emphasis>
+                            </span>
                           </li>
                         ))}
                       </motion.ul>

@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="shell pb-10 pt-6 md:pb-14">
           <div className="grid gap-12 border-t border-edge pt-12 lg:grid-cols-12 lg:gap-8">
             <div className="lg:col-span-5">
-              <p className="max-w-md text-base leading-relaxed text-content-secondary md:text-lg">
+              <p className="max-w-md text-lg text-content-secondary">
                 {profile.role} based in {profile.location}.
               </p>
               <SocialLinks className="mt-8" />

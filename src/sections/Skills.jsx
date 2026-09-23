@@ -65,7 +65,7 @@ export default function Skills() {
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center text-content-secondary">
                       <SkillIcon icon={item.icon} name={item.name} className="h-4 w-4" />
                     </span>
-                    <span className="min-w-0 flex-1 truncate text-sm text-content-primary">
+                    <span className="min-w-0 flex-1 truncate text-base text-content-primary">
                       {item.name}
                     </span>
                     <Seeds level={item.level} />

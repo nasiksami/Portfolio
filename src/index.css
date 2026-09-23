@@ -525,6 +525,20 @@
     background: rgb(var(--sky-rgb));
   }
 
+  /* Type scale: a fluid base (17px at 360 wide, 18px from ~1024) and a
+     major third above and below it. Display sizes interpolate between two
+     steps of the same scale across the viewport. */
+  :root {
+    --step-0: clamp(1.0625rem, 0.99rem + 0.3vw, 1.125rem);
+    --step--2: calc(var(--step-0) / 1.5625);
+    --step--1: calc(var(--step-0) / 1.25);
+    --step-1: calc(var(--step-0) * 1.25);
+    --step-2: calc(var(--step-0) * 1.5625);
+    --step-3: calc(var(--step-0) * 1.9531);
+    --step-4: calc(var(--step-0) * 2.4414);
+    --step-5: calc(var(--step-0) * 3.0518);
+  }
+
   html {
     background-color: rgb(var(--sky-rgb));
     scroll-behavior: smooth;
@@ -532,7 +546,7 @@
   }
 
   body {
-    @apply min-h-screen overflow-x-hidden bg-surface-base font-sans text-content-primary antialiased;
+    @apply min-h-screen overflow-x-hidden bg-surface-base font-sans text-base text-content-primary antialiased;
   }
 
   h1,
@@ -628,25 +642,50 @@
     font-weight: 400;
   }
 
+  /* Section headings: step 5 at 360 wide rising to step 8 (~107px). */
+  .d-1 {
+    font-size: clamp(var(--step-5), 1.2rem + 6vw, calc(var(--step-0) * 5.9605));
+    letter-spacing: -0.04em;
+  }
+
+  /* Project titles and other display subheads: step 3 → step 4. */
+  .d-2 {
+    font-size: clamp(var(--step-3), 1.1rem + 2.4vw, var(--step-4));
+    line-height: 0.98;
+  }
+
+  /* Group and entry titles: step 2 → step 3. */
+  .d-3 {
+    font-size: clamp(var(--step-2), 1rem + 1.2vw, var(--step-3));
+    line-height: 1.06;
+  }
+
+  /* Stat numerals: step 4 → step 7. */
+  .d-stat {
+    font-size: clamp(var(--step-4), 1rem + 5.6vw, calc(var(--step-0) * 4.7684));
+    line-height: 1;
+  }
+
+  /* Text-face subheads: unmistakably secondary to any display heading. */
+  .subhead {
+    font-family: 'Public Sans', 'Public Sans Fallback', system-ui, sans-serif;
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  /* Key outcomes, technologies and metrics inside running copy. One rule,
+     applied by components/ui/Emphasis.jsx everywhere it appears. */
+  .emph {
+    font-weight: 600;
+    color: rgb(var(--ink-rgb));
+  }
+
   .d-hero {
     font-size: clamp(3.4rem, 15vw, 14rem);
     line-height: 0.88;
     letter-spacing: -0.045em;
-  }
-
-  .d-1 {
-    font-size: clamp(2.75rem, 7vw, 7rem);
-    letter-spacing: -0.04em;
-  }
-
-  .d-2 {
-    font-size: clamp(2rem, 4vw, 3.8rem);
-    line-height: 0.98;
-  }
-
-  .d-3 {
-    font-size: clamp(1.4rem, 2.2vw, 2.1rem);
-    line-height: 1.06;
   }
 
   /* Metadata voice: Public Sans, tracked caps, tabular figures. */
@@ -659,14 +698,15 @@
     line-height: 1.45;
   }
 
+  /* Metadata sits a half and a full step below the smallest text step. */
   .meta {
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
+    font-size: calc(var(--step--2) * 1.118);
+    letter-spacing: 0.13em;
   }
 
   .meta-sm {
-    font-size: 0.64rem;
-    letter-spacing: 0.16em;
+    font-size: var(--step--2);
+    letter-spacing: 0.15em;
   }
 
   .eyebrow {
@@ -824,6 +864,12 @@
   }
 }
 
+@media (max-width: 767px) {
+  .d-hero {
+    font-size: clamp(3.2rem, 19vw, 7rem);
+  }
+}
+
 @media (pointer: coarse) {
   .tap,
   .tap-block {
@@ -835,11 +881,6 @@
   }
 }
 
-@media (max-width: 767px) {
-  .d-hero {
-    font-size: clamp(3.2rem, 19vw, 7rem);
-  }
-}
 
 /* Every moving layer has a static, complete equivalent. */
 @media (prefers-reduced-motion: reduce) {

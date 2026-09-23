@@ -1,4 +1,3 @@
-import { useReducedMotion } from 'framer-motion';
 import { skyProps } from '../../sky';
 import Reveal from './Reveal';
 import HorizonRule from '../HorizonRule';
@@ -27,13 +26,12 @@ export default function Section({
   className = '',
 }) {
   const headingId = id + '-heading';
-  const reduceMotion = useReducedMotion();
 
   return (
     <section
       id={id}
       aria-labelledby={headingId}
-      {...skyProps(arc, reduceMotion)}
+      {...skyProps(arc)}
       className={['relative isolate', className].join(' ')}
     >
       <div aria-hidden="true" className="sky-stars pointer-events-none absolute inset-0 -z-10" />
@@ -56,7 +54,7 @@ export default function Section({
               </Reveal>
               {description && (
                 <Reveal delay={0.08}>
-                  <p className="mt-6 max-w-prose border-l border-accent pl-5 text-base leading-relaxed text-content-secondary md:mt-8 md:text-lg">
+                  <p className="mt-6 max-w-prose border-l border-accent pl-5 text-lg text-content-secondary md:mt-8">
                     {description}
                   </p>
                 </Reveal>

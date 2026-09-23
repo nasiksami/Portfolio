@@ -9,6 +9,7 @@ import { useCountUp } from '../hooks/useCountUp';
 import { ARC } from '../sky';
 import Section from '../components/ui/Section';
 import Reveal from '../components/ui/Reveal';
+import Emphasis from '../components/ui/Emphasis';
 
 const FOCUS_ICONS = {
   brain: HiOutlineChip,
@@ -38,11 +39,11 @@ function Stat({ stat, index }) {
         {stat.label}
       </dt>
       <dd className="order-1 m-0">
-        <span className="display block text-[clamp(3rem,6.5vw,6rem)] leading-none text-accent">
+        <span className="display d-stat block text-accent">
           {display}
         </span>
       </dd>
-      <dd className="order-3 m-0 mt-2 max-w-[13rem] text-sm leading-relaxed text-content-secondary">
+      <dd className="order-3 m-0 mt-2 max-w-[15rem] text-sm text-content-secondary">
         {stat.detail}
       </dd>
     </div>
@@ -78,13 +79,11 @@ export default function About() {
             <Reveal key={paragraph} delay={index * 0.08}>
               <p
                 className={[
-                  'max-w-3xl leading-relaxed text-content-secondary',
-                  index === 0
-                    ? 'text-xl text-content-primary md:text-2xl md:leading-snug'
-                    : 'mt-8 text-base md:text-lg',
+                  'max-w-prose',
+                  index === 0 ? 'text-xl text-content-primary' : 'mt-8 text-base text-content-secondary',
                 ].join(' ')}
               >
-                {paragraph}
+                <Emphasis>{paragraph}</Emphasis>
               </p>
             </Reveal>
           ))}
@@ -117,8 +116,8 @@ export default function About() {
                   <h4 className="display d-3 mt-10 text-content-primary transition-colors group-hover:text-accent">
                     {area.title}
                   </h4>
-                  <p className="mt-4 max-w-prose text-sm leading-relaxed text-content-secondary md:text-base">
-                    {area.description}
+                  <p className="mt-4 max-w-prose text-base text-content-secondary">
+                    <Emphasis>{area.description}</Emphasis>
                   </p>
                 </div>
               </Reveal>

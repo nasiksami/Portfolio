@@ -5,6 +5,7 @@ import { categories, projects } from '../data/projects';
 import { ARC } from '../sky';
 import Section from '../components/ui/Section';
 import Tag from '../components/ui/Tag';
+import Emphasis from '../components/ui/Emphasis';
 
 const slug = (title) => 'project-' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const number = (index) => String(index + 1).padStart(2, '0');
@@ -75,12 +76,12 @@ function ProjectEntry({ project, index }) {
           <span className="meta-sm text-content-muted">{project.role}</span>
         </div>
 
-        <h3 className="display text-[clamp(2.2rem,4.5vw,4.4rem)] leading-[0.95] text-content-primary transition-colors duration-300 group-hover:text-accent">
+        <h3 className="display d-2 text-content-primary transition-colors duration-300 group-hover:text-accent">
           {project.title}
         </h3>
 
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-content-secondary md:text-lg">
-          {project.description}
+        <p className="mt-6 max-w-prose text-base text-content-secondary">
+          <Emphasis>{project.description}</Emphasis>
         </p>
 
         {links.length > 0 && (
@@ -106,7 +107,7 @@ function ProjectEntry({ project, index }) {
         {project.impact && (
           <div className="border-l border-accent pl-5">
             <p className="meta-sm text-accent">Impact</p>
-            <p className="mt-2 text-sm font-medium leading-relaxed text-content-primary">
+            <p className="mt-2 text-base font-semibold text-content-primary">
               {project.impact}
             </p>
           </div>

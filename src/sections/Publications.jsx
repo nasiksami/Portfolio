@@ -38,14 +38,14 @@ function PaperList() {
           <Reveal key={pub.title} as="li" delay={Math.min(index * 0.05, 0.25)}>
             <article className="group grid gap-4 border-t border-edge py-7 md:grid-cols-[8rem_minmax(0,1fr)] md:gap-8 md:py-9">
               <div className="flex items-baseline gap-3 md:block">
-                <p className="display text-5xl leading-none text-accent md:text-6xl">{pub.year}</p>
+                <p className="display d-2 text-accent">{pub.year}</p>
                 <p aria-hidden="true" className="meta-sm text-content-muted md:mt-3">
                   [{index + 1}]
                 </p>
               </div>
 
               <div>
-                <h4 className="text-lg font-semibold leading-snug text-content-primary md:text-xl">
+                <h4 className="subhead max-w-prose text-content-primary">
                   <a
                     href={pub.href}
                     target="_blank"
@@ -112,7 +112,7 @@ export default function Publications() {
               <span className="h-1.5 w-1.5 rounded-full bg-signal shadow-[0_0_0_4px_rgb(var(--signal-rgb)/0.18)]" />
               <span className="meta-sm text-content-muted">{String(index + 1).padStart(2, '0')}</span>
             </span>
-            <p className="text-sm font-medium leading-snug text-content-primary md:text-base">
+            <p className="text-base font-medium leading-snug text-content-primary">
               {award.href ? (
                 <a
                   href={award.href}

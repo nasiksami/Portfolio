@@ -19,7 +19,7 @@ function Channels() {
     <div className="mt-16 grid gap-8 md:mt-24 lg:grid-cols-12 lg:gap-8">
       <Reveal className="lg:col-span-4">
         <p className="eyebrow">Reach me directly</p>
-        <p className="mt-5 max-w-xs text-base leading-relaxed text-content-secondary">
+        <p className="mt-5 max-w-xs text-base text-content-secondary">
           Based in {profile.location}. Happy to talk about research, engineering, or anything in
           between.
         </p>
@@ -39,7 +39,7 @@ function Channels() {
                   <span className="meta-sm text-content-muted transition-colors group-hover:text-accent">
                     {social.label}
                   </span>
-                  <span className="min-w-0 truncate text-sm text-content-primary transition-colors group-hover:text-accent md:text-base">
+                  <span className="min-w-0 truncate text-base text-content-primary transition-colors group-hover:text-accent">
                     {social.value}
                   </span>
                   <FiArrowUpRight

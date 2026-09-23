@@ -43,7 +43,7 @@ function SkyPin({ pin, setPin }) {
             ].join(' ')}
           >
             <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-            <span aria-hidden="true" className="hidden md:inline">
+            <span aria-hidden="true" className="hidden md:inline xl:hidden 2xl:inline">
               {PIN_SHORT[mode]}
             </span>
           </button>
@@ -109,7 +109,7 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const desktop = window.matchMedia('(min-width: 1024px)');
+    const desktop = window.matchMedia('(min-width: 1280px)');
     const closeAtDesktop = (event) => {
       if (event.matches) setMenuOpen(false);
     };
@@ -179,7 +179,7 @@ export default function Navbar() {
             />
           </a>
 
-          <ul className="hidden items-center gap-6 lg:flex">
+          <ul className="hidden items-center gap-6 xl:flex">
             <NavItems activeId={activeId} selectId={selectId} />
           </ul>
 
@@ -203,7 +203,7 @@ export default function Navbar() {
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
-              className="tap -mr-2 justify-center rounded-[0.35rem] px-2 text-content-primary lg:hidden"
+              className="tap -mr-2 justify-center rounded-[0.35rem] px-2 text-content-primary xl:hidden"
             >
               {menuOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
             </button>
@@ -223,7 +223,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
             transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-edge bg-surface-raised lg:hidden"
+            className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-edge bg-surface-raised xl:hidden"
           >
             <div className="shell relative flex min-h-full flex-col justify-between py-8">
               <ul className="border-b border-edge [&>li]:border-t [&>li]:border-edge">

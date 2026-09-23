@@ -27,7 +27,7 @@ export default function Button({
 }) {
   const padding = variant === 'bare' ? '' : SIZES[size] ?? SIZES.md;
   const classes = [
-    'meta tap justify-center gap-2.5 rounded-[0.35rem] transition-colors duration-300',
+    'meta tap justify-center gap-2.5 whitespace-nowrap rounded-[0.35rem] transition-colors duration-300',
     VARIANTS[variant] ?? VARIANTS.solid,
     padding,
     className,
