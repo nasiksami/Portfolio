@@ -22,7 +22,51 @@ function AuthorList({ authors }) {
   );
 }
 
-/** The papers, set in the sky as the first stars of the evening. */
+/**
+ * The paper itself: its first page as a small sheet on a stack, or for a
+ * book chapter the book's jacket with a spine. It repeats the title link's
+ * destination, so it is hidden from assistive technology and skipped by the
+ * keyboard; the title link is the accessible way in. Fixed aspect ratios
+ * reserve the space before the lazy image arrives, so nothing shifts.
+ */
+function Cover({ pub }) {
+  if (!pub.cover) return null;
+  const isBook = pub.type === 'Book chapter';
+
+  return (
+    <a
+      href={pub.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      tabIndex={-1}
+      aria-hidden="true"
+      className="relative block self-start [grid-area:cover]"
+    >
+      {!isBook && (
+        <span className="absolute inset-0 translate-x-1.5 translate-y-1.5 rounded-[0.35rem] border border-edge bg-surface-overlay" />
+      )}
+      <span
+        className={[
+          'relative block overflow-hidden border border-edge bg-white transition-transform duration-300 group-hover:-translate-y-1',
+          isBook ? 'aspect-[7/10] rounded-[0.15rem_0.35rem_0.35rem_0.15rem]' : 'aspect-[3/4] rounded-[0.35rem]',
+        ].join(' ')}
+      >
+        <img
+          src={pub.cover}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover object-top"
+        />
+        {isBook && (
+          <span className="absolute inset-y-0 left-0 w-2.5 bg-gradient-to-r from-black/40 to-transparent" />
+        )}
+      </span>
+    </a>
+  );
+}
+
+/** The papers, each with its first page or jacket in the right-hand column. */
 function PaperList() {
   return (
     <div className="mt-16 md:mt-24">
@@ -36,15 +80,15 @@ function PaperList() {
       <ol>
         {publications.map((pub, index) => (
           <Reveal key={pub.title} as="li" delay={Math.min(index * 0.05, 0.25)}>
-            <article className="group grid gap-4 border-t border-edge py-7 md:grid-cols-[8rem_minmax(0,1fr)] md:gap-8 md:py-9">
-              <div className="flex items-baseline gap-3 md:block">
+            <article className="group grid grid-cols-[minmax(0,1fr)_4.5rem] gap-x-5 gap-y-4 border-t border-edge py-7 [grid-template-areas:'year_cover'_'body_body'] md:grid-cols-[7rem_minmax(0,1fr)_8rem] md:gap-x-8 md:py-9 md:[grid-template-areas:'year_body_cover']">
+              <div className="flex items-baseline gap-3 self-start [grid-area:year] md:block">
                 <p className="display d-2 text-accent">{pub.year}</p>
                 <p aria-hidden="true" className="meta-sm text-content-muted md:mt-3">
                   [{index + 1}]
                 </p>
               </div>
 
-              <div>
+              <div className="[grid-area:body]">
                 <h4 className="subhead max-w-prose text-content-primary">
                   <a
                     href={pub.href}
@@ -73,6 +117,8 @@ function PaperList() {
                   <Tag>{pub.type}</Tag>
                 </p>
               </div>
+
+              <Cover pub={pub} />
             </article>
           </Reveal>
         ))}

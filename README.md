@@ -90,6 +90,12 @@ content needs no markup. Matching is case-sensitive.
 **The About profile** pairs each paragraph in `bio` with the heading at the
 same position in `bioLabels`. Keep the two arrays in step.
 
+**Publication covers** are optional: a `cover` image on an entry in
+`publications.js` shows beside it, linked to the paper. Seven are the paper's
+first page, rendered once from its PDF to a 320px WebP in
+`src/assets/papers/`. The book chapter uses the book's jacket, and any entry
+with `type: 'Book chapter'` is drawn as a book with a spine.
+
 ## Design system — "Horizon"
 
 A Saskatchewan prairie sky read as one continuous document. Every section is
