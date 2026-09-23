@@ -13,6 +13,15 @@ export const publications = [
   },
   {
     title:
+      'Enhancing Language Models for Telecom Networks Using Retrieval-Augmented Generation: A Pipeline for Telecom-Specific QA System',
+    authors: 'N. S. Khan',
+    venue: 'MSc thesis, Faculty of Graduate Studies and Research, University of Regina',
+    year: 2025,
+    type: 'Thesis',
+    href: 'https://uregina.scholaris.ca/items/c0f7521e-9a2e-477a-b633-3c4463cdf0f7/full',
+  },
+  {
+    title:
       'Enhancing Large Language Models for Telecom Networks Using Retrieval-Augmented Generation',
     authors: 'N. S. Khan, M. M. Hasan, M. S. Towhid, S. Basnet, and N. Shahriar',
     venue: 'IEEE Globecom Workshops (GC Wkshps)',
