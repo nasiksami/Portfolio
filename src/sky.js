@@ -54,11 +54,16 @@ export function skyAt(t) {
 const nearestKnot = (t) =>
   KNOTS.reduce((best, k) => (Math.abs(k - t) < Math.abs(best - t) ? k : best), KNOTS[0]);
 
-/** The arc position a section's palette is taken from: the middle of its text span. */
-export function paletteAt(arc, reduceMotion = false) {
+/**
+ * The arc position a section's text palette is taken from: the keyframe
+ * nearest the middle of its text span. Snapping to a keyframe rather than
+ * interpolating matters because neighbouring keyframes can have distant
+ * accent hues — morning rust and noon blue average to grey. The painted sky
+ * behind the text still interpolates continuously.
+ */
+export function paletteAt(arc) {
   const start = arc.cross ?? arc.from;
-  const t = (start + arc.to) / 2;
-  return reduceMotion ? nearestKnot(t) : t;
+  return nearestKnot((start + arc.to) / 2);
 }
 
 /**
@@ -97,9 +102,9 @@ export function arcAtOffset(arc, offset, height) {
 }
 
 /** Props that place an element on the arc: its palette and its painted sky. */
-export function skyProps(arc, reduceMotion = false) {
+export function skyProps(arc) {
   return {
     'data-sky': Object.keys(ARC).find((key) => ARC[key] === arc) ?? '',
-    style: { '--sky': paletteAt(arc, reduceMotion), '--sky-grad': skyGradient(arc) },
+    style: { '--sky': paletteAt(arc), '--sky-grad': skyGradient(arc) },
   };
 }
