@@ -682,10 +682,40 @@
     color: rgb(var(--ink-rgb));
   }
 
-  .d-hero {
-    font-size: clamp(3.4rem, 15vw, 14rem);
-    line-height: 0.88;
+  /* The hero name fills its column exactly. Measured advance widths in
+     Fraunces at this tracking: "Nasik Sami" 3.90em, the full name 5.96em;
+     the divisors leave ~2.5% slack. Two lines below 1280px, capped so
+     tablets are not overwhelmed; one line above. */
+  .hero-name-fit {
+    container-type: inline-size;
+  }
+
+  .hero-name {
+    font-size: min(100cqi / 4, 12rem);
+    line-height: 0.86;
     letter-spacing: -0.045em;
+    text-box: trim-both cap alphabetic;
+  }
+
+  .hero-name > span {
+    display: block;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 1280px) {
+    .hero-name {
+      font-size: calc(100cqi / 6.1);
+    }
+
+    .hero-name > span {
+      display: inline;
+    }
+  }
+
+  /* Aligns a text block's cap height with the top edge of what sits beside
+     it, where supported; elsewhere the line box aligns instead. */
+  .trim-cap {
+    text-box: trim-start cap alphabetic;
   }
 
   /* Metadata voice: Public Sans, tracked caps, tabular figures. */
@@ -861,12 +891,6 @@
 
   to {
     translate: 6% 0;
-  }
-}
-
-@media (max-width: 767px) {
-  .d-hero {
-    font-size: clamp(3.2rem, 19vw, 7rem);
   }
 }
 
