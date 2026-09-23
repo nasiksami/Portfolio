@@ -1,79 +1,64 @@
 import { motion, useSpring, useTransform, useVelocity } from 'framer-motion';
 
-// A deterministic fringe of grass along the horizon. Heights are seeded from
-// the index so the silhouette is the same on every render.
-const BLADES = Array.from({ length: 120 }, (_, i) => {
-  const x = (i / 119) * 1200;
-  const seed = ((i * 7919) % 97) / 97;
-  const height = 10 + 34 * seed + 10 * Math.sin(i * 0.61);
-  const lean = 3 * Math.sin(i * 1.7);
-  return { x, height, lean };
+// A sparse, clumped fringe of grass along the horizon. Seeded from the index
+// so the silhouette is stable across renders: tall stems in loose clumps,
+// short ones between, each a gentle curve rather than a straight tick.
+const BLADES = Array.from({ length: 84 }, (_, i) => {
+  const clump = Math.sin(i * 0.37) * 0.5 + Math.sin(i * 0.11 + 1.3) * 0.5;
+  const seed = ((i * 7919) % 101) / 101;
+  const x = (i / 83) * 1200 + (seed - 0.5) * 9;
+  const height = 5 + 7 * seed + Math.max(clump, 0) * 22;
+  const bend = (seed - 0.5) * 8;
+  return `M${x.toFixed(1)} 40 q${(bend * 0.3).toFixed(1)} ${(-height * 0.55).toFixed(1)} ${bend.toFixed(1)} ${(-height).toFixed(1)}`;
 });
 
 /**
- * Weather for the hero: three haze bands that drift against the pointer at
- * different depths, a fringe of grass that leans with the wind, and a glow
- * where the sun meets the horizon.
+ * Weather for the hero: two haze banks that drift against the pointer at
+ * different depths, and a fringe of grass that leans with the wind.
  *
- * Everything moves through MotionValues supplied by the hero — no React state
- * is touched on pointer move. Under reduced motion the composition is static
- * and complete.
+ * Everything moves through MotionValues supplied by the hero; nothing touches
+ * React state on pointer move, and every moving layer is a transform on a
+ * painted gradient, never an animated filter. Under reduced motion the
+ * composition is static and complete.
  */
 export default function Weather({ windX, windY, reduceMotion }) {
-  const farX = useTransform(windX, [-1, 1], [-50, 50]);
-  const nearX = useTransform(windX, [-1, 1], [120, -120]);
-  const groundY = useTransform(windY, [-1, 1], [-10, 10]);
+  const farX = useTransform(windX, [-1, 1], [-40, 40]);
+  const nearX = useTransform(windX, [-1, 1], [90, -90]);
+  const nearY = useTransform(windY, [-1, 1], [-8, 8]);
 
-  // Grass leans away from the direction the pointer is moving. Velocity is in
-  // normalised units per second; a full sweep across the hero in a second is
-  // about 2, so ±2.5 covers a brisk gesture.
+  // Grass leans away from the direction the pointer moves. Velocity is in
+  // normalised units per second; a brisk sweep across the hero is about 2.
   const velocity = useVelocity(windX);
-  const leanTarget = useTransform(velocity, [-2.5, 2.5], [9, -9]);
+  const leanTarget = useTransform(velocity, [-2.5, 2.5], [10, -10]);
   const lean = useSpring(leanTarget, { stiffness: 140, damping: 16, mass: 0.5 });
   const skew = useTransform(lean, (deg) => `skewX(${deg}deg)`);
 
-  const still = reduceMotion ? undefined : {};
-
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      {/* Far haze: cool, wide, slow. */}
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
       <motion.div
-        className="absolute -left-[12%] bottom-[16%] h-[24vh] w-[74%] rounded-[100%] bg-accent/[0.14] blur-3xl"
+        className="absolute inset-x-[-15%] bottom-[8%] h-[38%] bg-[radial-gradient(ellipse_at_30%_70%,rgb(var(--accent-rgb)/0.16),transparent_62%)]"
         style={reduceMotion ? undefined : { x: farX }}
       />
-      {/* Near haze: warm, drifts the opposite way for depth. */}
       <motion.div
-        className="absolute -right-[18%] bottom-[4%] h-[20vh] w-[84%] rounded-[100%] bg-signal/[0.1] blur-3xl"
-        style={reduceMotion ? undefined : { x: nearX }}
-      />
-      {/* Ground mist hugging the horizon. */}
-      <motion.div
-        className="absolute inset-x-[-6%] bottom-0 h-[9vh] rounded-[100%] bg-surface-raised/70 blur-2xl"
-        style={reduceMotion ? undefined : { y: groundY }}
+        className="absolute inset-x-[-20%] bottom-0 h-[26%] bg-[radial-gradient(ellipse_at_65%_100%,rgb(var(--signal-rgb)/0.12),transparent_60%)]"
+        style={reduceMotion ? undefined : { x: nearX, y: nearY }}
       />
 
-      {/* Grass fringe standing on the rule. */}
       <svg
-        className="absolute inset-x-0 bottom-0 h-14 w-full md:h-20"
-        viewBox="0 0 1200 60"
+        className="absolute inset-x-0 bottom-0 h-8 w-full md:h-10"
+        viewBox="0 0 1200 40"
         preserveAspectRatio="none"
         focusable="false"
       >
         <motion.g
-          style={reduceMotion ? still : { transform: skew, transformOrigin: '600px 60px' }}
-          className="stroke-content-primary/40"
+          style={reduceMotion ? undefined : { transform: skew, transformOrigin: '600px 40px' }}
+          fill="none"
+          className="stroke-content-primary/30"
           strokeWidth="1"
-          vectorEffect="non-scaling-stroke"
+          strokeLinecap="round"
         >
-          {BLADES.map((blade, i) => (
-            <line
-              key={i}
-              x1={blade.x}
-              y1="60"
-              x2={blade.x + blade.lean}
-              y2={60 - blade.height}
-              vectorEffect="non-scaling-stroke"
-            />
+          {BLADES.map((d) => (
+            <path key={d} d={d} vectorEffect="non-scaling-stroke" />
           ))}
         </motion.g>
       </svg>

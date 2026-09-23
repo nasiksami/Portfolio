@@ -30,10 +30,58 @@ const item = {
 };
 
 /**
- * Pre-dawn to sunrise. The name stands on the horizon; the portrait is the sun,
- * half below the line at the top of the page and cresting as the visitor
- * scrolls the first viewport. Pointer position feeds the weather through
- * springs — no React state on move.
+ * The sun: the portrait in a disc.
+ *
+ * Below lg it is in normal flow, risen into the open sky above the name, so
+ * the two can never collide. At lg and up it stands on the horizon with its
+ * lower 30% below the line; the sky row clips it, so nothing can overhang the
+ * ground or the next section. The offset lives on a plain wrapper because
+ * Framer's entry animation owns the transform of the element it animates.
+ * It rises a little as the visitor scrolls, still inside the clip.
+ */
+function Sun({ rise, reduceMotion }) {
+  return (
+    <div className="pointer-events-none relative z-0 mb-10 ml-auto w-[min(56vw,20rem)] sm:mb-12 lg:absolute lg:bottom-0 lg:right-[5%] lg:mb-0 lg:w-[min(30vw,30rem)] lg:translate-y-[30%]">
+    <motion.figure variants={item} className="m-0">
+      <motion.div style={reduceMotion ? undefined : { y: rise }} className="relative aspect-square">
+        {/* Halo: painted rings and a radial glow, no filters. */}
+        <span
+          aria-hidden="true"
+          className="absolute -inset-[45%] rounded-full bg-[radial-gradient(circle,rgb(var(--accent-rgb)/0.28)_0%,rgb(var(--accent-rgb)/0.1)_38%,transparent_68%)]"
+        />
+        <span aria-hidden="true" className="absolute -inset-[9%] rounded-full border border-accent/25" />
+        <span aria-hidden="true" className="absolute -inset-[20%] rounded-full border border-accent/15" />
+        <span aria-hidden="true" className="absolute -inset-[34%] rounded-full border border-accent/[0.08]" />
+
+        <div className="relative h-full w-full overflow-hidden rounded-full bg-surface-overlay shadow-[0_0_0_1px_rgb(var(--accent-rgb)/0.5)]">
+          <img
+            src={profile.headshot}
+            alt={'Portrait of ' + profile.name}
+            width="640"
+            height="640"
+            loading="eager"
+            fetchPriority="high"
+            className="h-full w-full object-cover object-[50%_18%] grayscale"
+          />
+          <span aria-hidden="true" className="absolute inset-0 bg-accent/45 mix-blend-soft-light" />
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_40%,rgb(var(--sky-rgb)/0.35))]"
+          />
+        </div>
+      </motion.div>
+      <figcaption className="sr-only">
+        {profile.name}, {profile.location}
+      </figcaption>
+    </motion.figure>
+    </div>
+  );
+}
+
+/**
+ * Pre-dawn. The name stands on the horizon; the portrait is the sun, half
+ * risen behind it. Pointer position feeds the weather through springs — no
+ * React state on move.
  */
 export default function Hero() {
   const sectionRef = useRef(null);
@@ -49,8 +97,9 @@ export default function Hero() {
     target: sectionRef,
     offset: ['start start', 'end start'],
   });
-  const sunY = useTransform(scrollYProgress, [0, 1], ['46%', '-38%']);
-  const nameY = useTransform(scrollYProgress, [0, 1], [0, -48]);
+  // The sun climbs a fifth of its diameter over the hero; the clip keeps it
+  // inside the sky row throughout.
+  const rise = useTransform(scrollYProgress, [0, 1], ['0%', '-20%']);
 
   const handlePointerMove = (event) => {
     if (reduceMotion || !window.matchMedia('(pointer: fine)').matches) return;
@@ -76,73 +125,37 @@ export default function Hero() {
       className="relative isolate flex min-h-[100svh] flex-col"
     >
       <div aria-hidden="true" className="sky-stars pointer-events-none absolute inset-0 -z-10" />
-      {/* Sky */}
+
+      {/* Sky — clips the sun and the weather at the horizon. */}
       <motion.div
-        className="horizon-sky relative flex flex-1 flex-col justify-end pt-24 md:pt-28"
+        className="horizon-sky relative flex min-h-[62svh] flex-1 flex-col justify-end overflow-hidden pt-28 md:pt-32"
         variants={container}
         initial={reduceMotion ? false : 'hidden'}
         animate="show"
       >
         <Weather windX={windX} windY={windY} reduceMotion={reduceMotion} />
 
-        <div className="shell grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-8">
-          <div className="relative z-10 lg:col-span-8">
-            <motion.p
-              variants={item}
-              className="meta-sm mb-8 inline-flex items-center gap-2.5 text-content-secondary md:mb-12"
-            >
-              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signal" />
-              {profile.currentRole}
-            </motion.p>
+        <div className="shell relative pb-[clamp(0.9rem,1.6vw,1.6rem)]">
+          <Sun rise={rise} reduceMotion={reduceMotion} />
 
-            {/* Each line is non-wrapping so the line count cannot change while
-                the display face is still loading. */}
-            <motion.h1
-              id="hero-heading"
-              variants={item}
-              style={reduceMotion ? undefined : { y: nameY }}
-              className="display d-hero -mb-[0.06em] text-content-primary"
-            >
-              <span className="block whitespace-nowrap">{GIVEN}</span>
-              <span className="block whitespace-nowrap italic text-accent">{FAMILY}</span>
-            </motion.h1>
-          </div>
-
-          {/* The sun. The figure reserves only the part that shows above the
-              rule; the disc is translated down so its lower half hides behind
-              the ground. */}
-          <motion.figure
+          <motion.p
             variants={item}
-            className="relative z-0 h-[calc(clamp(10rem,26vw,21rem)*0.6)] w-[clamp(10rem,26vw,21rem)] justify-self-end lg:col-span-4"
+            className="meta-sm relative z-10 mb-6 inline-flex items-center gap-2.5 text-content-secondary md:mb-10"
           >
-            <motion.div
-              style={{ y: reduceMotion ? '22%' : sunY }}
-              className="absolute inset-x-0 bottom-0"
-            >
-              <span
-                aria-hidden="true"
-                className="absolute -inset-[28%] rounded-full bg-accent/30 blur-3xl"
-              />
-              <div className="relative aspect-square overflow-hidden rounded-full bg-surface-overlay shadow-[0_0_0_1px_rgb(var(--edge-rgb))]">
-                <img
-                  src={profile.headshot}
-                  alt={'Portrait of ' + profile.name}
-                  width="640"
-                  height="640"
-                  loading="eager"
-                  fetchPriority="high"
-                  className="h-full w-full object-cover object-top grayscale"
-                />
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-accent/50 mix-blend-soft-light"
-                />
-              </div>
-            </motion.div>
-            <figcaption className="sr-only">
-              {profile.name}, {profile.location}
-            </figcaption>
-          </motion.figure>
+            <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-signal" />
+            {profile.currentRole}
+          </motion.p>
+
+          {/* Each line is non-wrapping so the line count cannot change while
+              the display face is still loading. */}
+          <motion.h1
+            id="hero-heading"
+            variants={item}
+            className="display d-hero relative z-10 text-content-primary"
+          >
+            <span className="block whitespace-nowrap">{GIVEN}</span>
+            <span className="block whitespace-nowrap italic text-accent">{FAMILY}</span>
+          </motion.h1>
         </div>
       </motion.div>
 
@@ -150,7 +163,7 @@ export default function Hero() {
 
       {/* Ground */}
       <div className="horizon-ground">
-        <div className="shell py-10 md:py-14">
+        <div className="shell pb-20 pt-10 md:pb-28 md:pt-14">
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
             <motion.div
               variants={item}
