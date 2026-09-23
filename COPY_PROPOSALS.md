@@ -1,9 +1,11 @@
 # Copy proposals — for review
 
-**Status.** Applied to `src/data/`: **A1, P1, P3, E1**. Everything else is
-still awaiting a decision. Conflict 1 is resolved: the DPO figure is **37%**.
-P3 keeps the site's existing term, "relevance-guided", because conflict 2 is
-still open.
+**Status.** Applied to `src/data/`: **A1, P1, P3, E1, P6, P7**. Everything
+else is still awaiting a decision. Resolved conflicts: the DPO figure is
+**37%** (conflict 1), and P3's feature selection is **Bayesian** (conflict 2).
+P6 and P7 went in without the optional result and accuracy figures, and the
+book and journal names are plain text because the data files hold plain
+strings.
 
 Approve, edit or reject each remaining item by its ID, and only approved
 items will be written into the data files.
@@ -336,7 +338,7 @@ repo holds nothing that would add to them.
 | # | Where | Site says | Resume says |
 |---|---|---|---|
 | 1 | About bio, DPO bullet | 40% microservices improvement | 37% reduction in processing time — **resolved: 37%** |
-| 2 | Incident management project | relevance-guided feature selection | Bayesian feature selection |
+| 2 | Incident management project | relevance-guided feature selection | Bayesian feature selection — **resolved: Bayesian** |
 | 3 | Teaching Assistant | nine courses | 11 courses, including lab instructing |
 | 4 | DHL employer and location | DHL Express Malaysia, Petaling Jaya | DHL Asia Pacific Shared Service Centre, Kuala Lumpur |
 | 5 | BDM title | AI Team Lead (AI Software Developer) | AI Software Developer |

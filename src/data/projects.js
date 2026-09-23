@@ -32,7 +32,7 @@ export const projects = [
     category: 'AI/ML',
     featured: true,
     description:
-      "Incident tickets in a real Canadian telecom's dataset are noisy and carry overlapping impact and cause labels. I built a multi-label pipeline that predicts four incident ticket types, using a BERT model with relevance-guided feature selection that raised minority-class F1 by over 14%. A Phi-2 model added a further 12.7% F1 gain.",
+      "Incident tickets in a real Canadian telecom's dataset are noisy and carry overlapping impact and cause labels. I built a multi-label pipeline that predicts four incident ticket types, using a BERT model with Bayesian feature selection that raised minority-class F1 by over 14%. A Phi-2 model added a further 12.7% F1 gain.",
     role: 'Co-author & Researcher',
     impact: '+14% minority-class F1, +12.7% more with Phi-2 · IEEE JSAC (2026)',
     tech: ['LLMs', 'BERT', 'NLP', 'Python', 'PyTorch'],
@@ -69,7 +69,7 @@ export const projects = [
     category: 'AI/ML',
     featured: false,
     description:
-      'Research comparing BERT, CNN, HAN, RNN, BiLSTM and Text-CNN architectures against rule-based NLP baselines to classify the severity of hate speech across varied class-balance conditions.',
+      'A multi-class study of cyberbullying severity. It compares BERT, CNN, HAN, RNN, BiLSTM and Text-CNN models against rule-based NLP baselines, across datasets with different class balances, to see which architectures hold up when severe cases are rare. Published as a chapter in Securing Social Networks in Cyberspace (CRC Press, 2021).',
     role: 'Researcher',
     impact: 'Published as a Taylor & Francis book chapter',
     tech: ['BERT', 'CNN', 'HAN', 'BiLSTM', 'Text-CNN', 'NLP'],
@@ -83,7 +83,7 @@ export const projects = [
     category: 'AI/ML',
     featured: false,
     description:
-      'Classified waste images into multiple categories using Random Forest, Decision Tree, SVM and CNN models, applying transfer learning to lift detection accuracy. Shipped with a Streamlit demo app.',
+      'Classified waste images into multiple categories, comparing Random Forest, Decision Tree and SVM models against CNNs, then used transfer learning to lift accuracy further. Shipped with a Streamlit demo app. The work produced two papers in the International Journal on Perceptive and Cognitive Computing (2020, 2021).',
     role: 'Lead ML Engineer',
     impact: 'Two peer-reviewed publications',
     tech: ['Random Forest', 'SVM', 'CNN', 'Transfer Learning', 'Streamlit'],
