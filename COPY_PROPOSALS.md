@@ -1,8 +1,12 @@
 # Copy proposals — for review
 
-Nothing here has been applied. `src/data/` is unchanged. Approve, edit or
-reject each item by its ID, and only approved items will be written into the
-data files.
+**Status.** Applied to `src/data/`: **A1, P1, P3, E1**. Everything else is
+still awaiting a decision. Conflict 1 is resolved: the DPO figure is **37%**.
+P3 keeps the site's existing term, "relevance-guided", because conflict 2 is
+still open.
+
+Approve, edit or reject each remaining item by its ID, and only approved
+items will be written into the data files.
 
 **Sources.** Every proposed fact comes from something already in the repo:
 the data files themselves, or `public/resume.pdf`. Each item names its
@@ -331,7 +335,7 @@ repo holds nothing that would add to them.
 
 | # | Where | Site says | Resume says |
 |---|---|---|---|
-| 1 | About bio, DPO bullet | 40% microservices improvement | 37% reduction in processing time |
+| 1 | About bio, DPO bullet | 40% microservices improvement | 37% reduction in processing time — **resolved: 37%** |
 | 2 | Incident management project | relevance-guided feature selection | Bayesian feature selection |
 | 3 | Teaching Assistant | nine courses | 11 courses, including lab instructing |
 | 4 | DHL employer and location | DHL Express Malaysia, Petaling Jaya | DHL Asia Pacific Shared Service Centre, Kuala Lumpur |

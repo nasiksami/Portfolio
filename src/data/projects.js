@@ -7,7 +7,7 @@ export const projects = [
     category: 'AI/ML',
     featured: true,
     description:
-      'A telecom-specific multi-modal RAG pipeline combining fine-tuned embedding models with LLMs to improve question-answering accuracy over 3GPP specification documents.',
+      'General-purpose LLMs answer poorly over 3GPP specifications, which are long, dense and full of domain terms. I built a telecom-specific, multi-modal RAG pipeline that pairs fine-tuned embedding models (ColBERT, Matryoshka representation learning) with Phi-2 over a ChromaDB store, and fine-tuned several open-source LLMs on telecom data. Question-answering accuracy rose 47% over the baseline, published at IEEE Globecom Workshops 2024.',
     role: 'Lead Researcher & Developer',
     impact: '47% improvement in QA accuracy',
     tech: ['Python', 'LLMs', 'ColBERT', 'Matryoshka', 'Phi-2', 'ChromaDB'],
@@ -32,9 +32,9 @@ export const projects = [
     category: 'AI/ML',
     featured: true,
     description:
-      'Automated multi-label classification of telecom incident management tickets, pairing a BERT encoder using relevance-guided feature selection with an LLM-based approach to handle noisy text and overlapping impact and cause categories.',
+      "Incident tickets in a real Canadian telecom's dataset are noisy and carry overlapping impact and cause labels. I built a multi-label pipeline that predicts four incident ticket types, using a BERT model with relevance-guided feature selection that raised minority-class F1 by over 14%. A Phi-2 model added a further 12.7% F1 gain.",
     role: 'Co-author & Researcher',
-    impact: 'Published in IEEE JSAC (2026)',
+    impact: '+14% minority-class F1, +12.7% more with Phi-2 · IEEE JSAC (2026)',
     tech: ['LLMs', 'BERT', 'NLP', 'Python', 'PyTorch'],
     links: {
       paper: 'https://uregina.ca/~nss373/papers/JSAC_2026.pdf',

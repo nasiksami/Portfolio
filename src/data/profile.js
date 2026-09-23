@@ -19,7 +19,7 @@ export const profile = {
 
 export const bio = [
   'I am an MSc in Computer Science graduate with a proven record of translating advanced AI/ML research into impactful, production-ready solutions. My work bridges rigorous academic research and hands-on software engineering, helping organizations solve difficult technical problems and accelerate growth.',
-  'I have collaborated with industry partners including Rogers and the Department of National Defence, and earned recognition in global AI/ML competitions run by the ITU. My work has delivered measurable results: a 47% QA accuracy improvement in telecom RAG systems, a 22% F1 gain in intrusion detection, and a 40% improvement in microservices performance at DPO International.',
+  'I have collaborated with industry partners including Rogers and the Department of National Defence, and placed in two ITU AI/ML in 5G challenges: runner-up in SDN intrusion detection and silver in specialising LLMs for telecom. The results are measurable: a 47% gain in telecom question-answering accuracy with retrieval-augmented generation, a 22.5% F1 gain on the hardest intrusion classes, and a 37% cut in transaction processing time at DPO International.',
   'With peer-reviewed publications spanning the IEEE Journal on Selected Areas in Communications and presentations at top international conferences including IEEE GLOBECOM and CNSM, I bring depth in LLMs, scalable architectures, and end-to-end delivery across both research and production environments.',
 ];
 

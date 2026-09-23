@@ -30,10 +30,12 @@ export const experience = [
     type: 'Research',
     points: [
       'Conducted AI/ML research under Dr. Nashid Shahriar, collaborating with industry partners including Rogers and the Department of National Defence.',
-      'Developed NLP and AI systems spanning retrieval-augmented generation, agentic AI, and intrusion detection.',
+      'Led LLMOps projects using RAG and BERT pipelines for telecom incident classification, raising F1 by 14%.',
+      'Built a hierarchical intrusion detection system, combining a CNN with a Random Forest, that reached a 92% F1 score.',
       'Simulated 5G network testbeds to evaluate and improve network performance and security.',
       'Published peer-reviewed work in the IEEE Journal on Selected Areas in Communications, IEEE Globecom Workshops, and CNSM.',
       'Presented research at international conferences and contributed to academic peer review.',
+      'Mentored junior researchers in adopting LLM and ML tools, in line with industry practice.',
     ],
   },
   {
