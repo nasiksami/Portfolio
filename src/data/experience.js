@@ -13,8 +13,8 @@ export const experience = [
     logo: bdmLogo,
     type: 'Industry',
     points: [
-      'Lead the AI team within R&D, designing and integrating AI solutions into BDM’s healthcare software and building AI-powered healthcare applications from the ground up.',
-      'Design and implement AI/ML models from research to production, optimising for scalability and cloud deployment.',
+      'Lead the AI team within R&D, designing and integrating AI solutions into BDM’s healthcare software and building AI-powered healthcare applications from the ground up for external clients.',
+      'Design and implement AI/ML models from research to production, optimizing for scalability and cloud deployment.',
       'Architect and maintain data pipelines for training, preprocessing, and inference to ensure reliable model performance.',
       'Partner with product managers, engineers, and customers to translate clinical and business requirements into AI features that improve patient care workflows.',
       'Drive evaluation of new AI techniques and ensure ethical, secure, and compliant deployment within healthcare settings.',
@@ -94,7 +94,7 @@ export const experience = [
     logo: uofrLogo,
     type: 'Research',
     points: [
-      'Prepared and organised course materials supporting faculty teaching and student learning.',
+      'Prepared and organized course materials supporting faculty teaching and student learning.',
       'Conducted research tasks and contributed to academic projects under faculty supervision.',
     ],
   },
@@ -106,7 +106,7 @@ export const experience = [
     logo: dpoLogo,
     type: 'Industry',
     points: [
-      'Full-stack development of CAPSUL, the company’s central database management system.',
+      'Built CAPSUL, the company’s central database management system, across the full stack.',
       'Implemented scalable software architecture and REST APIs to integrate across applications.',
       'Applied middleware (RabbitMQ, MassTransit) on Docker for data consistency between services.',
       'Introduced Elasticsearch to improve application performance.',
@@ -123,7 +123,7 @@ export const experience = [
     type: 'Industry',
     points: [
       'Supported, maintained, and enhanced internal IT applications.',
-      'Developed web systems with ASP.NET WebForms & MVC, C#, and MS SQL against new change requests.',
+      'Built web systems in ASP.NET WebForms and MVC, C# and MS SQL to deliver new change requests.',
       'Converted legacy Excel VBA macros into maintainable .NET web applications, and resolved IT tickets to keep downtime minimal.',
     ],
   },

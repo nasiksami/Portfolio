@@ -89,7 +89,7 @@ export default function Publications() {
       label="Research"
       arc={ARC.publications}
       title="Publications & awards"
-      description="Peer-reviewed work in telecom AI, network security, and applied deep learning."
+      description="Research in telecom AI, network security, and applied deep learning, from peer-reviewed papers to an MSc thesis."
       sky={<PaperList />}
     >
       <Reveal>

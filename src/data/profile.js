@@ -19,7 +19,7 @@ export const profile = {
 
 export const bio = [
   'I am an AI software developer and team lead at BDM Healthware, with an MSc in Computer Science from the University of Regina and over three years of experience across healthcare, telecom and research. I take AI/ML systems from research to production: large language models and retrieval-augmented generation, the data pipelines behind them, and the software that delivers them.',
-  'My research has been carried out with industry partners including Rogers and the Department of National Defence. Results include a 47% improvement in telecom question-answering accuracy with retrieval-augmented generation, a 22.5% F1 improvement on minority intrusion classes, and a 37% reduction in transaction processing time at DPO International. I placed runner-up in the ITU AI/ML in 5G challenge on SDN intrusion detection, and earned silver rank in its challenge on specialising LLMs for telecom.',
+  'My research has been carried out with industry partners including Rogers and the Department of National Defence. Results include a 47% improvement in telecom question-answering accuracy with retrieval-augmented generation, a 22.5% F1 improvement on minority intrusion classes, and a 37% reduction in transaction processing time at DPO International. I placed runner-up in the ITU AI/ML in 5G challenge on SDN intrusion detection, and earned silver rank in its challenge on specializing LLMs for telecom.',
   'My work is published in the IEEE Journal on Selected Areas in Communications, IEEE Globecom Workshops and CNSM, and my MSc thesis developed a retrieval-augmented question-answering pipeline for telecom networks. I have presented at international conferences including IEEE GLOBECOM 2024 in Cape Town, and contribute to academic peer review.',
 ];
 
@@ -45,7 +45,7 @@ export const availability =
 // what the site displays; `label` and `detail` are free text.
 // ─────────────────────────────────────────────────────────────────────────────
 export const stats = [
-  { value: '8', label: 'Publications', detail: 'Peer-reviewed papers & book chapters' },
+  { value: '8', label: 'Publications', detail: 'Papers, a book chapter & an MSc thesis' },
   {
     value: '3+',
     label: 'Years experience',

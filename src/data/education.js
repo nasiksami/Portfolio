@@ -24,7 +24,7 @@ export const education = [
     logo: iiumLogo,
     grade: 'CGPA 3.62 / 4.00',
     points: [
-      'Specialisation in Data Science & Computational Intelligence.',
+      'Specialization in Data Science & Computational Intelligence.',
       'Dean’s List in 6 of 8 semesters.',
       'Published 2 conference papers and 1 book chapter with Taylor & Francis.',
     ],

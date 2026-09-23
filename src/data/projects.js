@@ -7,7 +7,7 @@ export const projects = [
     category: 'AI/ML',
     featured: true,
     description:
-      'General-purpose LLMs answer poorly over 3GPP specifications, which are long, dense and full of domain terms. I built a telecom-specific, multi-modal RAG pipeline that pairs fine-tuned embedding models (ColBERT, Matryoshka representation learning) with Phi-2 over a ChromaDB store, and fine-tuned several open-source LLMs on telecom data. Question-answering accuracy rose 47% over the baseline, published at IEEE Globecom Workshops 2024.',
+      'General-purpose LLMs answer poorly over 3GPP specifications, which are long, dense and full of domain terms. I built a telecom-specific, multi-modal RAG pipeline that pairs fine-tuned embedding models (ColBERT, Matryoshka representation learning) with Phi-2 over a ChromaDB store, and fine-tuned several open-source LLMs on telecom data. Question-answering accuracy rose 47% over the baseline, and the work was published at IEEE Globecom Workshops 2024.',
     role: 'Lead Researcher & Developer',
     impact: '47% improvement in QA accuracy',
     tech: ['Python', 'LLMs', 'ColBERT', 'Matryoshka', 'Phi-2', 'ChromaDB'],
@@ -21,7 +21,7 @@ export const projects = [
     category: 'Networks',
     featured: true,
     description:
-      'Simulated and benchmarked 5G network slices using a virtual testbed with traffic replay, analysing how slice configuration affects resource allocation and performance.',
+      'Simulated and benchmarked 5G network slices using a virtual testbed with traffic replay, analyzing how slice configuration affects resource allocation and performance.',
     role: 'Network Research Engineer',
     impact: 'Benchmarked resource allocation across slice configurations',
     tech: ['free5GC', 'UERANSIM', 'Docker', 'Prometheus', 'Grafana'],
@@ -32,7 +32,7 @@ export const projects = [
     category: 'AI/ML',
     featured: true,
     description:
-      "Incident tickets in a real Canadian telecom's dataset are noisy and carry overlapping impact and cause labels. I built a multi-label pipeline that predicts four incident ticket types, using a BERT model with Bayesian feature selection that raised minority-class F1 by over 14%. A Phi-2 model added a further 12.7% F1 gain.",
+      'Incident tickets in a real-world dataset from a Canadian telecom operator are noisy and carry overlapping impact and cause labels. I built a multi-label pipeline that predicts four incident ticket types, using a BERT model with Bayesian feature selection that raised minority-class F1 by over 14%. A Phi-2 model added a further 12.7% F1 gain.',
     role: 'Co-author & Researcher',
     impact: '+14% minority-class F1, +12.7% more with Phi-2 · IEEE JSAC (2026)',
     tech: ['LLMs', 'BERT', 'NLP', 'Python', 'PyTorch'],
