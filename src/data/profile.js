@@ -18,10 +18,13 @@ export const profile = {
 };
 
 export const bio = [
-  'I am an MSc in Computer Science graduate with a proven record of translating advanced AI/ML research into impactful, production-ready solutions. My work bridges rigorous academic research and hands-on software engineering, helping organizations solve difficult technical problems and accelerate growth.',
-  'I have collaborated with industry partners including Rogers and the Department of National Defence, and placed in two ITU AI/ML in 5G challenges: runner-up in SDN intrusion detection and silver in specialising LLMs for telecom. The results are measurable: a 47% gain in telecom question-answering accuracy with retrieval-augmented generation, a 22.5% F1 gain on the hardest intrusion classes, and a 37% cut in transaction processing time at DPO International.',
-  'With peer-reviewed publications spanning the IEEE Journal on Selected Areas in Communications and presentations at top international conferences including IEEE GLOBECOM and CNSM, I bring depth in LLMs, scalable architectures, and end-to-end delivery across both research and production environments.',
+  'I am an AI software developer and team lead at BDM Healthware, with an MSc in Computer Science from the University of Regina and over three years of experience across healthcare, telecom and research. I take AI/ML systems from research to production: large language models and retrieval-augmented generation, the data pipelines behind them, and the software that delivers them.',
+  'My research has been carried out with industry partners including Rogers and the Department of National Defence. Results include a 47% improvement in telecom question-answering accuracy with retrieval-augmented generation, a 22.5% F1 improvement on minority intrusion classes, and a 37% reduction in transaction processing time at DPO International. I placed runner-up in the ITU AI/ML in 5G challenge on SDN intrusion detection, and earned silver rank in its challenge on specialising LLMs for telecom.',
+  'My work is published in the IEEE Journal on Selected Areas in Communications, IEEE Globecom Workshops and CNSM, and my MSc thesis developed a retrieval-augmented question-answering pipeline for telecom networks. I have presented at international conferences including IEEE GLOBECOM 2024 in Cape Town, and contribute to academic peer review.',
 ];
+
+// A short heading for each bio paragraph above, in the same order.
+export const bioLabels = ['Background', 'Results', 'Research'];
 
 // Sub-heading under the About title. Deliberately positions the work rather
 // than signalling job-seeking.

@@ -159,7 +159,7 @@ entry, parallax and weather layer falls back to a static composition.
 | § | Section | Arc | Relation to the line | Move |
 |---|---|---|---|---|
 | 00 | Hero | pre-dawn, flat | The name stands on the rule; the plate and text start one clear gap below it | Deep slate navy with a steel-blue accent and brass buttons. The name is one line in one colour; the portrait is a natural-colour plate whose top edge aligns with the role's cap height and whose left edge is the name's first letter. |
-| 01 | About | sunrise band → 0.30 | Tagline in the sky, everything else on the ground | Stats stand below the rule as survey posts and count up. Focus areas form a quarter section: NW, NE, SW, SE. |
+| 01 | About | sunrise band → 0.30 | Tagline in the sky, everything else on the ground | Stats stand below the rule as survey posts and count up. The profile is three ruled rows, Background, Results and Research, each with a text-face subhead. Focus areas sit in a two-by-two grid. |
 | 02 | Experience | 0.30 → 0.40 | Timeline drops from the rule | A plumb line falls from the horizon; entries hang from it. Education sticky beside at wide viewports. |
 | 03 | Publications | 0.40 → 0.46 | Papers in the sky, awards on the ground | Years set large beside each paper; awards as a ruled constellation. |
 | 04 | Projects | sunset band → 0.66 | Filter in the sky, records on the ground | A ledger of project records with catalogue numbers, impact and stack. |

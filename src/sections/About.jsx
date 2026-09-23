@@ -4,7 +4,7 @@ import {
   HiOutlineCloud,
   HiOutlineDocumentText,
 } from 'react-icons/hi';
-import { availability, bio, focusAreas, profile, stats } from '../data/profile';
+import { availability, bio, bioLabels, focusAreas, profile, stats } from '../data/profile';
 import { useCountUp } from '../hooks/useCountUp';
 import { ARC } from '../sky';
 import Section from '../components/ui/Section';
@@ -18,9 +18,6 @@ const FOCUS_ICONS = {
   document: HiOutlineDocumentText,
 };
 
-// A section of prairie is surveyed into four quarters. The four focus areas
-// take the same labels.
-const QUARTERS = ['NW', 'NE', 'SW', 'SE'];
 
 /**
  * A stat as a survey post: a line rising from the horizon with the number on
@@ -69,28 +66,37 @@ export default function About() {
         </dl>
       </Reveal>
 
-      {/* Field notes. */}
-      <div className="mt-24 grid gap-10 md:mt-32 lg:grid-cols-12 lg:gap-8">
-        <Reveal className="lg:col-span-3">
-          <p className="eyebrow">Field notes</p>
+      {/* Profile: each paragraph is a ruled row with its heading beside it on
+          wide screens and above it on narrow ones. */}
+      <div className="mt-24 md:mt-32">
+        <Reveal>
+          <div className="mb-8 flex items-center gap-5">
+            <h3 className="eyebrow shrink-0">Profile</h3>
+            <span aria-hidden="true" className="h-px flex-1 bg-edge" />
+          </div>
         </Reveal>
-        <div className="lg:col-span-8 lg:col-start-5">
+
+        <div className="border-b border-edge">
           {bio.map((paragraph, index) => (
-            <Reveal key={paragraph} delay={index * 0.08}>
-              <p
-                className={[
-                  'max-w-prose',
-                  index === 0 ? 'text-xl text-content-primary' : 'mt-8 text-base text-content-secondary',
-                ].join(' ')}
-              >
-                <Emphasis>{paragraph}</Emphasis>
-              </p>
+            <Reveal
+              key={paragraph}
+              delay={index * 0.06}
+              className="border-t border-edge first:border-t-0"
+            >
+              <div className="grid gap-3 py-8 md:py-10 lg:grid-cols-12 lg:gap-8">
+                {bioLabels[index] && (
+                  <h4 className="subhead text-content-primary lg:col-span-3">{bioLabels[index]}</h4>
+                )}
+                <p className="max-w-prose text-lg text-content-secondary lg:col-span-8 lg:col-start-5">
+                  <Emphasis>{paragraph}</Emphasis>
+                </p>
+              </div>
             </Reveal>
           ))}
         </div>
       </div>
 
-      {/* The quarter section. */}
+      {/* What I do. */}
       <div className="mt-24 md:mt-32">
         <Reveal>
           <div className="mb-8 flex items-center gap-5">
@@ -108,9 +114,6 @@ export default function About() {
                   <div className="flex items-start justify-between gap-6">
                     <span className="flex h-11 w-11 items-center justify-center rounded-full border border-accent/60 text-accent transition-colors duration-300 group-hover:bg-accent group-hover:text-on-accent">
                       <Icon className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <span aria-hidden="true" className="meta-sm text-content-muted">
-                      {QUARTERS[index] ?? String(index + 1).padStart(2, '0')}
                     </span>
                   </div>
                   <h4 className="display d-3 mt-10 text-content-primary transition-colors group-hover:text-accent">
