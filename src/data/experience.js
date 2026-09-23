@@ -70,7 +70,7 @@ export const experience = [
     logo: uofrLogo,
     type: 'Teaching',
     points: [
-      'Provided one-on-one mentoring to international students from diverse backgrounds.',
+      'Mentored more than 100 undergraduate computer science students one-on-one, many of them international students from diverse backgrounds.',
       'Guided students through assignments, projects, and career roadmaps, contributing to a 100% pass rate.',
     ],
   },
@@ -117,14 +117,14 @@ export const experience = [
   {
     period: 'Feb 2021 — Aug 2021',
     title: 'Software Engineer, Business Process Optimization (Intern)',
-    org: 'DHL Express Malaysia',
-    location: 'Petaling Jaya, Malaysia',
+    org: 'DHL Asia Pacific Shared Service Centre',
+    location: 'Kuala Lumpur, Malaysia',
     logo: dhlLogo,
     type: 'Industry',
     points: [
       'Supported, maintained, and enhanced internal IT applications.',
       'Developed web systems with ASP.NET WebForms & MVC, C#, and MS SQL against new change requests.',
-      'Performed application and system testing, and debugged legacy Excel VBA macros.',
+      'Converted legacy Excel VBA macros into maintainable .NET web applications, and resolved IT tickets to keep downtime minimal.',
     ],
   },
 ];
