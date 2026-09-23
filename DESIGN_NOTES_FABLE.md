@@ -25,7 +25,30 @@ The only hard edge on the page is the next horizon.
 | Text | **Public Sans** | Designed by the US government for forms and long reading. Neutral, humanist, generous x-height, tabular figures for dates and metadata. It is the plain field to Fraunces' weather. |
 
 No monospace face. Metadata is Public Sans in tracked uppercase with tabular
-numerals. Sizes are `clamp()`-fluid; the hero name reaches 14rem.
+numerals.
+
+**Scale.** One major-third (1.25) scale from a fluid base: 17px at 360 wide,
+18px from about 1024, line-height 1.65. The steps are CSS custom properties
+(`--step--2` … `--step-5`) mapped onto Tailwind's `text-xs` … `text-4xl`.
+Display sizes interpolate between two steps of the same scale across the
+viewport:
+
+| Class | Use | Range |
+|---|---|---|
+| `.hero-name` | the name | fills its column; 82px at 360, 228px at 1920 |
+| `.d-1` | section headings | step 5 → 8 (52 → 107px) |
+| `.d-stat` | stat numerals | step 4 → 7 |
+| `.d-2` | project titles, publication years | step 3 → 4 |
+| `.d-3` | entry and group titles | step 2 → 3 |
+| `.subhead` | text-face subheads | step 1 (22.5px), semibold |
+
+Body copy uses `max-w-prose` = 54ch, measured at 61–71 characters a line on
+desktop.
+
+**Emphasis.** One rule: `components/ui/Emphasis.jsx` marks metrics and named
+technologies in running copy as `.emph` (semibold, primary ink). Its term
+list is built from `skills.js` and every project's stack, so `src/data/`
+needs no markup.
 
 Both faces have **size-adjusted local fallbacks** (ratios measured against the
 loaded fonts in Chromium) so text does not reflow when the web fonts arrive.
@@ -47,6 +70,10 @@ Only the floating chrome, wrapped in `[data-sky-live]`, follows the scroll:
 `src/hooks/useSky.js` writes `--sky` onto that one small subtree, at most once
 per frame and only when it changes, using the same mapping as the gradients so
 the header matches the sky beneath it.
+
+Each section's *text* palette is the keyframe nearest the middle of its text
+span. Interpolating it instead can mix distant accent hues into grey — morning
+rust and noon blue — so only the painted sky interpolates.
 
 *Why not one live value on `<html>`?* That was the first implementation. Each
 write restyled all ~1,770 nodes, 16ms a frame, and scrolling dropped 39 of 600
@@ -104,8 +131,8 @@ python3 scripts/sky-tokens.py --write   # regenerate after editing the table
   ≥ 6.49:1.
 - Generator sweep, 2001 positions at 0.0005: worst **4.58:1**, none below AA.
 - In-browser, per section: each section's inks against 101 samples of its own
-  painted sky and against its ground. Worst **4.83:1** (About, muted ink at the
-  foot of the sunrise band).
+  painted sky and against its ground. Worst **5.1:1** (Projects, muted ink at
+  the end of its stretch).
 - In-browser, live chrome: every 0.001 step the writer can produce. Worst
   **4.58:1**.
 
@@ -168,6 +195,13 @@ Lighthouse 12, Playwright Chromium, static `dist/` served over localhost.
 | `redesign-fable` | desktop | **96** | **100** | **100** | **100** | 1.3 s | 0.001 | 0 ms |
 | `redesign-fable`, painted sky | mobile | **74** | **100** | **100** | **100** | 5.0 s | 0 | 10 ms |
 | `redesign-fable`, painted sky | desktop | **96** | **100** | **100** | **100** | 1.3 s | 0 | 0 ms |
+
+| hero option B + type scale | mobile | **79** | **100** | **100** | **100** | 4.1 s | 0.055 | 0 ms |
+| hero option B + type scale | desktop | **98** | **100** | **100** | **100** | 0.9 s | 0.011 | 0 ms |
+
+The mobile layout shift comes from the web fonts replacing their fallbacks
+after the hero text has already painted. It stays inside Lighthouse's "good"
+band of 0.1.
 
 Scripted scroll, top to bottom at 24px a frame: live `<html>` sky dropped 39 of
 600 frames; the painted sky drops 0 at 1440 and 390 wide.
