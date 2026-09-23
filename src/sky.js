@@ -9,7 +9,7 @@ export const KNOTS = [0.0, 0.11, 0.14, 0.3, 0.46, 0.49, 0.78, 1.0];
 export const FLIPS = { sunrise: 0.12171, sunset: 0.48198 };
 
 /** Sky colour at each knot, as RGB triples, for painting section gradients. */
-export const SKY = [[14, 18, 38], [59, 36, 68], [244, 231, 212], [230, 239, 246], [239, 230, 214], [126, 58, 55], [10, 20, 32], [6, 17, 15]];
+export const SKY = [[15, 23, 36], [59, 36, 68], [244, 231, 212], [230, 239, 246], [239, 230, 214], [126, 58, 55], [10, 20, 32], [6, 17, 15]];
 
 /** Fixed positions for the pinned skies. Night is starlight, not aurora. */
 export const PINS = { day: 0.3, night: 0.78 };
@@ -30,8 +30,8 @@ export const CROSSING_PX = 88;
  * the day after the band.
  */
 export const ARC = {
-  top: { from: 0, to: 0.11 },
-  about: { from: 0.11, cross: 0.14, to: 0.3 },
+  top: { from: 0, to: 0 },
+  about: { from: 0, cross: 0.14, to: 0.3 },
   projects: { from: 0.3, to: 0.4 },
   skills: { from: 0.4, to: 0.46 },
   experience: { from: 0.46, cross: 0.49, to: 0.66 },

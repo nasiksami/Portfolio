@@ -451,42 +451,42 @@
     --pure: calc(255 * var(--ink-family));
 
     /* Surfaces interpolate continuously. */
-    --sky-r: calc(var(--w0)*14 + var(--w1)*59 + var(--w2)*244 + var(--w3)*230 + var(--w4)*239 + var(--w5)*126 + var(--w6)*10 + var(--w7)*6);
-    --sky-g: calc(var(--w0)*18 + var(--w1)*36 + var(--w2)*231 + var(--w3)*239 + var(--w4)*230 + var(--w5)*58 + var(--w6)*20 + var(--w7)*17);
-    --sky-b: calc(var(--w0)*38 + var(--w1)*68 + var(--w2)*212 + var(--w3)*246 + var(--w4)*214 + var(--w5)*55 + var(--w6)*32 + var(--w7)*15);
-    --ground-r: calc(var(--w0)*23 + var(--w1)*56 + var(--w2)*239 + var(--w3)*244 + var(--w4)*242 + var(--w5)*119 + var(--w6)*17 + var(--w7)*12);
-    --ground-g: calc(var(--w0)*27 + var(--w1)*37 + var(--w2)*232 + var(--w3)*239 + var(--w4)*230 + var(--w5)*60 + var(--w6)*28 + var(--w7)*26);
-    --ground-b: calc(var(--w0)*51 + var(--w1)*68 + var(--w2)*219 + var(--w3)*225 + var(--w4)*204 + var(--w5)*74 + var(--w6)*41 + var(--w7)*23);
-    --overlay-r: calc(var(--w0)*35 + var(--w1)*58 + var(--w2)*234 + var(--w3)*227 + var(--w4)*229 + var(--w5)*94 + var(--w6)*24 + var(--w7)*19);
+    --sky-r: calc(var(--w0)*15 + var(--w1)*59 + var(--w2)*244 + var(--w3)*230 + var(--w4)*239 + var(--w5)*126 + var(--w6)*10 + var(--w7)*6);
+    --sky-g: calc(var(--w0)*23 + var(--w1)*36 + var(--w2)*231 + var(--w3)*239 + var(--w4)*230 + var(--w5)*58 + var(--w6)*20 + var(--w7)*17);
+    --sky-b: calc(var(--w0)*36 + var(--w1)*68 + var(--w2)*212 + var(--w3)*246 + var(--w4)*214 + var(--w5)*55 + var(--w6)*32 + var(--w7)*15);
+    --ground-r: calc(var(--w0)*20 + var(--w1)*56 + var(--w2)*239 + var(--w3)*244 + var(--w4)*242 + var(--w5)*119 + var(--w6)*17 + var(--w7)*12);
+    --ground-g: calc(var(--w0)*30 + var(--w1)*37 + var(--w2)*232 + var(--w3)*239 + var(--w4)*230 + var(--w5)*60 + var(--w6)*28 + var(--w7)*26);
+    --ground-b: calc(var(--w0)*44 + var(--w1)*68 + var(--w2)*219 + var(--w3)*225 + var(--w4)*204 + var(--w5)*74 + var(--w6)*41 + var(--w7)*23);
+    --overlay-r: calc(var(--w0)*28 + var(--w1)*58 + var(--w2)*234 + var(--w3)*227 + var(--w4)*229 + var(--w5)*94 + var(--w6)*24 + var(--w7)*19);
     --overlay-g: calc(var(--w0)*40 + var(--w1)*40 + var(--w2)*223 + var(--w3)*220 + var(--w4)*214 + var(--w5)*49 + var(--w6)*38 + var(--w7)*41);
-    --overlay-b: calc(var(--w0)*72 + var(--w1)*70 + var(--w2)*202 + var(--w3)*199 + var(--w4)*181 + var(--w5)*64 + var(--w6)*54 + var(--w7)*36);
-    --edge-r: calc(var(--w0)*58 + var(--w1)*106 + var(--w2)*201 + var(--w3)*185 + var(--w4)*198 + var(--w5)*162 + var(--w6)*43 + var(--w7)*35);
-    --edge-g: calc(var(--w0)*63 + var(--w1)*74 + var(--w2)*184 + var(--w3)*198 + var(--w4)*179 + var(--w5)*100 + var(--w6)*61 + var(--w7)*64);
-    --edge-b: calc(var(--w0)*94 + var(--w1)*114 + var(--w2)*158 + var(--w3)*207 + var(--w4)*145 + var(--w5)*95 + var(--w6)*80 + var(--w7)*58);
+    --overlay-b: calc(var(--w0)*56 + var(--w1)*70 + var(--w2)*202 + var(--w3)*199 + var(--w4)*181 + var(--w5)*64 + var(--w6)*54 + var(--w7)*36);
+    --edge-r: calc(var(--w0)*51 + var(--w1)*106 + var(--w2)*201 + var(--w3)*185 + var(--w4)*198 + var(--w5)*162 + var(--w6)*43 + var(--w7)*35);
+    --edge-g: calc(var(--w0)*66 + var(--w1)*74 + var(--w2)*184 + var(--w3)*198 + var(--w4)*179 + var(--w5)*100 + var(--w6)*61 + var(--w7)*64);
+    --edge-b: calc(var(--w0)*90 + var(--w1)*114 + var(--w2)*158 + var(--w3)*207 + var(--w4)*145 + var(--w5)*95 + var(--w6)*80 + var(--w7)*58);
     /* Primary ink. */
-    --ink-r: calc((var(--v0)*243 + var(--v1)*251 + var(--v2)*28 + var(--v3)*20 + var(--v4)*36 + var(--v5)*255 + var(--v6)*238 + var(--v7)*238) * (1 - var(--fold)) + var(--pure) * var(--fold));
-    --ink-g: calc((var(--v0)*239 + var(--v1)*243 + var(--v2)*36 + var(--v3)*32 + var(--v4)*31 + var(--v5)*243 + var(--v6)*242 + var(--v7)*244) * (1 - var(--fold)) + var(--pure) * var(--fold));
-    --ink-b: calc((var(--v0)*230 + var(--v1)*234 + var(--v2)*48 + var(--v3)*44 + var(--v4)*26 + var(--v5)*234 + var(--v6)*244 + var(--v7)*238) * (1 - var(--fold)) + var(--pure) * var(--fold));
+    --ink-r: calc((var(--v0)*238 + var(--v1)*251 + var(--v2)*28 + var(--v3)*20 + var(--v4)*36 + var(--v5)*255 + var(--v6)*238 + var(--v7)*238) * (1 - var(--fold)) + var(--pure) * var(--fold));
+    --ink-g: calc((var(--v0)*241 + var(--v1)*243 + var(--v2)*36 + var(--v3)*32 + var(--v4)*31 + var(--v5)*243 + var(--v6)*242 + var(--v7)*244) * (1 - var(--fold)) + var(--pure) * var(--fold));
+    --ink-b: calc((var(--v0)*245 + var(--v1)*234 + var(--v2)*48 + var(--v3)*44 + var(--v4)*26 + var(--v5)*234 + var(--v6)*244 + var(--v7)*238) * (1 - var(--fold)) + var(--pure) * var(--fold));
     /* Inks that fold toward primary near a flip. */
-    --ink2-r: calc((var(--v0)*203 + var(--v1)*230 + var(--v2)*69 + var(--v3)*61 + var(--v4)*74 + var(--v5)*248 + var(--v6)*191 + var(--v7)*188) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
-    --ink2-g: calc((var(--v0)*200 + var(--v1)*214 + var(--v2)*77 + var(--v3)*74 + var(--v4)*68 + var(--v5)*223 + var(--v6)*202 + var(--v7)*203) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
-    --ink2-b: calc((var(--v0)*192 + var(--v1)*207 + var(--v2)*88 + var(--v3)*87 + var(--v4)*60 + var(--v5)*211 + var(--v6)*211 + var(--v7)*193) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
-    --ink3-r: calc((var(--v0)*166 + var(--v1)*209 + var(--v2)*91 + var(--v3)*85 + var(--v4)*95 + var(--v5)*241 + var(--v6)*148 + var(--v7)*147) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
-    --ink3-g: calc((var(--v0)*165 + var(--v1)*189 + var(--v2)*101 + var(--v3)*99 + var(--v4)*88 + var(--v5)*207 + var(--v6)*163 + var(--v7)*168) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
-    --ink3-b: calc((var(--v0)*184 + var(--v1)*184 + var(--v2)*112 + var(--v3)*112 + var(--v4)*79 + var(--v5)*194 + var(--v6)*176 + var(--v7)*154) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
-    --accent-r: calc((var(--v0)*240 + var(--v1)*255 + var(--v2)*154 + var(--v3)*26 + var(--v4)*138 + var(--v5)*255 + var(--v6)*159 + var(--v7)*126) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
-    --accent-g: calc((var(--v0)*168 + var(--v1)*179 + var(--v2)*69 + var(--v3)*94 + var(--v4)*63 + var(--v5)*208 + var(--v6)*211 + var(--v7)*240) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
-    --accent-b: calc((var(--v0)*104 + var(--v1)*122 + var(--v2)*18 + var(--v3)*140 + var(--v4)*30 + var(--v5)*143 + var(--v6)*255 + var(--v7)*194) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
-    --signal-r: calc((var(--v0)*232 + var(--v1)*255 + var(--v2)*107 + var(--v3)*125 + var(--v4)*107 + var(--v5)*255 + var(--v6)*255 + var(--v7)*201) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
-    --signal-g: calc((var(--v0)*210 + var(--v1)*212 + var(--v2)*83 + var(--v3)*84 + var(--v4)*82 + var(--v5)*230 + var(--v6)*220 + var(--v7)*166) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
-    --signal-b: calc((var(--v0)*122 + var(--v1)*121 + var(--v2)*0 + var(--v3)*0 + var(--v4)*0 + var(--v5)*163 + var(--v6)*138 + var(--v7)*255) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    --ink2-r: calc((var(--v0)*196 + var(--v1)*230 + var(--v2)*69 + var(--v3)*61 + var(--v4)*74 + var(--v5)*248 + var(--v6)*191 + var(--v7)*188) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
+    --ink2-g: calc((var(--v0)*203 + var(--v1)*214 + var(--v2)*77 + var(--v3)*74 + var(--v4)*68 + var(--v5)*223 + var(--v6)*202 + var(--v7)*203) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
+    --ink2-b: calc((var(--v0)*213 + var(--v1)*207 + var(--v2)*88 + var(--v3)*87 + var(--v4)*60 + var(--v5)*211 + var(--v6)*211 + var(--v7)*193) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    --ink3-r: calc((var(--v0)*155 + var(--v1)*209 + var(--v2)*91 + var(--v3)*85 + var(--v4)*95 + var(--v5)*241 + var(--v6)*148 + var(--v7)*147) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
+    --ink3-g: calc((var(--v0)*167 + var(--v1)*189 + var(--v2)*101 + var(--v3)*99 + var(--v4)*88 + var(--v5)*207 + var(--v6)*163 + var(--v7)*168) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
+    --ink3-b: calc((var(--v0)*182 + var(--v1)*184 + var(--v2)*112 + var(--v3)*112 + var(--v4)*79 + var(--v5)*194 + var(--v6)*176 + var(--v7)*154) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    --accent-r: calc((var(--v0)*156 + var(--v1)*255 + var(--v2)*154 + var(--v3)*26 + var(--v4)*138 + var(--v5)*255 + var(--v6)*159 + var(--v7)*126) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
+    --accent-g: calc((var(--v0)*195 + var(--v1)*179 + var(--v2)*69 + var(--v3)*94 + var(--v4)*63 + var(--v5)*208 + var(--v6)*211 + var(--v7)*240) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
+    --accent-b: calc((var(--v0)*230 + var(--v1)*122 + var(--v2)*18 + var(--v3)*140 + var(--v4)*30 + var(--v5)*143 + var(--v6)*255 + var(--v7)*194) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
+    --signal-r: calc((var(--v0)*216 + var(--v1)*255 + var(--v2)*107 + var(--v3)*125 + var(--v4)*107 + var(--v5)*255 + var(--v6)*255 + var(--v7)*201) * (1 - var(--danger)) + var(--ink-r) * var(--danger));
+    --signal-g: calc((var(--v0)*189 + var(--v1)*212 + var(--v2)*83 + var(--v3)*84 + var(--v4)*82 + var(--v5)*230 + var(--v6)*220 + var(--v7)*166) * (1 - var(--danger)) + var(--ink-g) * var(--danger));
+    --signal-b: calc((var(--v0)*140 + var(--v1)*121 + var(--v2)*0 + var(--v3)*0 + var(--v4)*0 + var(--v5)*163 + var(--v6)*138 + var(--v7)*255) * (1 - var(--danger)) + var(--ink-b) * var(--danger));
     /* Text on accent and signal fills. */
-    --on-accent-r: calc(var(--v0)*14 + var(--v1)*43 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*58 + var(--v6)*10 + var(--v7)*6);
-    --on-accent-g: calc(var(--v0)*18 + var(--v1)*20 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*26 + var(--v6)*20 + var(--v7)*17);
-    --on-accent-b: calc(var(--v0)*38 + var(--v1)*32 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*23 + var(--v6)*32 + var(--v7)*15);
-    --on-signal-r: calc(var(--v0)*14 + var(--v1)*43 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*58 + var(--v6)*10 + var(--v7)*6);
-    --on-signal-g: calc(var(--v0)*18 + var(--v1)*20 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*26 + var(--v6)*20 + var(--v7)*17);
-    --on-signal-b: calc(var(--v0)*38 + var(--v1)*32 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*23 + var(--v6)*32 + var(--v7)*15);
+    --on-accent-r: calc(var(--v0)*15 + var(--v1)*43 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*58 + var(--v6)*10 + var(--v7)*6);
+    --on-accent-g: calc(var(--v0)*23 + var(--v1)*20 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*26 + var(--v6)*20 + var(--v7)*17);
+    --on-accent-b: calc(var(--v0)*36 + var(--v1)*32 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*23 + var(--v6)*32 + var(--v7)*15);
+    --on-signal-r: calc(var(--v0)*15 + var(--v1)*43 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*58 + var(--v6)*10 + var(--v7)*6);
+    --on-signal-g: calc(var(--v0)*23 + var(--v1)*20 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*26 + var(--v6)*20 + var(--v7)*17);
+    --on-signal-b: calc(var(--v0)*36 + var(--v1)*32 + var(--v2)*255 + var(--v3)*255 + var(--v4)*255 + var(--v5)*23 + var(--v6)*32 + var(--v7)*15);
     /* Triples for Tailwind's rgb(var(--x) / <alpha-value>). */
     --sky-rgb: var(--sky-r) var(--sky-g) var(--sky-b);
     --ground-rgb: var(--ground-r) var(--ground-g) var(--ground-b);
@@ -642,9 +642,10 @@
     font-weight: 400;
   }
 
-  /* Section headings: step 5 at 360 wide rising to step 8 (~107px). */
+  /* Section headings: step 4 at 360 wide rising to step 7 (~86px), always
+     just under the hero name. */
   .d-1 {
-    font-size: clamp(var(--step-5), 1.2rem + 6vw, calc(var(--step-0) * 5.9605));
+    font-size: clamp(var(--step-4), 1.2rem + 4.6vw, calc(var(--step-0) * 4.7684));
     letter-spacing: -0.04em;
   }
 
@@ -682,34 +683,25 @@
     color: rgb(var(--ink-rgb));
   }
 
-  /* The hero name fills its column exactly. Measured advance widths in
-     Fraunces at this tracking: "Nasik Sami" 3.90em, the full name 5.96em;
-     the divisors leave ~2.5% slack. Two lines below 1280px, capped so
-     tablets are not overwhelmed; one line above. */
+  /* The hero name: one line at every width, in the display face with its
+     quirks off. Sized just above step 4 at 360 wide, rising to ~96px,
+     so it always outranks the section headings
+     and capped by the column: the full name measures 6.05em at this
+     tracking, so 100cqi / 6.25 leaves ~3% slack on the narrowest phones. */
   .hero-name-fit {
     container-type: inline-size;
   }
 
   .hero-name {
-    font-size: min(100cqi / 4, 12rem);
-    line-height: 0.86;
-    letter-spacing: -0.045em;
-    text-box: trim-both cap alphabetic;
-  }
-
-  .hero-name > span {
-    display: block;
+    font-size: min(clamp(calc(var(--step-4) * 1.1), 1.4rem + 4.6vw, 6rem), 100cqi / 6.25);
+    font-variation-settings:
+      'opsz' 144,
+      'SOFT' 0,
+      'WONK' 0;
+    line-height: 1;
+    letter-spacing: -0.035em;
     white-space: nowrap;
-  }
-
-  @media (min-width: 1280px) {
-    .hero-name {
-      font-size: calc(100cqi / 6.1);
-    }
-
-    .hero-name > span {
-      display: inline;
-    }
+    text-box: trim-both cap alphabetic;
   }
 
   /* Aligns a text block's cap height with the top edge of what sits beside

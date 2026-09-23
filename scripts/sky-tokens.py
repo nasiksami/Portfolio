@@ -22,7 +22,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 # name, arc position, sky, ground, overlay, edge, ink, ink2, ink3, accent, on-accent, signal, on-signal
 KNOTS = [
-    ('pre-dawn',  0.00, '#0e1226', '#171b33', '#232848', '#3a3f5e', '#f3efe6', '#cbc8c0', '#a6a5b8', '#f0a868', '#0e1226', '#e8d27a', '#0e1226'),
+    ('pre-dawn',  0.00, '#0f1724', '#141e2c', '#1c2838', '#33425a', '#eef1f5', '#c4cbd5', '#9ba7b6', '#9cc3e6', '#0f1724', '#d8bd8c', '#0f1724'),
     ('dawn',      0.11, '#3b2444', '#2a1c33', '#3a2846', '#6a4a72', '#fbf3ea', '#e6d6cf', '#d1bdb8', '#ffb37a', '#2b1420', '#ffd479', '#2b1420'),
     ('morning',   0.14, '#f4e7d4', '#f7f0e2', '#eadfca', '#c9b89e', '#1c2430', '#454d58', '#5b6570', '#9a4512', '#ffffff', '#6b5300', '#ffffff'),
     ('noon',      0.30, '#e6eff6', '#f4efe1', '#e3dcc7', '#b9c6cf', '#14202c', '#3d4a57', '#556370', '#1a5e8c', '#ffffff', '#7d5400', '#ffffff'),
