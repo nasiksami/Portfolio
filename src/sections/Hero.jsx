@@ -22,10 +22,10 @@ const item = {
  * The opening: one flat pre-dawn sky, the name on a single line above the
  * horizon rule, and everything else hung from the rule.
  *
- * The rule is the axis. The portrait plate hangs from it, top edge on the
- * rule, left edge on the name's first letter. The name's baseline and the
- * role's cap height sit the same distance either side of it, trimmed to the
- * ink with text-box. Reading order is strictly downward: name, role, current
+ * The name stands on the horizon rule. Below it, after a clear gap, the
+ * portrait plate and the text column start on one line: the plate's top edge
+ * and the role's cap height (trimmed to the ink with text-box) align, and the
+ * plate's left edge is the name's first letter. Reading order is strictly downward: name, role, current
  * position, positioning statement, View my work, then Get in touch and
  * Resume.
  */
@@ -60,13 +60,13 @@ export default function Hero() {
 
       <div className="horizon-ground">
         <motion.div
-          className="shell grid grid-cols-[minmax(0,6.5rem)_minmax(0,1fr)] gap-x-5 pb-20 sm:grid-cols-[minmax(0,9rem)_minmax(0,1fr)] sm:gap-x-8 md:pb-28 lg:grid-cols-12"
+          className="shell grid grid-cols-[minmax(0,6.5rem)_minmax(0,1fr)] gap-x-5 pb-20 pt-8 sm:grid-cols-[minmax(0,9rem)_minmax(0,1fr)] sm:gap-x-8 md:pb-28 md:pt-12 lg:grid-cols-12 lg:pt-16"
           variants={container}
           initial={enter}
           animate="show"
         >
           <motion.figure variants={item} className="m-0 lg:col-span-3 lg:row-span-2">
-            <div className="aspect-[4/5] overflow-hidden rounded-[0.35rem] rounded-t-none border border-t-0 border-edge bg-surface-overlay lg:aspect-square">
+            <div className="aspect-[4/5] overflow-hidden rounded-[0.35rem] border border-edge bg-surface-overlay lg:aspect-square">
               <img
                 src={profile.headshot}
                 alt={'Portrait of ' + profile.name}
@@ -82,7 +82,7 @@ export default function Hero() {
             </figcaption>
           </motion.figure>
 
-          <div className="pt-[clamp(0.75rem,1.4vw,1.5rem)] lg:col-span-8 lg:col-start-5">
+          <div className="lg:col-span-8 lg:col-start-5">
             <motion.p
               variants={item}
               className="trim-cap text-lg font-medium leading-tight text-content-primary sm:text-xl"
