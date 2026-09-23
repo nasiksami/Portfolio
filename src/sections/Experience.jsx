@@ -181,7 +181,7 @@ export default function Experience() {
   return (
     <Section
       id="experience"
-      index="04"
+      index="02"
       label="Record"
       arc={ARC.experience}
       title="Experience & education"

@@ -10,49 +10,6 @@ import Emphasis from '../components/ui/Emphasis';
 const slug = (title) => 'project-' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const number = (index) => String(index + 1).padStart(2, '0');
 
-// Elevator heights for the skyline, seeded from the catalogue index so the
-// silhouette is stable across filters.
-const HEIGHTS = [3.2, 5.4, 4.1, 6.2, 3.6, 5, 4.6];
-
-/**
- * The skyline: one grain elevator per visible project standing on the
- * horizon, each a link to its record on the ground below. The negative
- * bottom margin cancels the sky row's padding so the elevators touch the rule.
- */
-function Skyline({ visible }) {
-  return (
-    <nav aria-label="Jump to a project" className="-mb-12 mt-16 md:-mb-16 md:mt-24">
-      <ul className="flex items-end gap-[clamp(0.9rem,3vw,2.5rem)] overflow-x-auto pb-px">
-        {visible.map((project) => {
-          const index = projects.indexOf(project);
-          const height = HEIGHTS[index % HEIGHTS.length];
-          return (
-            <li key={project.title} className="shrink-0">
-              <a
-                href={'#' + slug(project.title)}
-                aria-label={project.title}
-                className="group flex flex-col items-center gap-2"
-              >
-                <span className="meta-sm text-content-muted transition-colors group-hover:text-accent">
-                  {number(index)}
-                </span>
-                <span
-                  aria-hidden="true"
-                  style={{ height: height + 'rem' }}
-                  className={[
-                    'block w-[clamp(0.9rem,2.2vw,1.6rem)] border border-b-0 border-content-primary/45 transition-colors duration-300 group-hover:border-accent group-hover:bg-accent/10',
-                    project.featured ? 'bg-content-primary/[0.06]' : '',
-                  ].join(' ')}
-                />
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
-  );
-}
-
 function ProjectEntry({ project, index }) {
   const { paper, demo, repo } = project.links ?? {};
   const links = [
@@ -137,40 +94,36 @@ export default function Projects() {
   return (
     <Section
       id="projects"
-      index="02"
+      index="04"
       label="Work"
       arc={ARC.projects}
       title="Selected work"
       description="Research and engineering work spanning applied AI, network systems, and full-stack product delivery."
       sky={
-        <>
-          <div
-            aria-label="Filter projects by category"
-            className="mt-12 flex flex-wrap gap-2 md:mt-16"
-          >
-            {categories.map((category) => {
-              const isActive = active === category;
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  aria-pressed={isActive}
-                  onClick={() => setActive(category)}
-                  className={[
-                    'meta tap rounded-[0.35rem] border px-4 py-2 transition-colors',
-                    isActive
-                      ? 'border-content-primary bg-content-primary text-surface-base'
-                      : 'border-edge text-content-muted hover:border-content-primary hover:text-content-primary',
-                  ].join(' ')}
-                >
-                  {category}
-                </button>
-              );
-            })}
-          </div>
-
-          <Skyline visible={visible} />
-        </>
+        <div
+          aria-label="Filter projects by category"
+          className="mt-12 flex flex-wrap gap-2 md:mt-16"
+        >
+          {categories.map((category) => {
+            const isActive = active === category;
+            return (
+              <button
+                key={category}
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => setActive(category)}
+                className={[
+                  'meta tap rounded-[0.35rem] border px-4 py-2 transition-colors',
+                  isActive
+                    ? 'border-content-primary bg-content-primary text-surface-base'
+                    : 'border-edge text-content-muted hover:border-content-primary hover:text-content-primary',
+                ].join(' ')}
+              >
+                {category}
+              </button>
+            );
+          })}
+        </div>
       }
     >
       <motion.div

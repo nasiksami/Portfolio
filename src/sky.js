@@ -21,7 +21,9 @@ export const STORAGE_KEY = 'theme';
 export const CROSSING_PX = 88;
 
 /**
- * The span of the day each section covers, in document order. Adjacent
+ * The span of the day each section covers. The spans follow document order —
+ * About, Experience, Publications, Projects, Skills, Contact — so a section's
+ * place in the day is set by its position, not its subject. Adjacent
  * sections share a boundary value so the painted sky is continuous.
  *
  * A section with `cross` opens with a CROSSING_PX band that carries the sky
@@ -32,10 +34,10 @@ export const CROSSING_PX = 88;
 export const ARC = {
   top: { from: 0, to: 0 },
   about: { from: 0, cross: 0.14, to: 0.3 },
-  projects: { from: 0.3, to: 0.4 },
-  skills: { from: 0.4, to: 0.46 },
-  experience: { from: 0.46, cross: 0.49, to: 0.66 },
-  publications: { from: 0.66, to: 0.84 },
+  experience: { from: 0.3, to: 0.4 },
+  publications: { from: 0.4, to: 0.46 },
+  projects: { from: 0.46, cross: 0.49, to: 0.66 },
+  skills: { from: 0.66, to: 0.84 },
   contact: { from: 0.84, to: 1 },
   footer: { from: 1, to: 1 },
 };

@@ -51,10 +51,10 @@ export default function App() {
         <Hero />
         <About />
         <Suspense fallback={<SectionFallback />}>
-          <Projects />
-          <Skills />
           <Experience />
           <Publications />
+          <Projects />
+          <Skills />
           <Contact />
         </Suspense>
       </main>

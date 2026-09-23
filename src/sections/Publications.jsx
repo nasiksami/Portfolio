@@ -85,7 +85,7 @@ export default function Publications() {
   return (
     <Section
       id="publications"
-      index="05"
+      index="03"
       label="Research"
       arc={ARC.publications}
       title="Publications & awards"

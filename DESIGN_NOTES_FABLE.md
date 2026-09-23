@@ -158,13 +158,16 @@ entry, parallax and weather layer falls back to a static composition.
 
 | § | Section | Arc | Relation to the line | Move |
 |---|---|---|---|---|
-| 00 | Hero | 0 → dawn | Name stands on the rule; role, summary and actions on the ground | The portrait is the sun. At desktop widths it stands on the horizon, its lower 30% clipped by the line, and climbs as you scroll; below lg it has risen into the open sky above the name. Three haze bands drift against the pointer at different depths; a grass fringe leans with pointer velocity. MotionValues only. |
+| 00 | Hero | pre-dawn, flat | The name stands on the rule; the plate and text start one clear gap below it | Deep slate navy with a steel-blue accent and brass buttons. The name is one line in one colour; the portrait is a natural-colour plate whose top edge aligns with the role's cap height and whose left edge is the name's first letter. |
 | 01 | About | sunrise band → 0.30 | Tagline in the sky, everything else on the ground | Stats stand below the rule as survey posts and count up. Focus areas form a quarter section: NW, NE, SW, SE. |
-| 02 | Projects | 0.30 → 0.40 | Filter and skyline in the sky, records on the ground | A skyline of grain elevators, one per visible project, stands on the rule and links to each record. |
-| 03 | Skills | 0.40 → 0.46 | Fully below the line | Six ruled furrows; proficiency is three seeds. |
-| 04 | Experience | sunset band → 0.66 | Timeline drops from the rule | A plumb line falls from the horizon; entries hang from it. Education sticky beside at wide viewports. |
-| 05 | Publications | 0.66 → 0.84 | Sky-heavy | Papers in the night sky with years set large as the first stars; awards as a constellation on the ground. |
+| 02 | Experience | 0.30 → 0.40 | Timeline drops from the rule | A plumb line falls from the horizon; entries hang from it. Education sticky beside at wide viewports. |
+| 03 | Publications | 0.40 → 0.46 | Papers in the sky, awards on the ground | Years set large beside each paper; awards as a ruled constellation. |
+| 04 | Projects | sunset band → 0.66 | Filter in the sky, records on the ground | A ledger of project records with catalogue numbers, impact and stack. |
+| 05 | Skills | 0.66 → 0.84 | Fully below the line | Six ruled furrows; proficiency is three seeds. |
 | 06 | Contact | 0.84 → 1 | Channels in the sky, form on solid ground | Aurora bands drift across the sky, visible only at the end of the arc. The footer continues the ground; the name stands on a final horizon. |
+
+Each section's stretch of the day is set by its position in the page, not its
+subject, so reordering sections keeps the sky continuous.
 
 ## Behaviour preserved
 

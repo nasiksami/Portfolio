@@ -35,7 +35,7 @@ export default function Skills() {
   return (
     <Section
       id="skills"
-      index="03"
+      index="05"
       label="Toolkit"
       arc={ARC.skills}
       title="Skills & technologies"
