@@ -32,7 +32,7 @@ export const availability =
 // STAT TILES — shown in the About section.
 //
 // These defaults are derived strictly from content already in this repo:
-//   publications  → 7 entries in data/publications.js
+//   publications  → 8 entries in data/publications.js
 //   experience    → "over 3 years", matching the wording in public/resume.pdf
 //                   so the site and the PDF never contradict each other
 //   roles         → 9 entries in data/experience.js
@@ -42,7 +42,7 @@ export const availability =
 // what the site displays; `label` and `detail` are free text.
 // ─────────────────────────────────────────────────────────────────────────────
 export const stats = [
-  { value: '7', label: 'Publications', detail: 'Peer-reviewed papers & book chapters' },
+  { value: '8', label: 'Publications', detail: 'Peer-reviewed papers & book chapters' },
   {
     value: '3+',
     label: 'Years experience',
