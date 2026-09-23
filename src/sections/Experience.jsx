@@ -46,18 +46,18 @@ function TimelineEntry({ entry, index, isEducation = false }) {
               <span
                 aria-hidden="true"
                 className={[
-                  'flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-white',
+                  'flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-white md:h-16 md:w-16',
                   entry.current ? 'border-signal' : 'border-edge',
                 ].join(' ')}
               >
                 <img
                   src={entry.logo}
                   alt=""
-                  width="44"
-                  height="44"
+                  width="64"
+                  height="64"
                   loading="lazy"
                   decoding="async"
-                  className="h-full w-full object-contain p-1.5"
+                  className="h-full w-full object-contain p-2"
                 />
               </span>
             )}
