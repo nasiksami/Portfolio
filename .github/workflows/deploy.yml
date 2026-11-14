@@ -1,0 +1,118 @@
+name: Deploy
+
+# One build, two destinations.
+#
+#   push to main            → nasik.ca (Hostinger, over FTPS) and the Pages preview
+#   push to redesign-fable  → the Pages preview only
+#
+# The Pages preview at https://nasiksami.github.io/Portfolio/ is for reviewing
+# changes before they go to the live host. Only main reaches nasik.ca.
+#
+# The Hostinger upload needs three repository secrets (Settings → Secrets and
+# variables → Actions): HOSTINGER_FTP_HOST, HOSTINGER_FTP_USER and
+# HOSTINGER_FTP_PASSWORD. Until they exist the upload is skipped, not failed.
+# The optional repository variable HOSTINGER_FTP_DIR sets the remote folder
+# and defaults to public_html/.
+on:
+  push:
+    branches: [main, redesign-fable]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # Fail the deploy on lint errors rather than shipping them.
+      - run: npm run lint
+
+      - run: npm run build
+
+      # The build as it goes to nasik.ca, with the real robots.txt. Taken
+      # before the preview's robots.txt is written over it below.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist
+          retention-days: 7
+
+      # The preview is a second public copy of the site. Keep it out of search
+      # results so it never competes with nasik.ca; the canonical tag in
+      # index.html already points at the real domain.
+      - name: Block crawlers on the preview
+        run: |
+          cat > dist/robots.txt <<'ROBOTS'
+          # Preview build only — the canonical site is https://nasik.ca/
+          # Kept out of search results so this copy never competes with the real domain.
+          User-agent: *
+          Disallow: /
+          ROBOTS
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  preview:
+    needs: build
+    runs-on: ubuntu-latest
+    # Let a newer push cancel a queued deploy, but never interrupt one that is
+    # already publishing.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Independent of the preview job, so a Pages failure never holds back the
+  # live site.
+  hostinger:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: hostinger
+      cancel-in-progress: false
+    env:
+      FTP_HOST: ${{ secrets.HOSTINGER_FTP_HOST }}
+    steps:
+      - name: Skip when the FTP secrets are not set
+        if: env.FTP_HOST == ''
+        run: echo "::warning::HOSTINGER_FTP_HOST is not set, so nasik.ca was not updated."
+
+      - uses: actions/download-artifact@v4
+        if: env.FTP_HOST != ''
+        with:
+          name: site
+          path: dist
+
+      # Uploads only files that changed, and removes only files a previous run
+      # of this action uploaded. Anything else on the server is left alone.
+      # Pinned to the commit behind v4.3.5.
+      - name: Upload to Hostinger
+        if: env.FTP_HOST != ''
+        uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65
+        with:
+          server: ${{ secrets.HOSTINGER_FTP_HOST }}
+          username: ${{ secrets.HOSTINGER_FTP_USER }}
+          password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./dist/
+          server-dir: ${{ vars.HOSTINGER_FTP_DIR || 'public_html/' }}

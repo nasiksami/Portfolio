@@ -208,17 +208,32 @@ and 98 on desktop, and 100 for accessibility and best practices.
 
 Static build: `dist/` deploys to any static host.
 
-**GitHub Pages preview.** `.github/workflows/preview.yml` builds, lints and
-publishes to [nasiksami.github.io/Portfolio](https://nasiksami.github.io/Portfolio/)
-on every push to **`redesign-fable`**. Pushes to other branches, `main`
-included, do not deploy. The branch must also be allowed under Settings →
-Environments → `github-pages` → Deployment branches. The preview serves a
-`robots.txt` that blocks crawlers, so it never competes with the real domain.
+**One workflow, two destinations.** `.github/workflows/deploy.yml` builds and
+lints once, then:
 
-**nasik.ca** is deployed by hand. `vite.config.js` sets `base: './'` for
-relative asset paths, so the same build works at a domain root and under a
-subdirectory. The resume link is the relative `./resume.pdf` for the same
-reason.
+| Push to | nasik.ca (Hostinger) | Pages preview |
+| --- | --- | --- |
+| `main` | yes | yes |
+| `redesign-fable` | no | yes |
+
+**nasik.ca** is uploaded to Hostinger over FTPS, and only from `main`. It needs
+three repository secrets under Settings → Secrets and variables → Actions:
+`HOSTINGER_FTP_HOST`, `HOSTINGER_FTP_USER` and `HOSTINGER_FTP_PASSWORD`. Until
+they are set the upload is skipped with a warning. The remote folder defaults
+to `public_html/`; set the repository variable `HOSTINGER_FTP_DIR` to change
+it. The upload sends only changed files and removes only files it uploaded
+itself.
+
+**The Pages preview** at
+[nasiksami.github.io/Portfolio](https://nasiksami.github.io/Portfolio/) is for
+checking a change before it goes live. Each branch that deploys there must be
+allowed under Settings → Environments → `github-pages` → Deployment branches.
+The preview serves a `robots.txt` that blocks crawlers, so it never competes
+with the real domain.
+
+`vite.config.js` sets `base: './'` for relative asset paths, so the same build
+works at a domain root and under a subdirectory. The resume link is the
+relative `./resume.pdf` for the same reason.
 
 **Vercel / Netlify:** connect the repo, with build command `npm run build`
 and output directory `dist`.
