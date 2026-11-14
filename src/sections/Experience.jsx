@@ -185,7 +185,7 @@ export default function Experience() {
       label="Record"
       arc={ARC.experience}
       title="Experience & education"
-      description="Nine roles across industry and academia, from full-stack engineering in Malaysia to leading an AI team in Canada."
+      description="From software engineering in Kuala Lumpur, through applied AI research, to leading an AI team in healthcare."
     >
       <div className="grid gap-20 xl:grid-cols-[1.55fr_1fr] xl:gap-16">
         <Record heading="Professional experience" entries={experience} isEducation={false} fromHorizon />

@@ -18,10 +18,12 @@ const TERMS = [
     ...projects.flatMap((project) => project.tech),
   ]),
 ]
+  // A one-letter name ("R") would also match inside "R&D".
+  .filter((term) => term.length > 1)
   .sort((a, b) => b.length - a.length)
   .map(escape);
 
-// $35,000 · 47% · 88.4% · 10+ · 200+
+// $35,000 · 45.2% · 88.4% · 10+ · 200+
 const METRIC = String.raw`\$\d[\d,]*(?:\.\d+)?\+?|\d+(?:\.\d+)?%|\d+\+`;
 
 const PATTERN = new RegExp(

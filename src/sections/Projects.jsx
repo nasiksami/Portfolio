@@ -70,7 +70,7 @@ function ProjectEntry({ project, index }) {
           </div>
         )}
 
-        <p className="meta-sm mt-8 text-content-muted">Stack</p>
+        <p className={['meta-sm text-content-muted', project.impact ? 'mt-8' : ''].join(' ')}>Stack</p>
         <ul className="mt-3 flex flex-wrap gap-1.5">
           {project.tech.map((tech) => (
             <li key={tech}>
@@ -98,7 +98,7 @@ export default function Projects() {
       label="Work"
       arc={ARC.projects}
       title="Selected work"
-      description="Research and engineering work spanning applied AI, network systems, and full-stack product delivery."
+      description="Applied AI and network research, each with the result it produced, and full-stack product work."
       sky={
         <div
           aria-label="Filter projects by category"
