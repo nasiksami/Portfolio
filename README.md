@@ -219,9 +219,9 @@ lints once, then:
 **nasik.ca** is uploaded to Hostinger over FTPS, and only from `main`. It needs
 three repository secrets under Settings → Secrets and variables → Actions:
 `HOSTINGER_FTP_HOST`, `HOSTINGER_FTP_USER` and `HOSTINGER_FTP_PASSWORD`. Until
-they are set the upload is skipped with a warning. The remote folder defaults
-to `public_html/`; set the repository variable `HOSTINGER_FTP_DIR` to change
-it. The upload sends only changed files and removes only files it uploaded
+they are set the upload is skipped with a warning. The FTP account opens
+inside `public_html`, so the upload goes to the account's root; set the
+repository variable `HOSTINGER_FTP_DIR` to change the folder. The upload sends only changed files and removes only files it uploaded
 itself.
 
 **The Pages preview** at

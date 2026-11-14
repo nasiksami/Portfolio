@@ -11,8 +11,9 @@ name: Deploy
 # The Hostinger upload needs three repository secrets (Settings → Secrets and
 # variables → Actions): HOSTINGER_FTP_HOST, HOSTINGER_FTP_USER and
 # HOSTINGER_FTP_PASSWORD. Until they exist the upload is skipped, not failed.
-# The optional repository variable HOSTINGER_FTP_DIR sets the remote folder
-# and defaults to public_html/.
+# The FTP account opens inside public_html, the folder nasik.ca is served
+# from, so the upload goes to the account's root. The optional repository
+# variable HOSTINGER_FTP_DIR overrides that.
 on:
   push:
     branches: [main, redesign-fable]
@@ -115,4 +116,4 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./dist/
-          server-dir: ${{ vars.HOSTINGER_FTP_DIR || 'public_html/' }}
+          server-dir: ${{ vars.HOSTINGER_FTP_DIR || './' }}
