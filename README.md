@@ -1,12 +1,302 @@
 # Nasik Sami Khan — Portfolio
 
-Personal portfolio for **Nasik Sami Khan**, AI/ML Researcher & Full-Stack Developer.
-Live at **[nasik.ca](https://nasik.ca/)**, with a preview build at
-**[nasiksami.github.io/Portfolio](https://nasiksami.github.io/Portfolio/)**.
+[![Deploy](https://github.com/nasiksami/Portfolio/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/nasiksami/Portfolio/actions/workflows/deploy.yml)
+
+The personal portfolio of **Nasik Sami Khan**, AI/ML Researcher & Full-Stack
+Developer. It is a static React site, built and deployed automatically by
+GitHub Actions on every push.
 
 > Driving innovation at the intersection of AI, ML, and software engineering.
 
----
+| | |
+| --- | --- |
+| **Live site** | [nasik.ca](https://nasik.ca/), hosted on Hostinger |
+| **Preview** | [nasiksami.github.io/Portfolio](https://nasiksami.github.io/Portfolio/), hosted on GitHub Pages |
+| **Stack** | React 18, Vite 4, Tailwind CSS 3, Framer Motion |
+| **CI/CD** | GitHub Actions: lint, build, then deploy to both hosts |
+| **Design** | "Horizon", documented in [`DESIGN_NOTES_FABLE.md`](DESIGN_NOTES_FABLE.md) |
+
+## Contents
+
+- [Architecture](#architecture)
+- [Delivery pipeline](#delivery-pipeline)
+- [Day-to-day workflow](#day-to-day-workflow)
+- [Setting up on a new machine](#setting-up-on-a-new-machine)
+- [Repository settings the pipeline depends on](#repository-settings-the-pipeline-depends-on)
+- [Troubleshooting deploys](#troubleshooting-deploys)
+- [Branches](#branches)
+- [Tech stack](#tech-stack)
+- [Project structure](#project-structure)
+- [Design system — "Horizon"](#design-system--horizon)
+- [Accessibility](#accessibility)
+- [Performance](#performance)
+- [Hosting notes](#hosting-notes)
+- [Contact](#contact)
+
+## Architecture
+
+The site has no backend and no database. All content is plain JavaScript data
+in `src/data/`, the components render it, and Vite compiles everything into
+static files that any web host can serve.
+
+```mermaid
+flowchart TD
+    subgraph source["Source, in this repository"]
+        data["Content<br/>src/data/*.js"]
+        ui["Sections and components<br/>src/sections, src/components"]
+        tokens["Design tokens<br/>scripts/sky-tokens.py<br/>generates index.css and sky.js"]
+        assets["Static assets<br/>public/, src/assets"]
+    end
+
+    build["Vite build<br/>npm run build"]
+    dist["dist/<br/>HTML, CSS, JS, images"]
+
+    data --> ui
+    tokens --> ui
+    ui --> build
+    assets --> build
+    build --> dist
+
+    subgraph hosts["Static hosting"]
+        live["Hostinger<br/>nasik.ca"]
+        pages["GitHub Pages<br/>preview"]
+    end
+
+    dist --> live
+    dist --> pages
+
+    browser["Visitor's browser"]
+    live --> browser
+    pages --> browser
+    browser -->|"contact form"| formspree["Formspree"]
+    browser -->|"web fonts"| fonts["Google Fonts"]
+```
+
+Two outside services are used at runtime, and both are called from the
+visitor's browser: **Formspree** receives contact-form submissions, and
+**Google Fonts** serves the two typefaces. Neither needs a key or a secret in
+this repository.
+
+## Delivery pipeline
+
+One workflow, [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml),
+takes a push from the local machine to both hosts. It builds once and deploys
+the same build twice.
+
+```mermaid
+flowchart TD
+    dev["Local machine<br/>edit code, npm run dev, npm run lint"]
+    repo["GitHub repository<br/>nasiksami/Portfolio"]
+
+    dev -->|"git commit, git push"| repo
+    repo -->|"push to main or redesign-fable"| build
+
+    subgraph actions["GitHub Actions"]
+        build["build job<br/>checkout, Node 20, npm ci<br/>lint, vite build"]
+        preview["preview job<br/>publish to GitHub Pages"]
+        hostinger["hostinger job, main only<br/>FTPS upload, one automatic retry"]
+        build -->|"Pages artifact<br/>robots.txt blocks crawlers"| preview
+        build -->|"site artifact<br/>real robots.txt"| hostinger
+    end
+
+    preview --> pages["GitHub Pages<br/>nasiksami.github.io/Portfolio"]
+    hostinger --> live["Hostinger<br/>nasik.ca"]
+```
+
+What each push deploys:
+
+| Push to | nasik.ca (Hostinger) | Pages preview |
+| --- | --- | --- |
+| `main` | Yes | Yes |
+| `redesign-fable` | No | Yes |
+| any other branch | No | No |
+
+How the pipeline is built:
+
+- **Lint is a gate.** If `npm run lint` fails, nothing is deployed.
+- **One build, two artifacts.** The copy for nasik.ca keeps the real
+  `robots.txt`. The Pages copy gets a `robots.txt` that blocks crawlers, so the
+  preview never competes with the real domain in search results.
+- **The two deploys are independent jobs.** A failure on one host does not
+  stop the other.
+- **The Hostinger upload is incremental.** It sends only files that changed
+  and removes only files it uploaded itself. Anything else on the server is
+  left alone. Hostinger sometimes drops the FTP connection mid-transfer, so a
+  failed first attempt is retried once.
+- **Credentials never touch the repository.** The FTP host, username and
+  password are GitHub repository secrets. If they are missing, the upload is
+  skipped with a warning and the rest of the workflow still passes.
+- **The third-party upload action is pinned to a commit**, not a moving tag.
+
+## Day-to-day workflow
+
+Work happens on `redesign-fable`, is checked on the preview, and is then
+promoted to `main`, which publishes it to nasik.ca.
+
+```mermaid
+flowchart LR
+    edit["Edit and test locally<br/>on redesign-fable"]
+    push1["git push"]
+    check["Check the Pages preview"]
+    promote["Fast-forward main<br/>and push it"]
+    livesite["nasik.ca is updated"]
+
+    edit --> push1 --> check --> promote --> livesite
+```
+
+```bash
+# 1. Work on the development branch
+git switch redesign-fable
+npm run dev                      # http://localhost:5173
+
+# 2. Check the change the way CI will
+npm run lint
+npm run build
+
+# 3. Commit and push: this deploys the Pages preview
+git add -A
+git commit -m "content: describe the change"
+git push
+
+# 4. After checking the preview, promote to main: this deploys nasik.ca
+git push origin redesign-fable:main
+```
+
+Step 4 is a fast-forward: it moves `main` to the same commit without a merge
+commit. It is refused if `main` has commits that `redesign-fable` does not, in
+which case merge `main` into `redesign-fable` first.
+
+Each run can be followed under the repository's
+[Actions tab](https://github.com/nasiksami/Portfolio/actions). A deploy takes
+about a minute.
+
+## Setting up on a new machine
+
+Everything needed to build and deploy the site is in this repository or in
+GitHub's settings. Nothing has to be copied from an old computer.
+
+### 1. Install the prerequisites
+
+| Tool | Version | Needed for |
+| --- | --- | --- |
+| Git | any recent | cloning and pushing |
+| Node.js | 20 or newer (CI uses 20; `.nvmrc` pins it for nvm users) | building and running the site |
+| npm | bundled with Node.js | installing dependencies |
+| Python 3 | any, no packages | only for regenerating the colour tokens |
+
+### 2. Give the machine access to GitHub
+
+Pushing requires authentication. Either works:
+
+- **SSH:** create a key with `ssh-keygen -t ed25519`, then add the public key
+  under GitHub → Settings → SSH and GPG keys.
+- **HTTPS:** clone with the HTTPS URL and sign in when Git asks, or install the
+  GitHub CLI and run `gh auth login`.
+
+Set the identity that commits are recorded under:
+
+```bash
+git config --global user.name  "Nasik Sami Khan"
+git config --global user.email "you@example.com"
+```
+
+### 3. Clone, install and run
+
+```bash
+git clone git@github.com:nasiksami/Portfolio.git
+cd Portfolio
+git switch redesign-fable        # the development branch
+
+npm ci                           # exact dependencies from package-lock.json
+npm run dev                      # dev server at http://localhost:5173
+```
+
+Use `npm ci`, not `npm install`, on a fresh clone: it installs exactly the
+versions recorded in `package-lock.json`, the same ones CI builds with.
+
+### 4. Confirm the machine can ship
+
+```bash
+npm run lint                     # must pass, CI runs the same check
+npm run build                    # writes dist/
+npm run preview                  # serves the production build locally
+```
+
+If these pass, a `git push` from this machine deploys exactly as before.
+
+### What lives where
+
+| Item | Where it lives | Action on a new machine |
+| --- | --- | --- |
+| Source code, content, assets, resume | This repository | `git clone` |
+| Dependency versions | `package-lock.json` | `npm ci` |
+| CI/CD pipeline | `.github/workflows/deploy.yml` | None |
+| Hostinger FTP credentials | GitHub repository secrets | None |
+| GitHub Pages configuration | GitHub repository settings | None |
+| Contact form endpoint | Formspree, form ID in `src/sections/Contact.jsx` | None |
+| Domain and DNS for nasik.ca | Hostinger account | None |
+| `node_modules/`, `dist/` | Generated locally, not committed | Recreated by `npm ci` and `npm run build` |
+
+Three things are **not** carried by a clone and exist only on the machine that
+made them: uncommitted changes, `git stash` entries, and tags or branches that
+were never pushed. Commit and push, or deliberately discard, anything that
+matters before retiring a machine. `git status`, `git stash list` and
+`git push --tags` cover all three.
+
+### All commands
+
+```bash
+npm ci          # install the locked dependencies
+npm run dev     # dev server at http://localhost:5173
+npm run build   # production build to dist/
+npm run preview # serve the production build locally
+npm run lint    # ESLint, including accessibility rules
+```
+
+## Repository settings the pipeline depends on
+
+These are already configured on `nasiksami/Portfolio`. They are listed so the
+pipeline can be rebuilt if the repository is ever forked or recreated.
+
+| Setting | Location in GitHub | Value |
+| --- | --- | --- |
+| Pages source | Settings → Pages → Build and deployment | GitHub Actions |
+| Pages deploy branches | Settings → Environments → `github-pages` → Deployment branches | `main`, `redesign-fable` |
+| `HOSTINGER_FTP_HOST` | Settings → Secrets and variables → Actions → **Repository secrets** | FTP hostname or IP, without `ftp://` |
+| `HOSTINGER_FTP_USER` | same | FTP username |
+| `HOSTINGER_FTP_PASSWORD` | same | FTP password |
+| `HOSTINGER_FTP_DIR` (optional) | Settings → Secrets and variables → Actions → Variables | Remote folder; defaults to `./` |
+
+The FTP details come from Hostinger's hPanel, under Files → FTP Accounts. The
+secrets must be **repository** secrets. Environment secrets are not visible to
+the upload job.
+
+The FTP account opens inside `public_html`, the folder nasik.ca is served
+from, so the workflow uploads to the account's root (`./`). Set
+`HOSTINGER_FTP_DIR` only if a different FTP account or folder is used.
+
+## Troubleshooting deploys
+
+| Symptom | Cause | Fix |
+| --- | --- | --- |
+| Warning "HOSTINGER_FTP_HOST is not set", nasik.ca unchanged | The secrets are missing, misnamed, or stored as environment secrets | Add the three repository secrets listed above, then re-run the workflow |
+| Upload succeeds but nasik.ca is unchanged | Files went to the wrong folder, for example `public_html/public_html` | Set `HOSTINGER_FTP_DIR` to the folder the domain is served from |
+| "read ECONNRESET (data socket)" | Hostinger dropped the FTP connection | The workflow retries once by itself; if both attempts fail, re-run the job |
+| The preview job fails on a branch | The branch is not allowed to deploy to Pages | Add it under Environments → `github-pages` → Deployment branches |
+| The build job fails | A lint or build error | Run `npm run lint` and `npm run build` locally and fix what they report |
+
+## Branches
+
+| Branch | Purpose | Deploys to |
+| --- | --- | --- |
+| `main` | Production. Whatever is here is what nasik.ca serves. | nasik.ca and the preview |
+| `redesign-fable` | Development branch for the current "Horizon" design. | The preview |
+| `redesign` | An earlier design exploration, "Specimen №". Kept for reference. | Not deployed by this workflow |
+| `redesign-codex` | An earlier design exploration, "Signal Cartography". Kept for reference. | Not deployed by this workflow |
+
+The two earlier branches carry their own older workflow files. Pushing to
+`redesign` would publish that design to the Pages preview, replacing the
+current one, so leave those branches as they are unless that is intended.
 
 ## Tech stack
 
@@ -20,18 +310,8 @@ Live at **[nasik.ca](https://nasik.ca/)**, with a preview build at
 | Icons     | react-icons (Simple Icons, Feather, FA)         |
 | Forms     | Formspree                                       |
 | Linting   | ESLint + react-hooks + jsx-a11y                 |
-
-## Getting started
-
-Requires **Node.js 18+**. The token generator needs Python 3, with no packages.
-
-```bash
-npm install     # install dependencies
-npm run dev     # dev server at http://localhost:5173
-npm run build   # production build to dist/
-npm run preview # serve the production build locally
-npm run lint    # ESLint, including accessibility rules
-```
+| CI/CD     | GitHub Actions                                  |
+| Hosting   | Hostinger (production), GitHub Pages (preview)  |
 
 ## Project structure
 
@@ -204,41 +484,16 @@ on, at every point of the arc. If you change a colour, run the generator.
 Lighthouse, last measured on the production build: performance 79 on mobile
 and 98 on desktop, and 100 for accessibility and best practices.
 
-## Deployment
-
-Static build: `dist/` deploys to any static host.
-
-**One workflow, two destinations.** `.github/workflows/deploy.yml` builds and
-lints once, then:
-
-| Push to | nasik.ca (Hostinger) | Pages preview |
-| --- | --- | --- |
-| `main` | yes | yes |
-| `redesign-fable` | no | yes |
-
-**nasik.ca** is uploaded to Hostinger over FTPS, and only from `main`. It needs
-three repository secrets under Settings → Secrets and variables → Actions:
-`HOSTINGER_FTP_HOST`, `HOSTINGER_FTP_USER` and `HOSTINGER_FTP_PASSWORD`. Until
-they are set the upload is skipped with a warning. The FTP account opens
-inside `public_html`, so the upload goes to the account's root; set the
-repository variable `HOSTINGER_FTP_DIR` to change the folder. The upload sends only changed files and removes only files it uploaded
-itself.
-
-**The Pages preview** at
-[nasiksami.github.io/Portfolio](https://nasiksami.github.io/Portfolio/) is for
-checking a change before it goes live. Each branch that deploys there must be
-allowed under Settings → Environments → `github-pages` → Deployment branches.
-The preview serves a `robots.txt` that blocks crawlers, so it never competes
-with the real domain.
+## Hosting notes
 
 `vite.config.js` sets `base: './'` for relative asset paths, so the same build
-works at a domain root and under a subdirectory. The resume link is the
-relative `./resume.pdf` for the same reason.
+works at a domain root (nasik.ca) and under a subdirectory (the Pages
+preview). The resume link is the relative `./resume.pdf` for the same reason.
 
-**Vercel / Netlify:** connect the repo, with build command `npm run build`
-and output directory `dist`.
+The build is plain static files, so it also runs on any other static host:
+build command `npm run build`, output directory `dist`.
 
-After a domain change, update `public/sitemap.xml` and the canonical / Open
+After a domain change, update `public/sitemap.xml` and the canonical and Open
 Graph URLs in `index.html`.
 
 ## Contact
