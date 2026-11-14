@@ -1,0 +1,56 @@
+name: CI
+
+# Runs on every pull request into main. The job is named "checks" so it can
+# be set as a required status check in the branch protection rule for main:
+# a pull request cannot be merged, and so nothing reaches nasik.ca, until it
+# passes.
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run build
+
+      # Smoke tests against the production build, on a desktop and a phone.
+      - name: Install the test browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke tests
+        run: npx playwright test
+
+      # Accessibility and best practices must hold; performance and SEO warn.
+      # Thresholds are in lighthouserc.json.
+      - name: Lighthouse
+        run: npx --yes @lhci/cli@0.15.1 autorun
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reports
+          path: |
+            playwright-report
+            .lighthouseci/report
+          if-no-files-found: ignore
+          retention-days: 7

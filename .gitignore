@@ -13,3 +13,6 @@ pnpm-lock.yaml
 coverage/
 *.local
 *.log
+test-results/
+playwright-report/
+.lighthouseci/

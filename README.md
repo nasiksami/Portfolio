@@ -3,8 +3,8 @@
 [![Deploy](https://github.com/nasiksami/Portfolio/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/nasiksami/Portfolio/actions/workflows/deploy.yml)
 
 The personal portfolio of **Nasik Sami Khan**, AI/ML Researcher & Full-Stack
-Developer. It is a static React site, built and deployed automatically by
-GitHub Actions on every push.
+Developer. It is a static React site, built, tested and deployed automatically
+by GitHub Actions.
 
 > Driving innovation at the intersection of AI, ML, and software engineering.
 
@@ -13,7 +13,7 @@ GitHub Actions on every push.
 | **Live site** | [nasik.ca](https://nasik.ca/), hosted on Hostinger |
 | **Preview** | [nasiksami.github.io/Portfolio](https://nasiksami.github.io/Portfolio/), hosted on GitHub Pages |
 | **Stack** | React 18, Vite 4, Tailwind CSS 3, Framer Motion |
-| **CI/CD** | GitHub Actions: lint, build, then deploy to both hosts |
+| **CI/CD** | GitHub Actions: lint, build, smoke tests and Lighthouse, then deploy to both hosts |
 | **Design** | "Horizon", documented in [`DESIGN_NOTES_FABLE.md`](DESIGN_NOTES_FABLE.md) |
 
 ## Contents
@@ -79,41 +79,64 @@ this repository.
 
 ## Delivery pipeline
 
-One workflow, [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml),
-takes a push from the local machine to both hosts. It builds once and deploys
-the same build twice.
+Two workflows take a change from the local machine to both hosts.
+[`ci.yml`](.github/workflows/ci.yml) checks every pull request into `main`.
+[`deploy.yml`](.github/workflows/deploy.yml) builds once and deploys the same
+build twice.
 
 ```mermaid
 flowchart TD
-    dev["Local machine<br/>edit code, npm run dev, npm run lint"]
-    repo["GitHub repository<br/>nasiksami/Portfolio"]
+    dev["Local machine<br/>edit code, npm run dev, npm test"]
+    branch["redesign-fable on GitHub"]
+    pr["Pull request into main"]
+    ci["CI workflow, job: checks<br/>lint, build, smoke tests, Lighthouse"]
+    main["main on GitHub<br/>protected branch"]
 
-    dev -->|"git commit, git push"| repo
-    repo -->|"push to main or redesign-fable"| build
+    dev -->|"git commit, git push"| branch
+    branch -->|"open a pull request"| pr
+    pr --> ci
+    ci -->|"checks pass, merge"| main
 
-    subgraph actions["GitHub Actions"]
-        build["build job<br/>checkout, Node 20, npm ci<br/>lint, vite build"]
+    subgraph actions["Deploy workflow"]
+        build["build job<br/>npm ci, lint, vite build, smoke tests"]
         preview["preview job<br/>publish to GitHub Pages"]
         hostinger["hostinger job, main only<br/>FTPS upload, one automatic retry"]
         build -->|"Pages artifact<br/>robots.txt blocks crawlers"| preview
         build -->|"site artifact<br/>real robots.txt"| hostinger
     end
 
+    branch -->|"on push"| build
+    main -->|"on push"| build
+
     preview --> pages["GitHub Pages<br/>nasiksami.github.io/Portfolio"]
     hostinger --> live["Hostinger<br/>nasik.ca"]
 ```
 
-What each push deploys:
+What each event runs:
 
-| Push to | nasik.ca (Hostinger) | Pages preview |
-| --- | --- | --- |
-| `main` | Yes | Yes |
-| `redesign-fable` | No | Yes |
-| any other branch | No | No |
+| Event | CI checks | Pages preview | nasik.ca (Hostinger) |
+| --- | --- | --- | --- |
+| Push to `redesign-fable` | Lint, build, smoke tests | Yes | No |
+| Pull request into `main` | Lint, build, smoke tests, Lighthouse | No | No |
+| Merge into `main` | Lint, build, smoke tests | Yes | Yes |
+| Push to any other branch | None | No | No |
 
 How the pipeline is built:
 
-- **Lint is a gate.** If `npm run lint` fails, nothing is deployed.
+- **`main` is protected.** Changes reach it only through a pull request whose
+  `checks` job has passed, so nothing untested reaches nasik.ca.
+- **Lint and tests are gates.** If `npm run lint` or a smoke test fails,
+  nothing is deployed.
+- **Smoke tests run against the production build,** on a desktop and a phone
+  viewport. They check that the page loads without errors, every section
+  renders, images load, the resume downloads, the project filter and the sky
+  pin work, an empty contact form is rejected, and the page never scrolls
+  sideways. They test structure and behaviour, not wording, so editing copy
+  does not break them. See [`tests/smoke.spec.js`](tests/smoke.spec.js).
+- **Lighthouse runs on every pull request.** Accessibility must score at
+  least 95 and best practices at least 90, or the check fails. Performance
+  and SEO raise a warning below 70 and 90. Thresholds are in
+  [`lighthouserc.json`](lighthouserc.json).
 - **One build, two artifacts.** The copy for nasik.ca keeps the real
   `robots.txt`. The Pages copy gets a `robots.txt` that blocks crawlers, so the
   preview never competes with the real domain in search results.
@@ -130,18 +153,20 @@ How the pipeline is built:
 
 ## Day-to-day workflow
 
-Work happens on `redesign-fable`, is checked on the preview, and is then
-promoted to `main`, which publishes it to nasik.ca.
+Work happens on `redesign-fable`, is checked on the preview, and reaches
+`main` through a pull request. Merging the pull request publishes it to
+nasik.ca.
 
 ```mermaid
 flowchart LR
     edit["Edit and test locally<br/>on redesign-fable"]
     push1["git push"]
     check["Check the Pages preview"]
-    promote["Fast-forward main<br/>and push it"]
+    pr["Open a pull request<br/>into main"]
+    merge["Checks pass, merge"]
     livesite["nasik.ca is updated"]
 
-    edit --> push1 --> check --> promote --> livesite
+    edit --> push1 --> check --> pr --> merge --> livesite
 ```
 
 ```bash
@@ -151,24 +176,33 @@ npm run dev                      # http://localhost:5173
 
 # 2. Check the change the way CI will
 npm run lint
-npm run build
+npm test                         # builds, then runs the smoke tests
 
 # 3. Commit and push: this deploys the Pages preview
 git add -A
 git commit -m "content: describe the change"
 git push
-
-# 4. After checking the preview, promote to main: this deploys nasik.ca
-git push origin redesign-fable:main
 ```
 
-Step 4 is a fast-forward: it moves `main` to the same commit without a merge
-commit. It is refused if `main` has commits that `redesign-fable` does not, in
-which case merge `main` into `redesign-fable` first.
+4. Open a pull request from `redesign-fable` into `main`:
+   <https://github.com/nasiksami/Portfolio/compare/main...redesign-fable>.
+   The `checks` job starts by itself.
+5. When it is green, choose **Create a merge commit**. The merge deploys to
+   nasik.ca.
+6. Bring the development branch up to date with the merge:
+
+```bash
+git pull --ff-only origin main
+git push
+```
+
+Use **Create a merge commit**, not squash or rebase. Those rewrite the
+commits, so `redesign-fable` and `main` would drift apart and the next pull
+request would show conflicts.
 
 Each run can be followed under the repository's
 [Actions tab](https://github.com/nasiksami/Portfolio/actions). A deploy takes
-about a minute.
+about two minutes.
 
 ## Setting up on a new machine
 
@@ -208,6 +242,7 @@ cd Portfolio
 git switch redesign-fable        # the development branch
 
 npm ci                           # exact dependencies from package-lock.json
+npx playwright install chromium  # the browser the smoke tests drive
 npm run dev                      # dev server at http://localhost:5173
 ```
 
@@ -218,11 +253,11 @@ versions recorded in `package-lock.json`, the same ones CI builds with.
 
 ```bash
 npm run lint                     # must pass, CI runs the same check
-npm run build                    # writes dist/
+npm test                         # builds to dist/, then runs the smoke tests
 npm run preview                  # serves the production build locally
 ```
 
-If these pass, a `git push` from this machine deploys exactly as before.
+If these pass, work pushed from this machine ships exactly as before.
 
 ### What lives where
 
@@ -230,7 +265,7 @@ If these pass, a `git push` from this machine deploys exactly as before.
 | --- | --- | --- |
 | Source code, content, assets, resume | This repository | `git clone` |
 | Dependency versions | `package-lock.json` | `npm ci` |
-| CI/CD pipeline | `.github/workflows/deploy.yml` | None |
+| CI/CD pipeline | `.github/workflows/` | None |
 | Hostinger FTP credentials | GitHub repository secrets | None |
 | GitHub Pages configuration | GitHub repository settings | None |
 | Contact form endpoint | Formspree, form ID in `src/sections/Contact.jsx` | None |
@@ -251,6 +286,7 @@ npm run dev     # dev server at http://localhost:5173
 npm run build   # production build to dist/
 npm run preview # serve the production build locally
 npm run lint    # ESLint, including accessibility rules
+npm test        # production build, then the Playwright smoke tests
 ```
 
 ## Repository settings the pipeline depends on
@@ -260,6 +296,7 @@ pipeline can be rebuilt if the repository is ever forked or recreated.
 
 | Setting | Location in GitHub | Value |
 | --- | --- | --- |
+| Branch protection for `main` | Settings → Branches | Require a pull request before merging; require the status check `checks` |
 | Pages source | Settings → Pages → Build and deployment | GitHub Actions |
 | Pages deploy branches | Settings → Environments → `github-pages` → Deployment branches | `main`, `redesign-fable` |
 | `HOSTINGER_FTP_HOST` | Settings → Secrets and variables → Actions → **Repository secrets** | FTP hostname or IP, without `ftp://` |
@@ -283,13 +320,14 @@ from, so the workflow uploads to the account's root (`./`). Set
 | Upload succeeds but nasik.ca is unchanged | Files went to the wrong folder, for example `public_html/public_html` | Set `HOSTINGER_FTP_DIR` to the folder the domain is served from |
 | "read ECONNRESET (data socket)" | Hostinger dropped the FTP connection | The workflow retries once by itself; if both attempts fail, re-run the job |
 | The preview job fails on a branch | The branch is not allowed to deploy to Pages | Add it under Environments → `github-pages` → Deployment branches |
-| The build job fails | A lint or build error | Run `npm run lint` and `npm run build` locally and fix what they report |
+| The build or `checks` job fails | A lint, build or smoke-test error | Run `npm run lint` and `npm test` locally and fix what they report. CI attaches the test and Lighthouse reports to the run as the `reports` artifact |
+| A push to `main` is rejected | `main` is protected | Open a pull request instead |
 
 ## Branches
 
 | Branch | Purpose | Deploys to |
 | --- | --- | --- |
-| `main` | Production. Whatever is here is what nasik.ca serves. | nasik.ca and the preview |
+| `main` | Production, protected. Whatever is here is what nasik.ca serves. | nasik.ca and the preview |
 | `redesign-fable` | Development branch for the current "Horizon" design. | The preview |
 | `redesign` | An earlier design exploration, "Specimen №". Kept for reference. | Not deployed by this workflow |
 | `redesign-codex` | An earlier design exploration, "Signal Cartography". Kept for reference. | Not deployed by this workflow |
@@ -310,6 +348,7 @@ current one, so leave those branches as they are unless that is intended.
 | Icons     | react-icons (Simple Icons, Feather, FA)         |
 | Forms     | Formspree                                       |
 | Linting   | ESLint + react-hooks + jsx-a11y                 |
+| Testing   | Playwright smoke tests, Lighthouse CI           |
 | CI/CD     | GitHub Actions                                  |
 | Hosting   | Hostinger (production), GitHub Pages (preview)  |
 
@@ -481,8 +520,9 @@ on, at every point of the arc. If you change a colour, run the generator.
 - Animation is limited to transform and opacity, and there is no
   `backdrop-filter`.
 
-Lighthouse, last measured on the production build: performance 79 on mobile
-and 98 on desktop, and 100 for accessibility and best practices.
+Lighthouse CI, run on the production build with its default mobile
+emulation, last measured 95 for performance and 100 for accessibility, best
+practices and SEO. It runs on every pull request.
 
 ## Hosting notes
 
