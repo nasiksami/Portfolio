@@ -34,6 +34,10 @@ export const education = [
 // Awards and scholarships, as listed in the previous site's Resume section.
 export const awards = [
   {
+    title: 'Fully Funded Graduate Research Scholarship & Departmental Grant',
+    period: 'Winter 2023 — Winter 2025',
+  },
+  {
     title: 'Runner-up — Intrusion and Vulnerability Detection in SDN',
     detail: 'ITU AI/ML in 5G Challenge',
     href: 'https://aiforgood.itu.int/event/ai-ml-challenge-finale-qos-prediction-network-traffic-scenario-prediction-sdn-security/',
@@ -42,10 +46,6 @@ export const awards = [
     title: 'Silver Rank — Specializing Large Language Models for Telecom Networks',
     detail: 'ITU AI/ML in 5G Challenge',
     href: 'https://zindi.africa/competitions/specializing-large-language-models-for-telecom-networks',
-  },
-  {
-    title: 'Fully Funded Graduate Research Scholarship & Departmental Grant',
-    period: 'Winter 2023 — Winter 2025',
   },
   { title: 'Saskatchewan Innovation and Excellence Graduate Scholarship', period: 'Fall 2023' },
   { title: 'FGSR Graduate Teaching Assistantship', period: 'Winter 2024, Fall 2024' },

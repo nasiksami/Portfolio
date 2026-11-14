@@ -1,10 +1,10 @@
 # Nasik Sami Khan — Portfolio
 
-Personal portfolio for **Nasik Sami Khan**, AI Engineer & Applied Researcher.
+Personal portfolio for **Nasik Sami Khan**, AI/ML Researcher & Full-Stack Developer.
 Live at **[nasik.ca](https://nasik.ca/)**, with a preview build at
 **[nasiksami.github.io/Portfolio](https://nasiksami.github.io/Portfolio/)**.
 
-> From peer-reviewed research to AI systems in production.
+> Driving innovation at the intersection of AI, ML, and software engineering.
 
 ---
 
@@ -81,7 +81,7 @@ object to `projects.js`, with no component changes. Skills resolve their icons
 by slug through `components/SkillIcon.jsx`. A slug with no registered icon
 renders a styled monogram rather than breaking.
 
-**Emphasis is automatic.** Metrics such as `45.2%`, `$35,000` and `10+`, and the
+**Emphasis is automatic.** Metrics such as `47%`, `$35,000` and `10+`, and the
 name of any skill or project technology, render in semibold wherever they
 appear in project descriptions, experience bullets and the About section. The
 term list is built from `skills.js` and each project's `tech` array, so

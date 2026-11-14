@@ -3,8 +3,6 @@ import {
   HiOutlineCode,
   HiOutlineCloud,
   HiOutlineDocumentText,
-  HiOutlineScale,
-  HiOutlineUserGroup,
 } from 'react-icons/hi';
 import { availability, bio, bioLabels, focusAreas, profile, stats } from '../data/profile';
 import { useCountUp } from '../hooks/useCountUp';
@@ -18,8 +16,6 @@ const FOCUS_ICONS = {
   code: HiOutlineCode,
   cloud: HiOutlineCloud,
   document: HiOutlineDocumentText,
-  scale: HiOutlineScale,
-  team: HiOutlineUserGroup,
 };
 
 

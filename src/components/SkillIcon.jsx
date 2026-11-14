@@ -3,15 +3,14 @@ import {
   SiTensorflow, SiPytorch, SiKeras, SiScikitlearn, SiLangchain, SiOpencv,
   SiStreamlit, SiDjango, SiFlask, SiDotnet, SiAngular, SiMysql, SiMongodb,
   SiElasticsearch, SiQdrant, SiDocker, SiJenkins, SiRabbitmq, SiLinux,
-  SiGit, SiPostman, SiWireshark, SiGooglecolab, SiLanggraph, SiMlflow, SiR,
-  SiGooglecloud, SiKubernetes, SiDatabricks,
+  SiGit, SiPostman, SiWireshark, SiGooglecolab,
 } from 'react-icons/si';
 import { FaAws, FaCss3Alt, FaDatabase } from 'react-icons/fa';
 import { DiHeroku } from 'react-icons/di';
 import { VscVscode } from 'react-icons/vsc';
 import {
   TbApi, TbBoxMultiple, TbChartBar, TbChartPie, TbDatabase, TbFileSpreadsheet, TbGitMerge,
-  TbRobot, TbStack2, TbVectorTriangle,
+  TbStack2,
 } from 'react-icons/tb';
 
 /**
@@ -59,15 +58,6 @@ const ICONS = {
   wireshark: SiWireshark,
   colab: SiGooglecolab,
   llamaindex: TbStack2,
-  langgraph: SiLanggraph,
-  autogen: TbRobot,
-  faiss: TbVectorTriangle,
-  pinecone: TbVectorTriangle,
-  mlflow: SiMlflow,
-  r: SiR,
-  gcp: SiGooglecloud,
-  kubernetes: SiKubernetes,
-  databricks: SiDatabricks,
   vba: TbFileSpreadsheet,
   entityframework: TbDatabase,
   dapper: TbDatabase,
