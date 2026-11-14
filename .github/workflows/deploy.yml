@@ -42,6 +42,14 @@ jobs:
 
       - run: npm run build
 
+      # Smoke tests against the production build. A failure stops both
+      # deploys.
+      - name: Install the test browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke tests
+        run: npx playwright test
+
       # The build as it goes to nasik.ca, with the real robots.txt. Taken
       # before the preview's robots.txt is written over it below.
       - uses: actions/upload-artifact@v4
