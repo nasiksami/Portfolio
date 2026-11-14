@@ -525,6 +525,31 @@
     background: rgb(var(--sky-rgb));
   }
 
+  /* The opening, in Live and Day: the name stands on the same ground as the
+     row below the rule, with no glow, so the rule is the only change. */
+  :root:not([data-sky-pin='night']) [data-sky='top'] .horizon-sky {
+    background: rgb(var(--ground-rgb));
+  }
+
+  :root:not([data-sky-pin='night']) [data-sky='top'] .horizon-rule::before {
+    content: none;
+  }
+
+  /* Live only: that ground runs on past Continue to About without fading to
+     sky, and About's crossing band blends it straight into About's ground,
+     which its heading row then keeps. */
+  :root:not([data-sky-pin]) [data-sky='top'] .horizon-ground {
+    --fade: 0px;
+  }
+
+  :root:not([data-sky-pin]) [data-sky='about'] .horizon-sky {
+    background: var(--ground-grad);
+  }
+
+  :root:not([data-sky-pin]) [data-sky='about'] .horizon-rule::before {
+    content: none;
+  }
+
   /* Type scale: a fluid base (17px at 360 wide, 18px from ~1024) and a
      major third above and below it. Display sizes interpolate between two
      steps of the same scale across the viewport. */

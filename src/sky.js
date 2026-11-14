@@ -1,4 +1,4 @@
-// Single source of truth for the time-of-day arc. KNOTS, FLIPS and SKY are
+// Single source of truth for the time-of-day arc. KNOTS, FLIPS, SKY and GROUND are
 // written by scripts/sky-tokens.py from the same knot table as the token
 // block in index.css; edit the table there and re-run with --write.
 
@@ -10,6 +10,9 @@ export const FLIPS = { sunrise: 0.12171, sunset: 0.48198 };
 
 /** Sky colour at each knot, as RGB triples, for painting section gradients. */
 export const SKY = [[15, 23, 36], [59, 36, 68], [244, 231, 212], [230, 239, 246], [239, 230, 214], [126, 58, 55], [10, 20, 32], [6, 17, 15]];
+
+/** Ground colour at each knot, as RGB triples. */
+export const GROUND = [[20, 30, 44], [56, 37, 68], [239, 232, 219], [244, 239, 225], [242, 230, 204], [119, 60, 74], [17, 28, 41], [12, 26, 23]];
 
 /** Fixed positions for the pinned skies. Night is starlight, not aurora. */
 export const PINS = { day: 0.3, night: 0.78 };
@@ -44,14 +47,19 @@ export const ARC = {
 
 const mix = (a, b, f) => a.map((v, i) => Math.round(v + (b[i] - v) * f));
 
-/** Sky colour at arc position t, piecewise-linear between knots. */
-export function skyAt(t) {
-  if (t <= KNOTS[0]) return SKY[0];
+const at = (table, t) => {
+  if (t <= KNOTS[0]) return table[0];
   for (let i = 1; i < KNOTS.length; i += 1) {
-    if (t <= KNOTS[i]) return mix(SKY[i - 1], SKY[i], (t - KNOTS[i - 1]) / (KNOTS[i] - KNOTS[i - 1]));
+    if (t <= KNOTS[i]) return mix(table[i - 1], table[i], (t - KNOTS[i - 1]) / (KNOTS[i] - KNOTS[i - 1]));
   }
-  return SKY[SKY.length - 1];
-}
+  return table[table.length - 1];
+};
+
+/** Sky colour at arc position t, piecewise-linear between knots. */
+export const skyAt = (t) => at(SKY, t);
+
+/** Ground colour at arc position t, piecewise-linear between knots. */
+export const groundAt = (t) => at(GROUND, t);
 
 const nearestKnot = (t) =>
   KNOTS.reduce((best, k) => (Math.abs(k - t) < Math.abs(best - t) ? k : best), KNOTS[0]);
@@ -103,10 +111,21 @@ export function arcAtOffset(arc, offset, height) {
   return start + (arc.to - start) * f;
 }
 
+/**
+ * A crossing section's ground, carried up into its sky row: it opens on the
+ * ground at `from` — the foot of the section before, where that ground runs
+ * solid — and blends across the crossing band into its own. The stylesheet
+ * decides where it is used.
+ */
+function groundGradient(arc) {
+  if (arc.cross === undefined) return undefined;
+  return `linear-gradient(to bottom, rgb(${groundAt(arc.from).join(' ')}) 0px, rgb(var(--ground-rgb)) ${CROSSING_PX}px)`;
+}
+
 /** Props that place an element on the arc: its palette and its painted sky. */
 export function skyProps(arc) {
   return {
     'data-sky': Object.keys(ARC).find((key) => ARC[key] === arc) ?? '',
-    style: { '--sky': paletteAt(arc), '--sky-grad': skyGradient(arc) },
+    style: { '--sky': paletteAt(arc), '--sky-grad': skyGradient(arc), '--ground-grad': groundGradient(arc) },
   };
 }
