@@ -107,8 +107,24 @@ jobs:
       # Uploads only files that changed, and removes only files a previous run
       # of this action uploaded. Anything else on the server is left alone.
       # Pinned to the commit behind v4.3.5.
+      #
+      # Hostinger sometimes drops the FTP data connection mid-transfer, so a
+      # failed first attempt is retried once before the job fails.
       - name: Upload to Hostinger
+        id: upload
         if: env.FTP_HOST != ''
+        continue-on-error: true
+        uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65
+        with:
+          server: ${{ secrets.HOSTINGER_FTP_HOST }}
+          username: ${{ secrets.HOSTINGER_FTP_USER }}
+          password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./dist/
+          server-dir: ${{ vars.HOSTINGER_FTP_DIR || './' }}
+
+      - name: Upload to Hostinger, second attempt
+        if: env.FTP_HOST != '' && steps.upload.outcome == 'failure'
         uses: SamKirkland/FTP-Deploy-Action@8e83cea8672e3fbcbb9fdafff34debf6ae4c5f65
         with:
           server: ${{ secrets.HOSTINGER_FTP_HOST }}
