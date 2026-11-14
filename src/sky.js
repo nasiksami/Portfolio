@@ -112,20 +112,33 @@ export function arcAtOffset(arc, offset, height) {
 }
 
 /**
- * A crossing section's ground, carried up into its sky row: it opens on the
- * ground at `from` — the foot of the section before, where that ground runs
- * solid — and blends across the crossing band into its own. The stylesheet
- * decides where it is used.
+ * The Live seam from the opening's ground into About's: one gradient that
+ * runs from the foot of the hero's text, through both paddings, to just
+ * above About's heading, so the change happens where there is no text. The
+ * hero paints its first part and About the rest; both carry the same value.
+ * Stops follow a smoothstep, so the colour eases out of navy and into cream
+ * the way Night's long fade does, with no visible band.
  */
-function groundGradient(arc) {
-  if (arc.cross === undefined) return undefined;
-  return `linear-gradient(to bottom, rgb(${groundAt(arc.from).join(' ')}) 0px, rgb(var(--ground-rgb)) ${CROSSING_PX}px)`;
-}
+const SEAM = (() => {
+  const from = groundAt(ARC.top.to);
+  const to = groundAt(paletteAt(ARC.about));
+  const stops = [];
+  for (let i = 0; i <= 12; i += 1) {
+    const x = i / 12;
+    const eased = x * x * (3 - 2 * x);
+    stops.push('rgb(' + mix(from, to, eased).join(' ') + ') ' + (x * 100).toFixed(2) + '%');
+  }
+  return 'linear-gradient(to bottom, ' + stops.join(', ') + ')';
+})();
 
 /** Props that place an element on the arc: its palette and its painted sky. */
 export function skyProps(arc) {
   return {
     'data-sky': Object.keys(ARC).find((key) => ARC[key] === arc) ?? '',
-    style: { '--sky': paletteAt(arc), '--sky-grad': skyGradient(arc), '--ground-grad': groundGradient(arc) },
+    style: {
+      '--sky': paletteAt(arc),
+      '--sky-grad': skyGradient(arc),
+      '--seam-grad': arc === ARC.top || arc === ARC.about ? SEAM : undefined,
+    },
   };
 }

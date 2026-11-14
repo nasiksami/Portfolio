@@ -535,15 +535,49 @@
     content: none;
   }
 
-  /* Live only: that ground runs on past Continue to About without fading to
-     sky, and About's crossing band blends it straight into About's ground,
-     which its heading row then keeps. */
+  /* Live only: that ground runs on past Continue to About, then the seam
+     (see SEAM in src/sky.js) eases it into About's ground across the empty
+     gap — the hero's bottom padding, then About's top padding less 1.5rem —
+     and About's heading row keeps that ground. The two parts are one
+     gradient: the hero shows its top, About shows the rest. */
+  :root:not([data-sky-pin]) {
+    --seam-top: 5rem; /* the hero's pb-20 */
+    --seam-bottom: 4.5rem; /* About's pt-24 less 1.5rem */
+    --seam: calc(var(--seam-top) + var(--seam-bottom));
+  }
+
+  @media (min-width: 768px) {
+    :root:not([data-sky-pin]) {
+      --seam-top: 7rem; /* md:pb-28 */
+      --seam-bottom: 6.5rem; /* md:pt-32 */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root:not([data-sky-pin]) {
+      --seam-bottom: 8.5rem; /* lg:pt-40 */
+    }
+  }
+
   :root:not([data-sky-pin]) [data-sky='top'] .horizon-ground {
     --fade: 0px;
   }
 
+  :root:not([data-sky-pin]) [data-sky='top'] .horizon-ground::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: var(--seam-top);
+    pointer-events: none;
+    background: var(--seam-grad) 0 0 / 100% var(--seam) no-repeat;
+  }
+
   :root:not([data-sky-pin]) [data-sky='about'] .horizon-sky {
-    background: var(--ground-grad);
+    background:
+      var(--seam-grad) 0 calc(-1 * var(--seam-top)) / 100% var(--seam) no-repeat,
+      rgb(var(--ground-rgb));
   }
 
   :root:not([data-sky-pin]) [data-sky='about'] .horizon-rule::before {
