@@ -1,44 +1,59 @@
-import { motion, useReducedMotion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 const REVEAL_MARGIN = '9999px 0px -60px 0px';
 
 /**
  * Scroll-triggered reveal: opacity and transform only, so it stays on the
- * compositor. The expanded top margin guarantees that hash
- * navigation and fast scrolling can never leave content hidden.
+ * compositor.
+ *
+ * The hidden state lives in the stylesheet, not in inline styles, and only
+ * applies under `.js` (set by the inline script in index.html). So the
+ * pre-rendered markup is visible to crawlers and to visitors without
+ * JavaScript, the server and client render identical HTML, and
+ * prefers-reduced-motion is honoured by a media query rather than a branch.
+ * See the "Reveal" block in index.css.
+ *
+ * The expanded top margin guarantees that hash navigation and fast scrolling
+ * can never leave content hidden.
  */
 export default function Reveal({
   children,
   delay = 0,
   className = '',
-  as = 'div',
+  as: Tag = 'div',
   variant = 'drift',
 }) {
-  const reduceMotion = useReducedMotion();
-  const MotionTag = motion[as] ?? motion.div;
+  const ref = useRef(null);
 
-  if (reduceMotion) {
-    const Tag = as;
-    return <Tag className={className}>{children}</Tag>;
-  }
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return undefined;
+    if (typeof IntersectionObserver === 'undefined') {
+      element.dataset.revealed = '';
+      return undefined;
+    }
 
-  const states =
-    variant === 'rise'
-      ? { hidden: { opacity: 0, y: 32 }, shown: { opacity: 1, y: 0 } }
-      : {
-          hidden: { opacity: 0, x: -14, y: 14 },
-          shown: { opacity: 1, x: 0, y: 0 },
-        };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          element.dataset.revealed = '';
+          observer.disconnect();
+        }
+      },
+      { rootMargin: REVEAL_MARGIN }
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <MotionTag
+    <Tag
+      ref={ref}
+      data-reveal={variant}
       className={className}
-      initial={states.hidden}
-      whileInView={states.shown}
-      viewport={{ once: true, margin: REVEAL_MARGIN }}
-      transition={{ duration: 0.72, delay, ease: [0.16, 1, 0.3, 1] }}
+      style={delay ? { '--reveal-delay': delay + 's' } : undefined}
     >
       {children}
-    </MotionTag>
+    </Tag>
   );
 }

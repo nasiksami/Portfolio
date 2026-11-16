@@ -1,0 +1,8 @@
+# nasik.ca is served by Hostinger (Apache-compatible). GitHub Pages, which
+# hosts the preview, ignores this file and uses 404.html on its own.
+
+# Unknown URLs get the site's own 404 page, with a 404 status.
+ErrorDocument 404 /404.html
+
+# The resume used to live at /resume.pdf; keep old links working.
+Redirect 301 /resume.pdf /Nasik_Sami_Khan_Resume.pdf

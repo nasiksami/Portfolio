@@ -28,7 +28,10 @@ export function useCountUp(value, { duration = 1200 } = {}) {
   const decimals = match && match[1].includes('.') ? match[1].split('.')[1].length : 0;
   const animatable = target !== null && !reduceMotion;
 
-  const [display, setDisplay] = useState(() => (animatable ? `0${suffix}` : value));
+  // The first render is always the real value: it is what the pre-rendered
+  // page carries, so a crawler or a visitor without JavaScript never reads
+  // "0". The count starts from zero only once the stat scrolls into view.
+  const [display, setDisplay] = useState(value);
 
   useEffect(() => {
     if (!animatable) {

@@ -4,43 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Nasik Sami Khan — AI/ML Researcher & Full-Stack Developer</title>
-    <meta
-      name="description"
-      content="Portfolio of Nasik Sami Khan, AI/ML Researcher and Full-Stack Developer specializing in Generative AI, LLMs, NLP, and scalable software systems. MSc Computer Science, University of Regina."
-    />
-    <meta name="author" content="Nasik Sami Khan" />
+    <!--
+      The tags between the two seo markers are the development defaults. The
+      production build replaces the whole block, per route, with the title,
+      description, canonical, Open Graph, Twitter and JSON-LD tags generated
+      by src/seo.js (see scripts/prerender.mjs).
+    -->
+    <!--seo:start-->
+    <title>Nasik Sami Khan | AI Software Developer | Applied AI &amp; Machine Learning</title>
+    <meta name="description" content="Development build of nasik.ca." />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <!--seo:end-->
     <meta name="theme-color" content="#0e1226" />
-    <link rel="canonical" href="https://nasik.ca/" />
-    <link rel="icon" type="image/png" href="./logo.png" />
-    <link rel="apple-touch-icon" href="./logo.png" />
-
-    <!-- Open Graph / social previews. Absolute URLs are required by crawlers. -->
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Nasik Sami Khan" />
-    <meta property="og:url" content="https://nasik.ca/" />
-    <meta
-      property="og:title"
-      content="Nasik Sami Khan — AI/ML Researcher & Full-Stack Developer"
-    />
-    <meta
-      property="og:description"
-      content="Specializing in Generative AI, LLMs, NLP, and scalable software systems."
-    />
-    <meta property="og:image" content="https://nasik.ca/og-image.jpg" />
-    <meta property="og:image:alt" content="Portrait of Nasik Sami Khan" />
-
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:creator" content="@NasikSami" />
-    <meta
-      name="twitter:title"
-      content="Nasik Sami Khan — AI/ML Researcher & Full-Stack Developer"
-    />
-    <meta
-      name="twitter:description"
-      content="Specializing in Generative AI, LLMs, NLP, and scalable software systems."
-    />
-    <meta name="twitter:image" content="https://nasik.ca/og-image.jpg" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -53,60 +28,24 @@
       rel="stylesheet"
     />
 
-    <!-- Structured data: helps search engines resolve the person entity. -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Nasik Sami Khan",
-        "url": "https://nasik.ca/",
-        "image": "https://nasik.ca/og-image.jpg",
-        "jobTitle": "AI/ML Researcher & Full-Stack Developer",
-        "email": "mailto:nasiksami@gmail.com",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Saskatoon",
-          "addressRegion": "SK",
-          "addressCountry": "CA"
-        },
-        "alumniOf": [
-          {
-            "@type": "CollegeOrUniversity",
-            "name": "University of Regina",
-            "sameAs": "https://www.uregina.ca/"
-          },
-          {
-            "@type": "CollegeOrUniversity",
-            "name": "International Islamic University Malaysia",
-            "sameAs": "https://www.iium.edu.my/"
-          }
-        ],
-        "knowsAbout": [
-          "Artificial Intelligence",
-          "Machine Learning",
-          "Large Language Models",
-          "Natural Language Processing",
-          "Retrieval-Augmented Generation",
-          "5G Networks",
-          "Full-Stack Development"
-        ],
-        "sameAs": [
-          "https://www.linkedin.com/in/nasiksami",
-          "https://github.com/nasiksami",
-          "https://scholar.google.com/citations?hl=en&user=NCdDTeEAAAAJ",
-          "https://x.com/NasikSami"
-        ]
-      }
-    </script>
-
     <!--
       Apply a stored sky pin before first paint so there is no flash of the
       wrong palette. No pin means the sky follows the scroll arc, starting at
       pre-dawn. Stored values stay 'light' | 'dark' for compatibility with
       preferences saved by the earlier designs.
+
+      The `js` class tells the stylesheet that scripts run, which is what lets
+      scroll reveals start hidden. Without it (no JavaScript) everything in
+      the pre-rendered page is simply visible.
     -->
     <script>
       (function () {
+        document.documentElement.classList.add('js');
+        // If the app has not started within a few seconds (a blocked or failed
+        // script), drop the class so nothing is left waiting to be revealed.
+        setTimeout(function () {
+          if (!window.__appStarted) document.documentElement.classList.remove('js');
+        }, 4000);
         try {
           var stored = localStorage.getItem('theme');
           if (stored === 'dark') document.documentElement.setAttribute('data-sky-pin', 'night');
@@ -119,12 +58,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <noscript>
-      <p style="padding: 2rem; font-family: system-ui, sans-serif">
-        This portfolio requires JavaScript. You can still reach me at
-        <a href="mailto:nasiksami@gmail.com">nasiksami@gmail.com</a>.
-      </p>
-    </noscript>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/entry-client.jsx"></script>
   </body>
 </html>

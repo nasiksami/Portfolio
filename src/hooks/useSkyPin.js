@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { STORAGE_KEY } from '../sky';
 
 export const PIN_MODES = ['live', 'day', 'night'];
@@ -16,10 +16,15 @@ const TO_STORED = { day: 'light', night: 'dark' };
  * following the arc.
  */
 export function useSkyPin() {
-  const [pin, setPinState] = useState(() => {
-    if (typeof document === 'undefined') return 'live';
-    return document.documentElement.dataset.skyPin || 'live';
-  });
+  // The pre-rendered page cannot know the visitor's stored pin, so the first
+  // render is always 'live' and the real value is read once mounted. Reading
+  // it during render would make the client's first render differ from the
+  // server's markup.
+  const [pin, setPinState] = useState('live');
+
+  useEffect(() => {
+    setPinState(document.documentElement.dataset.skyPin || 'live');
+  }, []);
 
   const setPin = useCallback((mode) => {
     const root = document.documentElement;

@@ -824,6 +824,55 @@
     transform-origin: left;
   }
 
+  /* ── Entrances ─────────────────────────────────────────────────────────── */
+
+  /* Reveal (components/ui/Reveal.jsx). Content starts hidden only when
+     scripts run (`.js` is set in index.html) and motion is welcome, and is
+     shown by a data attribute the component sets on scroll. The pre-rendered
+     markup therefore stays readable without JavaScript, and under
+     prefers-reduced-motion nothing is ever hidden. */
+  @media (prefers-reduced-motion: no-preference) {
+    .js [data-reveal] {
+      transition:
+        opacity 0.72s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s),
+        transform 0.72s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s);
+    }
+
+    .js [data-reveal]:not([data-revealed]) {
+      opacity: 0;
+      transform: translate3d(-14px, 14px, 0);
+    }
+
+    .js [data-reveal='rise']:not([data-revealed]) {
+      transform: translate3d(0, 32px, 0);
+    }
+
+    /* The hero's entrance: transform only, so its text counts as painted
+       from the first frame. `--i` staggers the items. */
+    .js .hero-rise {
+      animation: hero-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: calc(50ms + var(--i, 0) * 70ms);
+    }
+  }
+
+  @keyframes hero-rise {
+    from {
+      transform: translateY(14px);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  /* The "More tools" disclosure draws its own marker. */
+  summary {
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
   /* ── The horizon ───────────────────────────────────────────────────────── */
 
   /* A section is three rows: sky content, the rule, ground content. The sky
