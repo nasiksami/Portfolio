@@ -27,17 +27,26 @@ by GitHub Actions on every push.
 - [Branches](#branches)
 - [Tech stack](#tech-stack)
 - [Project structure](#project-structure)
+- [Pre-rendering and routes](#pre-rendering-and-routes)
 - [Design system — "Horizon"](#design-system--horizon)
 - [Accessibility](#accessibility)
 - [Performance](#performance)
 - [Hosting notes](#hosting-notes)
 - [Contact](#contact)
 
+Reference documents for the November 2026 upgrade are in [`docs/`](docs/):
+the audit, the decisions taken, the open questions and the final report.
+
 ## Architecture
 
 The site has no backend and no database. All content is plain JavaScript data
-in `src/data/`, the components render it, and Vite compiles everything into
-static files that any web host can serve.
+in `src/data/`, the components render it, and the build compiles everything
+into static files that any web host can serve.
+
+Every page is **pre-rendered**: the build writes one HTML file per route with
+the full content in the markup, and the browser bundle then hydrates it. A
+search engine, an AI crawler or a visitor without JavaScript reads the same
+page as everyone else. See [Pre-rendering and routes](#pre-rendering-and-routes).
 
 ```mermaid
 flowchart TD
@@ -92,7 +101,7 @@ flowchart TD
     repo -->|"push to main or redesign-fable"| build
 
     subgraph actions["GitHub Actions"]
-        build["build job<br/>checkout, Node 20, npm ci<br/>lint, vite build, smoke tests"]
+        build["build job<br/>checkout, Node 20, npm ci<br/>lint, build and pre-render, smoke tests"]
         preview["preview job<br/>publish to GitHub Pages"]
         hostinger["hostinger job, main only<br/>FTPS upload, one automatic retry"]
         build -->|"Pages artifact<br/>robots.txt blocks crawlers"| preview
@@ -120,7 +129,9 @@ How the pipeline is built:
   renders, images load, the resume downloads, the project filter and the sky
   pin work, an empty contact form is rejected, and the page never scrolls
   sideways. They test structure and behaviour, not wording, so editing copy
-  does not break them. See [`tests/smoke.spec.js`](tests/smoke.spec.js).
+  does not break them. See [`tests/smoke.spec.js`](tests/smoke.spec.js) and
+  [`tests/prerender.spec.js`](tests/prerender.spec.js), which checks the HTML
+  each route is served with, the 404 page, and the site without JavaScript.
 - **One build, two artifacts.** The copy for nasik.ca keeps the real
   `robots.txt`. The Pages copy gets a `robots.txt` that blocks crawlers, so the
   preview never competes with the real domain in search results.
@@ -235,7 +246,7 @@ versions recorded in `package-lock.json`, the same ones CI builds with.
 ```bash
 npm run lint                     # must pass, CI runs the same check
 npm test                         # builds to dist/, then runs the smoke tests
-npm run preview                  # serves the production build locally
+npm run preview                  # serves dist/ at http://localhost:4173
 ```
 
 If these pass, a `git push` from this machine deploys exactly as before.
@@ -265,7 +276,7 @@ matters before retiring a machine. `git status`, `git stash list` and
 npm ci          # install the locked dependencies
 npm run dev     # dev server at http://localhost:5173
 npm run build   # production build to dist/
-npm run preview # serve the production build locally
+npm run preview # serve dist/ at http://localhost:4173, like the real hosts
 npm run lint    # ESLint, including accessibility rules
 npm test        # production build, then the Playwright smoke tests
 ```
@@ -340,8 +351,9 @@ src/
 │   ├── projects.js      project cards + filter categories
 │   ├── experience.js    professional timeline
 │   ├── education.js     degrees + awards/scholarships
-│   ├── skills.js        skill groups and proficiency
-│   └── publications.js  papers, thesis, venues, links
+│   ├── skills.js        skill groups, and a short list of earlier tools
+│   ├── publications.js  papers, thesis, venues, links, grouped by type
+│   └── caseStudies.js   the three case-study pages under /projects/
 ├── components/
 │   ├── ui/
 │   │   ├── Section.jsx    Sky row, horizon rule, ground row; places a section on the day arc
@@ -350,7 +362,8 @@ src/
 │   │   ├── Button.jsx
 │   │   └── Tag.jsx
 │   ├── Navbar.jsx      Sticky nav, scroll-spy, sky pin control, mobile menu
-│   ├── Footer.jsx      Closing ground and wordmark
+│   ├── Footer.jsx      Closing ground, contact links and navigation
+│   ├── FlowDiagram.jsx Architecture diagram drawn as an ordered list of steps
 │   ├── HorizonRule.jsx The 1px horizon line with its glow
 │   ├── Aurora.jsx      Drifting aurora bands behind Contact
 │   ├── SkillIcon.jsx   Slug → icon registry, with monogram fallback
@@ -362,15 +375,65 @@ src/
 │   ├── useScrollSpy.js   Scroll-position-based active section
 │   ├── useHashScroll.js  Deep links into lazy sections
 │   └── useCountUp.js     Stat numerals, reduced-motion safe
-├── sections/        One component per page section
+├── sections/        One component per home-page section
+├── pages/
+│   ├── Home.jsx         The home page: the sections, in order
+│   └── CaseStudy.jsx    Layout of a case-study page
+├── App.jsx          The frame every page shares: skip link, nav, main, footer
+├── site.js          The route table, and helpers for linking between pages
+├── seo.js           Title, description, social tags and JSON-LD for each route
+├── entry-client.jsx Browser entry: hydrates the pre-rendered page
+├── entry-server.jsx Build-time entry: renders a route to HTML
 ├── sky.js           Day-arc knots, section spans, gradient and palette helpers
 └── index.css        Type scale, generated sky tokens, base styles
 scripts/
+├── prerender.mjs    Writes dist/<route>/index.html, sitemap.xml and 404.html
+├── serve-dist.mjs   Serves dist/ the way the production hosts do
+├── og-image.mjs     Draws public/og-image.png (run by hand)
 └── sky-tokens.py    Generates and contrast-checks the sky token block
 ```
 
-The page order is Hero, About, Experience, Publications, Projects, Skills and
-Contact. It is set in `App.jsx` and mirrored by `navLinks` in `profile.js`.
+The home page order is Hero, About, Experience, Publications, Projects, Skills
+and Contact. It is set in `pages/Home.jsx` and mirrored by `navLinks` in
+`profile.js`.
+
+## Pre-rendering and routes
+
+| Route | Page |
+| --- | --- |
+| `/` | Home |
+| `/projects/telecom-rag/` | Case study |
+| `/projects/incident-management/` | Case study |
+| `/projects/heritage-hive/` | Case study |
+
+`npm run build` runs three steps:
+
+1. `vite build` compiles the browser bundle into `dist/`.
+2. `vite build --ssr src/entry-server.jsx` compiles the same components for
+   Node into `dist-ssr/`.
+3. `node scripts/prerender.mjs` renders every route in `src/site.js` to HTML
+   and writes `dist/<route>/index.html`, each with its own `<head>` from
+   `src/seo.js`. It also writes `dist/sitemap.xml` and `dist/404.html`, then
+   deletes `dist-ssr/`.
+
+**Adding a page** means adding a route to `ROUTES` in `src/site.js` and
+rendering it in `App.jsx`. A new case study needs only an entry in
+`src/data/caseStudies.js` and a route; the sitemap, head tags and 404 links
+follow from the route table.
+
+**Links between pages are relative.** The site is served at a domain root
+(nasik.ca) and under a subdirectory (the Pages preview), so nothing may start
+with `/`. Use the helpers from `useSite()` in `src/site.js`: `to()` for a page
+or file, `home()` for a home-page section, `asset()` for an imported image.
+
+**Server and client must render the same markup.** Anything that depends on
+the browser (stored preferences, `window`, media queries) belongs in an
+effect, not in the first render. `Reveal` and the hero entrance are CSS for
+this reason: content is hidden only under the `.js` class that an inline
+script in `index.html` sets, so the markup is visible without JavaScript and
+identical on both sides. To check for mismatches, build with React in
+development mode and watch the console: `NODE_ENV=development npm run build`,
+then `npm run preview`.
 
 ### Editing content
 
@@ -379,11 +442,17 @@ object to `projects.js`, with no component changes. Skills resolve their icons
 by slug through `components/SkillIcon.jsx`. A slug with no registered icon
 renders a styled monogram rather than breaking.
 
-**Emphasis is automatic.** Metrics such as `47%`, `$35,000` and `10+`, and the
-name of any skill or project technology, render in semibold wherever they
-appear in project descriptions, experience bullets and the About section. The
-term list is built from `skills.js` and each project's `tech` array, so
-content needs no markup. Matching is case-sensitive.
+**Content follows the resume.** Titles, dates and figures in `src/data/` match
+`public/Nasik_Sami_Khan_Resume.pdf`, and every research figure is quoted from
+the paper it is attributed to. Change the resume and the data together.
+
+**Emphasis is automatic.** Metrics such as `37%`, `$35,000+` and `100+`, and
+the name of any tool in the skills list or a project's stack, render in
+semibold wherever they appear in project text, experience bullets, case
+studies and the About section. The term list is built from `skills.js` and
+each project's `tech` array, so content needs no markup. Matching is
+case-sensitive. A skill with `term: false` is a descriptive phrase and is not
+matched.
 
 **The About profile** pairs each paragraph in `bio` with the heading at the
 same position in `bioLabels`. Keep the two arrays in step.
@@ -484,8 +553,10 @@ on, at every point of the arc. If you change a colour, run the generator.
 
 ## Performance
 
-- Below-the-fold sections are `React.lazy` code-split. The initial chunk
-  carries only the hero and About.
+- Every page is pre-rendered, so its content paints from the HTML, before any
+  script runs.
+- Below-the-fold sections are `React.lazy` code-split. Their markup is in the
+  page already; the chunks only make them interactive.
 - The sky is painted once per section, so scrolling triggers no palette
   restyle. A scripted full-page scroll drops no frames.
 - Sky tokens are registered with `@property` as numbers, so each resolves
@@ -495,24 +566,31 @@ on, at every point of the arc. If you change a colour, run the generator.
 - Both web fonts have size-adjusted local fallbacks, to limit layout shift
   when they load.
 - Timeline logos are `loading="lazy"`, and the hero portrait is
-  `fetchPriority="high"`.
+  `fetchpriority="high"`.
 - Animation is limited to transform and opacity, and there is no
   `backdrop-filter`.
 
-Lighthouse, last measured on the production build with mobile emulation: 95
-for performance, and 100 for accessibility, best practices and SEO.
+Lighthouse has not been re-run since pages became pre-rendered. The figures
+measured for that change, and how they were taken, are in
+[`docs/UPGRADE_REPORT.md`](docs/UPGRADE_REPORT.md).
 
 ## Hosting notes
 
 `vite.config.js` sets `base: './'` for relative asset paths, so the same build
 works at a domain root (nasik.ca) and under a subdirectory (the Pages
-preview). The resume link is the relative `./resume.pdf` for the same reason.
+preview). Links between pages and to the resume are relative for the same
+reason; see [Pre-rendering and routes](#pre-rendering-and-routes).
+
+`public/.htaccess` gives nasik.ca its own 404 page and redirects the resume's
+old address, `/resume.pdf`, to the current file. GitHub Pages ignores that
+file and serves `404.html` for unknown URLs by itself.
 
 The build is plain static files, so it also runs on any other static host:
 build command `npm run build`, output directory `dist`.
 
-After a domain change, update `public/sitemap.xml` and the canonical and Open
-Graph URLs in `index.html`.
+After a domain change, update `SITE_URL` in `src/site.js` and the `Sitemap`
+line in `public/robots.txt`. Canonical, Open Graph and sitemap URLs are all
+generated from `SITE_URL`.
 
 ## Contact
 
