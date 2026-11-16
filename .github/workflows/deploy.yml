@@ -56,6 +56,9 @@ jobs:
         with:
           name: site
           path: dist
+          # The artifact step skips dotfiles unless told otherwise, and
+          # dist/.htaccess has to reach nasik.ca: it sets the 404 page.
+          include-hidden-files: true
           retention-days: 7
 
       # The preview is a second public copy of the site. Keep it out of search
