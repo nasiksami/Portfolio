@@ -6,3 +6,13 @@ ErrorDocument 404 /404.html
 
 # The resume used to live at /resume.pdf; keep old links working.
 Redirect 301 /resume.pdf /Nasik_Sami_Khan_Resume.pdf
+
+# Keep plain-http requests redirecting to https. The host's "force HTTPS"
+# setting is normally stored in this file, so the rule is repeated here in
+# case this copy replaces one that had it.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
