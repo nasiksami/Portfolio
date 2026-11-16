@@ -12,15 +12,12 @@ export default function Footer() {
     <footer {...skyProps(ARC.footer)} className="relative">
       <div className="bg-surface-raised">
         <div className="shell pb-10 pt-6 md:pb-14">
-          <div className="grid gap-12 border-t border-edge pt-12 lg:grid-cols-12 lg:gap-8">
-            <div className="lg:col-span-5">
-              <p className="max-w-md text-lg text-content-secondary">
-                {profile.role} based in {profile.location}.
-              </p>
-              <SocialLinks className="mt-8" />
+          <div className="grid gap-12 border-t border-edge pt-12 xl:grid-cols-12 xl:gap-8">
+            <div className="xl:col-span-8">
+              <SocialLinks oneLine />
             </div>
 
-            <nav aria-label="Footer" className="lg:col-span-4 lg:col-start-9">
+            <nav aria-label="Footer" className="xl:col-span-4 xl:col-start-9">
               <div className="mb-5 flex items-center gap-4">
                 <h2 className="eyebrow shrink-0">Navigate</h2>
                 <span aria-hidden="true" className="h-px flex-1 bg-edge" />

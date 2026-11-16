@@ -11,9 +11,12 @@ const ICONS = {
   x: FaXTwitter,
 };
 
-export default function SocialLinks({ items = allSocials, className = '' }) {
+/** `oneLine` keeps every link on a single row; labels drop to icons where they cannot fit. */
+export default function SocialLinks({ items = allSocials, className = '', oneLine = false }) {
   return (
-    <ul className={['flex flex-wrap items-center gap-2', className].join(' ')}>
+    <ul
+      className={['flex items-center gap-2', oneLine ? 'flex-nowrap' : 'flex-wrap', className].join(' ')}
+    >
       {items.map((social) => {
         const Icon = ICONS[social.icon] ?? FiMail;
         const isExternal = social.href.startsWith('http');
@@ -26,7 +29,7 @@ export default function SocialLinks({ items = allSocials, className = '' }) {
               className="meta-sm tap gap-2 rounded-[0.35rem] border border-edge px-3 text-content-secondary transition-colors hover:border-content-primary hover:text-content-primary"
             >
               <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-              {social.label}
+              {oneLine ? <span className="hidden whitespace-nowrap md:inline">{social.label}</span> : social.label}
             </a>
           </li>
         );
