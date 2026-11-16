@@ -8,31 +8,52 @@ import ijpcc2021Cover from '../assets/papers/ijpcc-2021.webp';
 import ijpcc2020Cover from '../assets/papers/ijpcc-2020.webp';
 
 // Author name is bolded in the UI by matching this string.
-//
-// `cover` is optional: the first page of the paper, rendered once from its PDF
-// to a 320px image, or for the book chapter the book's jacket.
 export const authorKey = 'N. S. Khan';
 
+// The order publications are grouped in on the page.
+export const publicationGroups = [
+  { type: 'Journal', heading: 'Journal articles' },
+  { type: 'Conference', heading: 'Conference and workshop papers' },
+  { type: 'Book chapter', heading: 'Book chapter' },
+  { type: 'Thesis', heading: 'Thesis' },
+];
+
+// `href` is the official record: the publisher's DOI, or the journal or
+// repository page where there is no DOI. `pdf` is a public author copy, where
+// one exists. `cover` is the first page of the paper, rendered once from its
+// PDF to a 320px image, or for the book chapter the book's jacket.
+// `label` is the short venue tag shown beside the year.
 export const publications = [
   {
     title: 'Leveraging LLM for Enhanced Incident Management in Wireless Networks',
-    authors:
-      'M. S. Towhid, N. S. Khan, N. Shahriar, M. Tornatore, R. Boutaba, and A. Saleh',
+    authors: 'M. S. Towhid, N. S. Khan, N. Shahriar, M. Tornatore, R. Boutaba, and A. Saleh',
     venue: 'IEEE Journal on Selected Areas in Communications, vol. 44, pp. 4505–4519',
     year: 2026,
     type: 'Journal',
-    href: 'https://uregina.ca/~nss373/papers/JSAC_2026.pdf',
+    label: 'IEEE JSAC',
+    href: 'https://doi.org/10.1109/JSAC.2026.3680419',
+    pdf: 'https://uregina.ca/~nss373/papers/JSAC_2026.pdf',
     cover: jsacCover,
   },
   {
-    title:
-      'Enhancing Language Models for Telecom Networks Using Retrieval-Augmented Generation: A Pipeline for Telecom-Specific QA System',
-    authors: 'N. S. Khan',
-    venue: 'MSc thesis, Faculty of Graduate Studies and Research, University of Regina',
-    year: 2025,
-    type: 'Thesis',
-    href: 'https://uregina.scholaris.ca/items/c0f7521e-9a2e-477a-b633-3c4463cdf0f7/full',
-    cover: thesisCover,
+    title: 'An Approach of Classifying Waste Using Transfer Learning Method',
+    authors: 'Z. M. A. Amin, N. S. Khan, and R. Hassan',
+    venue: 'International Journal on Perceptive and Cognitive Computing',
+    year: 2021,
+    type: 'Journal',
+    label: 'IJPCC',
+    href: 'https://journals.iium.edu.my/kict/index.php/IJPCC/article/view/213',
+    cover: ijpcc2021Cover,
+  },
+  {
+    title: 'Waste Management Using Machine Learning and Deep Learning Algorithms',
+    authors: 'N. S. Khan, Z. M. A. Amin, and R. Hassan',
+    venue: 'International Journal on Perceptive and Cognitive Computing, vol. 6, no. 2, pp. 97–106',
+    year: 2020,
+    type: 'Journal',
+    label: 'IJPCC',
+    href: 'https://doi.org/10.31436/ijpcc.v6i2.165',
+    cover: ijpcc2020Cover,
   },
   {
     title:
@@ -41,55 +62,56 @@ export const publications = [
     venue: 'IEEE Globecom Workshops (GC Wkshps)',
     year: 2024,
     type: 'Conference',
-    href: 'https://uregina.ca/~nss373/papers/gc-rag-khan.pdf',
+    label: 'IEEE Globecom Workshops',
+    href: 'https://doi.org/10.1109/GCWkshp64532.2024.11100791',
+    pdf: 'https://uregina.ca/~nss373/papers/gc-rag-khan.pdf',
     cover: globecomCover,
   },
   {
     title:
       'Towards Effective Network Intrusion Detection in Imbalanced Datasets: A Hierarchical Approach',
     authors: 'M. S. Towhid, N. S. Khan, M. M. Hasan, and N. Shahriar',
-    venue: 'International Workshop on Computing, Networking and Communications (CNC)',
+    venue:
+      'IEEE International Conference on Computing, Networking and Communications (ICNC), pp. 254–258',
     year: 2024,
-    type: 'Workshop',
-    href: 'https://uregina.ca/~nss373/papers/CNC_2024.pdf',
+    type: 'Conference',
+    label: 'IEEE ICNC',
+    href: 'https://doi.org/10.1109/ICNC59896.2024.10556133',
+    pdf: 'https://uregina.ca/~nss373/papers/CNC_2024.pdf',
     cover: cncCover,
   },
   {
     title:
-      'A Token Prioritization Strategy for Handling Data Imbalance in Network-Change Ticket Classification',
+      'A Token-Prioritization Strategy for Handling Data Imbalance in Network-Change Ticket Classification',
     authors: 'M. S. Towhid, N. S. Khan, N. Shahriar, M. Tornatore, R. Boutaba, and A. Saleh',
     venue: '19th IEEE/ACM/IFIP International Conference on Network and Service Management (CNSM)',
     year: 2023,
     type: 'Conference',
-    href: 'https://uregina.ca/~nss373/papers/NCT_CNSM_2023.pdf',
+    label: 'IEEE/ACM/IFIP CNSM',
+    href: 'https://doi.org/10.23919/CNSM59352.2023.10327831',
+    pdf: 'https://dl.ifip.org/db/conf/cnsm/cnsm2023/1570931597.pdf',
     cover: cnsmCover,
   },
   {
     title:
       'Cyberbullying Severity Detection Using Deep Learning Techniques: A Multi-Class Classification over Varied Class Balance Data',
     authors: 'S. Wani, N. S. Khan, Z. M. A. Amin, and Y. Gulzar',
-    venue: 'Securing Social Networks in Cyberspace, CRC Press',
+    venue: 'Securing Social Networks in Cyberspace, CRC Press, pp. 163–193',
     year: 2021,
     type: 'Book chapter',
-    href: 'https://www.taylorfrancis.com/chapters/edit/10.1201/9781003134527-11/cyberbullying-severity-detection-using-deep-learning-techniques-sharyar-wani-khan-nasik-sami-zian-md-afique-amin-yonis-gulzar',
+    label: 'CRC Press',
+    href: 'https://doi.org/10.1201/9781003134527-11',
     cover: chapterCover,
   },
   {
-    title: 'An Approach of Classifying Waste Using Transfer Learning Method',
-    authors: 'Z. M. A. Amin, N. S. Khan, and R. Hassan',
-    venue: 'International Journal on Perceptive and Cognitive Computing',
-    year: 2021,
-    type: 'Journal',
-    href: 'https://journals.iium.edu.my/kict/index.php/IJPCC/article/view/213',
-    cover: ijpcc2021Cover,
-  },
-  {
-    title: 'Waste Management Using Machine Learning and Deep Learning Algorithms',
-    authors: 'N. S. Khan, Z. M. A. Amin, and R. Hassan',
-    venue: 'International Journal on Perceptive and Cognitive Computing',
-    year: 2020,
-    type: 'Journal',
-    href: 'https://journals.iium.edu.my/kict/index.php/IJPCC/article/view/165',
-    cover: ijpcc2020Cover,
+    title:
+      'Enhancing Language Models for Telecom Networks Using Retrieval-Augmented Generation: A Pipeline for Telecom-Specific QA System',
+    authors: 'N. S. Khan',
+    venue: 'MSc thesis, Faculty of Graduate Studies and Research, University of Regina',
+    year: 2025,
+    type: 'Thesis',
+    label: 'MSc thesis',
+    href: 'https://hdl.handle.net/10294/17131',
+    cover: thesisCover,
   },
 ];

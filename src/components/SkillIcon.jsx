@@ -3,14 +3,15 @@ import {
   SiTensorflow, SiPytorch, SiKeras, SiScikitlearn, SiLangchain, SiOpencv,
   SiStreamlit, SiDjango, SiFlask, SiDotnet, SiAngular, SiMysql, SiMongodb,
   SiElasticsearch, SiQdrant, SiDocker, SiJenkins, SiRabbitmq, SiLinux,
-  SiGit, SiPostman, SiWireshark, SiGooglecolab,
+  SiGit, SiPostman, SiWireshark, SiGooglecolab, SiMlflow, SiDuckdb, SiKubernetes,
+  SiLanggraph, SiClaude,
 } from 'react-icons/si';
 import { FaAws, FaCss3Alt, FaDatabase } from 'react-icons/fa';
 import { DiHeroku } from 'react-icons/di';
 import { VscVscode } from 'react-icons/vsc';
 import {
   TbApi, TbBoxMultiple, TbChartBar, TbChartPie, TbDatabase, TbFileSpreadsheet, TbGitMerge,
-  TbStack2,
+  TbSql, TbStack2,
 } from 'react-icons/tb';
 
 /**
@@ -64,6 +65,13 @@ const ICONS = {
   rest: TbApi,
   microservices: TbBoxMultiple,
   cicd: TbGitMerge,
+  mlflow: SiMlflow,
+  duckdb: SiDuckdb,
+  kubernetes: SiKubernetes,
+  langgraph: SiLanggraph,
+  claude: SiClaude,
+  sqlserver: TbDatabase,
+  sql: TbSql,
   tableau: TbChartBar,
   powerbi: TbChartPie,
 };

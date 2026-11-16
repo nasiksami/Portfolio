@@ -1,27 +1,30 @@
-import { skillGroups } from '../../data/skills';
+import { moreTools, skillGroups } from '../../data/skills';
 import { projects } from '../../data/projects';
 
 /**
  * Marks what matters inside running copy with one rule: metrics and named
  * technologies render as `.emph` (semibold, primary ink).
  *
- * The term list is built from the site's own data — every skill and every
- * project's stack — so the copy in src/data needs no markup and a new skill
- * is recognised everywhere automatically. Matching is case-sensitive, so
+ * The term list is built from the site's own data — every named tool in the
+ * skills list and every project's stack — so the copy in src/data needs no
+ * markup and a new skill is recognised everywhere automatically. Matching is case-sensitive, so
  * ordinary words ("git", "rest") are never caught.
  */
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const TERMS = [
   ...new Set([
-    ...skillGroups.flatMap((group) => group.items.map((item) => item.name)),
+    ...skillGroups.flatMap((group) =>
+      group.items.filter((item) => item.term !== false).map((item) => item.name)
+    ),
+    ...moreTools,
     ...projects.flatMap((project) => project.tech),
   ]),
 ]
   .sort((a, b) => b.length - a.length)
   .map(escape);
 
-// $35,000 · 47% · 88.4% · 10+ · 200+
+// $35,000+ · 37% · 88.4% · 100+ · 4+
 const METRIC = String.raw`\$\d[\d,]*(?:\.\d+)?\+?|\d+(?:\.\d+)?%|\d+\+`;
 
 const PATTERN = new RegExp(

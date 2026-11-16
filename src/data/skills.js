@@ -1,89 +1,117 @@
-// `icon` values are slugs resolved by components/SkillIcon.jsx.
-// A slug with no registered icon falls back to a styled monogram, so adding a
-// skill here never requires touching the icon registry.
+// Skill groups, as on the resume. No proficiency labels.
 //
-// Proficiency levels carried over from the previous site's self-assessment.
+// `icon` is a slug resolved by components/SkillIcon.jsx; an item without one
+// shows a small monogram. `term: false` keeps a descriptive phrase out of the
+// automatic emphasis in running copy (components/ui/Emphasis.jsx), which is
+// meant for named tools only.
 export const skillGroups = [
   {
-    category: 'AI & Machine Learning',
-    blurb: 'Research-to-production model development',
+    category: 'ML & modelling',
     items: [
-      { name: 'TensorFlow', icon: 'tensorflow', level: 'Expert' },
-      { name: 'PyTorch', icon: 'pytorch', level: 'Advanced' },
-      { name: 'Keras', icon: 'keras', level: 'Advanced' },
-      { name: 'Scikit-Learn', icon: 'scikitlearn', level: 'Advanced' },
-      { name: 'LangChain', icon: 'langchain', level: 'Expert' },
-      { name: 'LlamaIndex', icon: 'llamaindex', level: 'Expert' },
-      { name: 'OpenCV', icon: 'opencv', level: 'Advanced' },
-      { name: 'Streamlit', icon: 'streamlit', level: 'Expert' },
+      { name: 'PyTorch', icon: 'pytorch' },
+      { name: 'TensorFlow', icon: 'tensorflow' },
+      { name: 'scikit-learn', icon: 'scikitlearn' },
+      { name: 'MLflow', icon: 'mlflow' },
+      { name: 'LLM and embedding fine-tuning', term: false },
+      { name: 'BERT' },
+      { name: 'CNNs', term: false },
+      { name: 'Time-series forecasting', term: false },
+      { name: 'Imbalanced-data training and evaluation', term: false },
+    ],
+  },
+  {
+    category: 'LLM systems',
+    items: [
+      { name: 'RAG' },
+      { name: 'LoRA fine-tuning', term: false },
+      { name: 'LangChain', icon: 'langchain' },
+      { name: 'LlamaIndex', icon: 'llamaindex' },
+      { name: 'ColBERT' },
+      { name: 'Matryoshka embeddings', term: false },
+    ],
+  },
+  {
+    category: 'Agentic AI',
+    items: [
+      { name: 'LangGraph', icon: 'langgraph' },
+      { name: 'AutoGen' },
+      { name: 'Model Context Protocol (MCP)', term: false },
+      { name: 'Claude Code', icon: 'claude' },
+      { name: 'OpenAI Codex' },
+      { name: 'Cursor' },
+    ],
+  },
+  {
+    category: 'Data & vectors',
+    items: [
+      { name: 'DuckDB', icon: 'duckdb' },
+      { name: 'SQL Server', icon: 'sqlserver' },
+      { name: 'Elasticsearch', icon: 'elasticsearch' },
+      { name: 'MongoDB', icon: 'mongodb' },
+      { name: 'ChromaDB', icon: 'chromadb' },
+      { name: 'Qdrant', icon: 'qdrant' },
+      { name: 'FAISS' },
     ],
   },
   {
     category: 'Languages',
-    blurb: 'Primary implementation languages',
     items: [
-      { name: 'Python', icon: 'python', level: 'Expert' },
-      { name: 'JavaScript', icon: 'javascript', level: 'Expert' },
-      { name: 'C#', icon: 'csharp', level: 'Advanced' },
-      { name: 'C++', icon: 'cplusplus', level: 'Advanced' },
-      { name: 'Java', icon: 'java', level: 'Advanced' },
-      { name: 'HTML', icon: 'html5', level: 'Expert' },
-      { name: 'CSS', icon: 'css3', level: 'Expert' },
-      { name: 'VBA', icon: 'vba', level: 'Intermediate' },
+      { name: 'Python', icon: 'python' },
+      { name: 'SQL', icon: 'sql' },
+      { name: 'C#', icon: 'csharp' },
+      { name: 'JavaScript', icon: 'javascript' },
     ],
   },
   {
-    category: 'Backend & Frameworks',
-    blurb: 'APIs, services, and web frameworks',
+    category: 'Engineering',
     items: [
-      { name: 'Django', icon: 'django', level: 'Expert' },
-      { name: 'Flask', icon: 'flask', level: 'Advanced' },
-      { name: 'ASP.NET', icon: 'dotnet', level: 'Advanced' },
-      { name: 'Entity Framework', icon: 'entityframework', level: 'Intermediate' },
-      { name: 'Dapper', icon: 'dapper', level: 'Intermediate' },
-      { name: 'REST APIs', icon: 'rest', level: 'Advanced' },
-      { name: 'Microservices', icon: 'microservices', level: 'Intermediate' },
-      { name: 'AngularJS', icon: 'angular', level: 'Advanced' },
+      { name: 'REST APIs', icon: 'rest' },
+      { name: 'Microservices', icon: 'microservices', term: false },
+      { name: 'RabbitMQ', icon: 'rabbitmq' },
+      { name: 'Docker', icon: 'docker' },
+      { name: 'Kubernetes', icon: 'kubernetes' },
+      { name: 'Jenkins CI/CD', icon: 'jenkins' },
+      { name: 'Git', icon: 'git' },
+      { name: 'Linux', icon: 'linux' },
+      { name: 'Django', icon: 'django' },
+      { name: 'Flask', icon: 'flask' },
+      { name: 'ASP.NET', icon: 'dotnet' },
     ],
   },
   {
-    category: 'Data & Storage',
-    blurb: 'Relational, document, and vector stores',
+    category: 'Cloud',
     items: [
-      { name: 'MySQL', icon: 'mysql', level: 'Advanced' },
-      { name: 'Oracle', icon: 'oracle', level: 'Advanced' },
-      { name: 'MongoDB', icon: 'mongodb', level: 'Advanced' },
-      { name: 'Elasticsearch', icon: 'elasticsearch', level: 'Advanced' },
-      { name: 'ChromaDB', icon: 'chromadb', level: 'Intermediate' },
-      { name: 'Qdrant', icon: 'qdrant', level: 'Intermediate' },
+      { name: 'AWS', icon: 'aws' },
+      { name: 'Lambda', term: false },
+      { name: 'S3', term: false },
+      { name: 'EC2', term: false },
+      { name: 'DynamoDB', term: false },
     ],
   },
   {
-    category: 'Cloud & DevOps',
-    blurb: 'Deployment, orchestration, and pipelines',
+    category: 'Domains',
     items: [
-      { name: 'AWS', icon: 'aws', level: 'Expert' },
-      { name: 'Docker', icon: 'docker', level: 'Expert' },
-      { name: 'Jenkins', icon: 'jenkins', level: 'Advanced' },
-      { name: 'CI/CD', icon: 'cicd', level: 'Intermediate' },
-      { name: 'RabbitMQ', icon: 'rabbitmq', level: 'Advanced' },
-      { name: 'Heroku', icon: 'heroku', level: 'Advanced' },
-      { name: 'Linux', icon: 'linux', level: 'Advanced' },
-    ],
-  },
-  {
-    category: 'Tools & Analytics',
-    blurb: 'Day-to-day engineering and BI tooling',
-    items: [
-      { name: 'Git', icon: 'git', level: 'Expert' },
-      { name: 'VS Code', icon: 'vscode', level: 'Expert' },
-      { name: 'Postman', icon: 'postman', level: 'Advanced' },
-      { name: 'Tableau', icon: 'tableau', level: 'Expert' },
-      { name: 'Power BI', icon: 'powerbi', level: 'Advanced' },
-      { name: 'Wireshark', icon: 'wireshark', level: 'Intermediate' },
-      { name: 'Google Colab', icon: 'colab', level: 'Intermediate' },
+      { name: 'Healthcare AI', term: false },
+      { name: 'Telecom networks', term: false },
+      { name: 'Network security', term: false },
     ],
   },
 ];
 
-export const levelOrder = ['Expert', 'Advanced', 'Intermediate'];
+// Tools used on earlier projects, kept out of the main view.
+export const moreTools = [
+  'Streamlit',
+  'OpenCV',
+  'Keras',
+  'Entity Framework',
+  'Dapper',
+  'MySQL',
+  'Oracle',
+  'HTML',
+  'CSS',
+  'Java',
+  'C++',
+  'Postman',
+  'Tableau',
+  'Power BI',
+];

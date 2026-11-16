@@ -1,7 +1,8 @@
 import { FiArrowUpRight } from 'react-icons/fi';
-import { authorKey, publications } from '../data/publications';
+import { authorKey, publicationGroups, publications } from '../data/publications';
 import { awards } from '../data/education';
 import { ARC } from '../sky';
+import { useSite } from '../site';
 import Section from '../components/ui/Section';
 import Reveal from '../components/ui/Reveal';
 import Tag from '../components/ui/Tag';
@@ -30,6 +31,7 @@ function AuthorList({ authors }) {
  * reserve the space before the lazy image arrives, so nothing shifts.
  */
 function Cover({ pub }) {
+  const { asset } = useSite();
   if (!pub.cover) return null;
   const isBook = pub.type === 'Book chapter';
 
@@ -52,7 +54,7 @@ function Cover({ pub }) {
         ].join(' ')}
       >
         <img
-          src={pub.cover}
+          src={asset(pub.cover)}
           alt=""
           loading="lazy"
           decoding="async"
@@ -66,78 +68,107 @@ function Cover({ pub }) {
   );
 }
 
-/** The papers, each with its first page or jacket in the right-hand column. */
-function PaperList() {
+/** One paper: year, title linked to its official record, authors, venue. */
+function Paper({ pub, number }) {
   return (
-    <div className="mt-16 md:mt-24">
-      <Reveal>
-        <div className="mb-8 flex items-center gap-5">
-          <h3 className="eyebrow shrink-0">Publications</h3>
-          <span aria-hidden="true" className="h-px flex-1 bg-edge" />
-        </div>
-      </Reveal>
+    <article className="group grid grid-cols-[minmax(0,1fr)_4.5rem] gap-x-5 gap-y-4 border-t border-edge py-7 [grid-template-areas:'year_cover'_'body_body'] md:grid-cols-[7rem_minmax(0,1fr)_8rem] md:gap-x-8 md:py-9 md:[grid-template-areas:'year_body_cover']">
+      <div className="flex items-baseline gap-3 self-start [grid-area:year] md:block">
+        <p className="display d-2 text-accent">{pub.year}</p>
+        <p aria-hidden="true" className="meta-sm text-content-muted md:mt-3">
+          [{number}]
+        </p>
+      </div>
 
-      <ol>
-        {publications.map((pub, index) => (
-          <Reveal key={pub.title} as="li" delay={Math.min(index * 0.05, 0.25)}>
-            <article className="group grid grid-cols-[minmax(0,1fr)_4.5rem] gap-x-5 gap-y-4 border-t border-edge py-7 [grid-template-areas:'year_cover'_'body_body'] md:grid-cols-[7rem_minmax(0,1fr)_8rem] md:gap-x-8 md:py-9 md:[grid-template-areas:'year_body_cover']">
-              <div className="flex items-baseline gap-3 self-start [grid-area:year] md:block">
-                <p className="display d-2 text-accent">{pub.year}</p>
-                <p aria-hidden="true" className="meta-sm text-content-muted md:mt-3">
-                  [{index + 1}]
-                </p>
+      <div className="min-w-0 [grid-area:body]">
+        <h4 className="subhead max-w-prose break-words text-content-primary">
+          <a
+            href={pub.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group/link transition-colors hover:text-accent"
+          >
+            {pub.title}
+            <FiArrowUpRight
+              className="ml-1.5 inline h-4 w-4 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
+              aria-hidden="true"
+            />
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+        </h4>
+
+        <p className="mt-3 text-sm leading-relaxed text-content-muted">
+          <AuthorList authors={pub.authors} />
+        </p>
+        <p className="mt-2 text-sm italic leading-relaxed text-content-secondary">{pub.venue}</p>
+
+        <p className="mt-4 flex flex-wrap items-center gap-2">
+          <Tag tone="signal">{pub.year}</Tag>
+          <Tag>{pub.label}</Tag>
+          {pub.pdf && (
+            <a
+              href={pub.pdf}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-draw meta-sm tap ml-1 gap-1 text-accent"
+            >
+              PDF
+              <span className="sr-only"> of {pub.title} (opens in a new tab)</span>
+              <FiArrowUpRight className="h-3 w-3" aria-hidden="true" />
+            </a>
+          )}
+        </p>
+      </div>
+
+      <Cover pub={pub} />
+    </article>
+  );
+}
+
+/** The papers, grouped by type, each with its first page or jacket. */
+function PaperList() {
+  let number = 0;
+
+  return (
+    <div className="space-y-16 md:space-y-20">
+      {publicationGroups.map((group) => {
+        const papers = publications.filter((pub) => pub.type === group.type);
+        if (!papers.length) return null;
+
+        return (
+          <section key={group.type} aria-labelledby={'pubs-' + group.type.toLowerCase().replace(/\s+/g, '-')}>
+            <Reveal>
+              <div className="mb-2 flex items-center gap-5">
+                <h3
+                  id={'pubs-' + group.type.toLowerCase().replace(/\s+/g, '-')}
+                  className="eyebrow shrink-0"
+                >
+                  {group.heading}
+                </h3>
+                <span aria-hidden="true" className="h-px flex-1 bg-edge" />
               </div>
+            </Reveal>
 
-              <div className="[grid-area:body]">
-                <h4 className="subhead max-w-prose text-content-primary">
-                  <a
-                    href={pub.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group/link transition-colors hover:text-accent"
-                  >
-                    {pub.title}
-                    <FiArrowUpRight
-                      className="ml-1.5 inline h-4 w-4 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
-                      aria-hidden="true"
-                    />
-                    <span className="sr-only"> (opens in a new tab)</span>
-                  </a>
-                </h4>
-
-                <p className="mt-3 text-sm leading-relaxed text-content-muted">
-                  <AuthorList authors={pub.authors} />
-                </p>
-                <p className="mt-2 text-sm italic leading-relaxed text-content-secondary">
-                  {pub.venue}
-                </p>
-
-                <p className="mt-4 flex flex-wrap items-center gap-2">
-                  <Tag tone="signal">{pub.year}</Tag>
-                  <Tag>{pub.type}</Tag>
-                </p>
-              </div>
-
-              <Cover pub={pub} />
-            </article>
-          </Reveal>
-        ))}
-      </ol>
+            <ol className="[&>li:first-child>article]:border-t-0">
+              {papers.map((pub) => {
+                number += 1;
+                return (
+                  <Reveal key={pub.title} as="li">
+                    <Paper pub={pub} number={number} />
+                  </Reveal>
+                );
+              })}
+            </ol>
+          </section>
+        );
+      })}
     </div>
   );
 }
 
-export default function Publications() {
+/** A constellation: each award a star, joined by the hairlines. */
+function AwardList() {
   return (
-    <Section
-      id="publications"
-      index="03"
-      label="Research"
-      arc={ARC.publications}
-      title="Publications & awards"
-      description="Research in telecom AI, network security, and applied deep learning, from peer-reviewed papers to an MSc thesis."
-      sky={<PaperList />}
-    >
+    <div className="mt-16 md:mt-24">
       <Reveal>
         <div className="mb-8 flex items-center gap-5">
           <h3 className="eyebrow shrink-0">Awards &amp; scholarships</h3>
@@ -145,7 +176,6 @@ export default function Publications() {
         </div>
       </Reveal>
 
-      {/* A constellation: each award a star, joined by the hairlines. */}
       <ol className="grid border-b border-edge md:grid-cols-2 lg:grid-cols-3">
         {awards.map((award, index) => (
           <Reveal
@@ -178,6 +208,26 @@ export default function Publications() {
           </Reveal>
         ))}
       </ol>
+    </div>
+  );
+}
+
+/**
+ * Awards sit in the sky, directly under the heading; the papers stand on the
+ * ground below, grouped by type.
+ */
+export default function Publications() {
+  return (
+    <Section
+      id="publications"
+      index="03"
+      label="Research"
+      arc={ARC.publications}
+      title="Publications & awards"
+      description="Eight publications with 100+ citations: LLM and RAG research for telecom networks, network security, and applied deep learning."
+      sky={<AwardList />}
+    >
+      <PaperList />
     </Section>
   );
 }
