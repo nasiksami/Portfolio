@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { FiPlus } from 'react-icons/fi';
 import { experience } from '../data/experience';
 import { education } from '../data/education';
 import { ARC } from '../sky';
+import { useSite } from '../site';
 import Section from '../components/ui/Section';
 import Reveal from '../components/ui/Reveal';
 import Tag from '../components/ui/Tag';
 import Emphasis from '../components/ui/Emphasis';
 
-function TimelineEntry({ entry, index, isEducation = false }) {
-  const [open, setOpen] = useState(index === 0);
-  const reduceMotion = useReducedMotion();
+/**
+ * One entry on the plumb line. Everything an entry says is in the markup —
+ * nothing is tucked behind a "show more" — so the page reads the same to a
+ * visitor, a crawler and a screen reader.
+ */
+function TimelineEntry({ entry, isEducation = false }) {
+  const { asset } = useSite();
   const title = isEducation ? entry.degree : entry.title;
   const points = entry.points ?? [];
-  const preview = points.slice(0, 2);
-  const hasMore = points.length > 2;
-  const panelId = 'record-panel-' + (isEducation ? 'edu' : 'exp') + '-' + String(index);
+  const roles = entry.roles ?? [];
 
   return (
     <li className="relative pb-12 pl-8 last:pb-0 md:pl-12">
@@ -51,7 +51,7 @@ function TimelineEntry({ entry, index, isEducation = false }) {
                 ].join(' ')}
               >
                 <img
-                  src={entry.logo}
+                  src={asset(entry.logo)}
                   alt=""
                   width="64"
                   height="64"
@@ -77,65 +77,44 @@ function TimelineEntry({ entry, index, isEducation = false }) {
             </div>
           </div>
 
+          {entry.summary && (
+            <p className="mt-6 max-w-prose text-base text-content-secondary">{entry.summary}</p>
+          )}
+
           {points.length > 0 && (
-            <>
-              <ul className="mt-6 space-y-3">
-                {preview.map((point) => (
-                  <li key={point} className="flex max-w-prose gap-3 text-base text-content-secondary">
-                    <span aria-hidden="true" className="mt-[0.75em] h-1 w-3 shrink-0 bg-accent" />
-                    <span>
-                      <Emphasis>{point}</Emphasis>
-                    </span>
-                  </li>
-                ))}
-              </ul>
+            <ul className={entry.summary ? 'mt-4 space-y-3' : 'mt-6 space-y-3'}>
+              {points.map((point) => (
+                <li key={point} className="flex max-w-prose gap-3 text-base text-content-secondary">
+                  <span aria-hidden="true" className="mt-[0.75em] h-1 w-3 shrink-0 bg-accent" />
+                  <span>
+                    <Emphasis>{point}</Emphasis>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
 
-              {hasMore && (
-                <>
-                  <AnimatePresence initial={false}>
-                    {open && (
-                      <motion.ul
-                        id={panelId}
-                        initial={reduceMotion ? false : { height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
-                        transition={{ duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
-                        className="space-y-3 overflow-hidden"
-                      >
-                        {points.slice(2).map((point) => (
-                          <li
-                            key={point}
-                            className="flex max-w-prose gap-3 pt-3 text-base text-content-secondary"
-                          >
-                            <span aria-hidden="true" className="mt-[0.75em] h-1 w-3 shrink-0 bg-accent" />
-                            <span>
-                              <Emphasis>{point}</Emphasis>
-                            </span>
-                          </li>
-                        ))}
-                      </motion.ul>
+          {/* Several titles held at one organisation, each with its dates. */}
+          {roles.length > 0 && (
+            <ul className="mt-6 max-w-prose border-b border-edge">
+              {roles.map((role) => (
+                <li
+                  key={role.title}
+                  className="grid gap-x-6 gap-y-1 border-t border-edge py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline"
+                >
+                  <span className="text-base text-content-primary">
+                    {role.title}
+                    {role.note && (
+                      <span className="text-content-secondary">
+                        {' '}
+                        · <Emphasis>{role.note}</Emphasis>
+                      </span>
                     )}
-                  </AnimatePresence>
-
-                  <button
-                    type="button"
-                    onClick={() => setOpen((value) => !value)}
-                    aria-expanded={open}
-                    aria-controls={panelId}
-                    className="meta-sm tap mt-5 gap-2 rounded-[0.35rem] border border-edge px-3.5 py-2 text-content-secondary transition-colors hover:border-content-primary hover:text-content-primary"
-                  >
-                    <FiPlus
-                      className={[
-                        'h-3 w-3 transition-transform duration-300',
-                        open ? 'rotate-45' : '',
-                      ].join(' ')}
-                      aria-hidden="true"
-                    />
-                    {open ? 'Show less' : 'Show ' + (points.length - 2) + ' more'}
-                  </button>
-                </>
-              )}
-            </>
+                  </span>
+                  <span className="meta-sm text-content-muted">{role.period}</span>
+                </li>
+              ))}
+            </ul>
           )}
         </article>
       </div>
@@ -163,11 +142,10 @@ function Record({ heading, entries, isEducation, fromHorizon = false }) {
           </div>
         </Reveal>
         <ol>
-          {entries.map((entry, index) => (
+          {entries.map((entry) => (
             <TimelineEntry
               key={entry.org + '-' + entry.period}
               entry={entry}
-              index={index}
               isEducation={isEducation}
             />
           ))}
@@ -185,7 +163,7 @@ export default function Experience() {
       label="Record"
       arc={ARC.experience}
       title="Experience & education"
-      description="Nine roles across industry and academia, from full-stack engineering in Malaysia to leading an AI team in Canada."
+      description="Healthcare AI in Canada, telecom ML research at the University of Regina, and software engineering in Malaysia."
     >
       <div className="grid gap-20 xl:grid-cols-[1.55fr_1fr] xl:gap-16">
         <Record heading="Professional experience" entries={experience} isEducation={false} fromHorizon />

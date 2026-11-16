@@ -2,12 +2,15 @@ import { navLinks, profile } from '../data/profile';
 import SocialLinks from './SocialLinks';
 import HorizonRule from './HorizonRule';
 import { ARC, skyProps } from '../sky';
+import { useSite } from '../site';
 
 /**
  * The last of the ground. Below the final horizon rule a slim strip of sky
  * closes the page where it began.
  */
 export default function Footer() {
+  const { home, to } = useSite();
+
   return (
     <footer {...skyProps(ARC.footer)} className="relative">
       <div className="bg-surface-raised">
@@ -26,7 +29,7 @@ export default function Footer() {
                 {navLinks.map((link) => (
                   <li key={link.id} className="border-t border-edge">
                     <a
-                      href={'#' + link.id}
+                      href={home(link.id)}
                       className="meta-sm tap-block py-3 text-content-secondary transition-colors hover:text-accent"
                     >
                       {link.label}
@@ -35,7 +38,7 @@ export default function Footer() {
                 ))}
                 <li className="border-t border-edge">
                   <a
-                    href={profile.resumeUrl}
+                    href={to(profile.resumeUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="meta-sm tap-block py-3 text-content-secondary transition-colors hover:text-accent"

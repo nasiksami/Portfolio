@@ -1,84 +1,80 @@
 import headshot from '../assets/headshot.jpg';
 
+// Identity and summary copy. The source of truth is the current resume
+// (public/Nasik_Sami_Khan_Resume.pdf): titles, dates and figures here must
+// match it, and nothing is stated that the resume or a published paper does
+// not support.
 export const profile = {
   name: 'Nasik Sami Khan',
-  role: 'AI/ML Researcher & Full-Stack Developer',
-  tagline: 'Driving innovation at the intersection of AI, ML, and software engineering.',
+  role: 'AI Software Developer',
+  focus: ['Machine Learning', 'LLMs & RAG', 'Agentic AI', 'Healthcare AI'],
+  // The About section's heading.
+  tagline: 'Machine learning and LLM systems, from research prototype to production.',
+  // One sentence under the name.
   summary:
-    'AI Team Lead and published researcher specializing in Generative AI, LLMs, and NLP — turning advanced research into production systems that deliver measurable impact.',
+    'I build machine learning, LLM and agentic AI systems, taking them from research prototype to production in healthcare software, with published LLM and RAG research in IEEE JSAC and IEEE Globecom.',
+  // Used for the meta description and structured data.
+  description:
+    'Nasik Sami Khan is an AI Software Developer specializing in machine learning, LLMs, RAG and agentic AI, with an MSc in Computer Science and 4+ years across healthcare AI, telecom ML research and software engineering.',
   location: 'Saskatoon, SK, Canada',
-  // Shown as the hero badge — states current standing rather than availability.
-  currentRole: 'AI Team Lead at BDM Healthware',
+  currentRole: 'AI Software Developer at BDM Healthware',
+  email: 'nasiksami@gmail.com',
+  phone: '+1 (306) 502-5153',
   headshot,
-  // Relative, not root-absolute: the site has to work both at a domain root
-  // (nasik.ca) and under a subdirectory (GitHub Pages preview). Vite's
-  // base: './' only rewrites imported assets, not string literals like this.
-  resumeUrl: './resume.pdf',
-  siteUrl: 'https://nasik.ca/',
+  // Relative to the site root; pages resolve it with useSite().to().
+  resumeUrl: 'Nasik_Sami_Khan_Resume.pdf',
 };
 
 export const bio = [
-  'I lead the AI team at BDM Healthware, where I architect and deliver AI solutions for healthcare software. With an MSc in Computer Science from the University of Regina and over three years of experience across healthcare, telecom and research, I own the full path from research to production: large language models and retrieval-augmented generation, the data pipelines behind them, and the software that delivers them at scale.',
-  'My research, conducted with industry leaders including Rogers and the Department of National Defence, delivers results that can be measured: a 47% improvement in telecom question-answering accuracy with retrieval-augmented generation, a 22.5% F1 improvement on minority intrusion classes, and a 37% reduction in transaction processing time at DPO International. On the global stage, I placed runner-up in the ITU AI/ML in 5G challenge on SDN intrusion detection and earned silver rank in its challenge on specializing LLMs for telecom.',
-  'My work is published in the IEEE Journal on Selected Areas in Communications, a leading journal in its field, as well as IEEE Globecom Workshops and CNSM. My MSc thesis delivered a retrieval-augmented question-answering pipeline for telecom networks. I have presented on the international stage, including IEEE GLOBECOM 2024 in Cape Town, and I serve as an academic peer reviewer.',
+  'I am a software developer specializing in machine learning, LLMs and agentic AI, with a thesis-based MSc in Computer Science and 4+ years across healthcare AI, telecom ML research and software engineering. At BDM Healthware I lead AI projects within R&D, including medication demand-forecasting and expiry-risk models built with the Vector Institute.',
+  'My LLM and RAG research is published in IEEE JSAC and IEEE Globecom, with 100+ citations. It was carried out at the University of Regina with Rogers and the Department of National Defence, and placed runner-up and silver rank in the ITU AI/ML in 5G Challenge.',
 ];
 
 // A short heading for each bio paragraph above, in the same order.
-export const bioLabels = ['Background', 'Results', 'Research'];
+export const bioLabels = ['Now', 'Research'];
 
-// Sub-heading under the About title. Deliberately positions the work rather
-// than signalling job-seeking.
+// Sub-heading under the About title.
 export const availability =
-  'Working across AI/ML, cloud, and telecom — from peer-reviewed research to systems in production.';
+  'Healthcare AI at BDM Healthware, built on published research in telecom machine learning.';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// STAT TILES — shown in the About section.
-//
-// These defaults are derived strictly from content already in this repo:
-//   publications  → 8 entries in data/publications.js
-//   experience    → "over 3 years", matching the wording in public/resume.pdf
-//                   so the site and the PDF never contradict each other
-//   roles         → 9 entries in data/experience.js
-//   msc grade     → 88.40%, from data/education.js
-//
-// Nothing here is estimated or rounded up. Edit the `value` fields to change
-// what the site displays; `label` and `detail` are free text.
+// STAT TILES — shown in the About section. Verified figures only:
+//   publications → 8 entries in data/publications.js
+//   citations    → Google Scholar (140 when last checked, 16 Nov 2026)
+//   experience   → "4+ years", as on the resume
+//   msc grade    → 88.4%, from data/education.js
 // ─────────────────────────────────────────────────────────────────────────────
 export const stats = [
-  { value: '8', label: 'Publications', detail: 'IEEE papers, a book chapter & an MSc thesis' },
-  {
-    value: '3+',
-    label: 'Years experience',
-    detail: 'Applied AI, data engineering & software',
-  },
-  { value: '9', label: 'Roles held', detail: 'Across industry, research and teaching' },
-  { value: '88.4%', label: 'MSc grade', detail: 'University of Regina' },
+  { value: '8', label: 'Publications', detail: 'Journal, conference and workshop papers, a book chapter and an MSc thesis' },
+  { value: '100+', label: 'Citations', detail: 'On Google Scholar' },
+  { value: '4+', label: 'Years experience', detail: 'Healthcare AI, telecom ML research and software engineering' },
+  { value: '88.4%', label: 'MSc grade', detail: 'University of Regina, thesis route' },
 ];
 
 export const focusAreas = [
   {
-    title: 'AI/ML Research',
+    title: 'Machine Learning',
     description:
-      'Leading the design and deployment of LLM, NLP, and generative AI systems — retrieval-augmented generation, fine-tuned embeddings, and published research that ships to production.',
+      'Model development in PyTorch, TensorFlow and scikit-learn: time-series forecasting, BERT and CNN models, and training and evaluation on imbalanced data.',
     icon: 'brain',
   },
   {
-    title: 'Full-Stack Development',
+    title: 'LLMs & RAG',
     description:
-      'Architecting and delivering scalable web applications with modern frameworks and cloud-native design, owning them from first commit through production launch.',
+      'Retrieval-augmented generation, LoRA fine-tuning of open-source LLMs and fine-tuned embedding models, with results published in IEEE JSAC and IEEE Globecom Workshops.',
+    icon: 'document',
+  },
+  {
+    title: 'Agentic AI',
+    description:
+      'Daily agentic coding workflows with Claude Code and OpenAI Codex: implementation, refactoring and tests delegated to agents on isolated branches, so every change stays reviewable and reversible.',
     icon: 'code',
   },
   {
-    title: 'Cloud & DevOps',
+    title: 'Healthcare AI',
     description:
-      'Engineering automated infrastructure, CI/CD pipelines, and containerized backend systems built for high-availability workloads.',
-    icon: 'cloud',
-  },
-  {
-    title: 'Research & Writing',
-    description:
-      'Publishing peer-reviewed research in leading IEEE venues, presenting it internationally, and serving as an academic peer reviewer.',
-    icon: 'document',
+      'AI projects within R&D at BDM Healthware, including medication demand-forecasting and expiry-risk models built with the Vector Institute and validated on real-world hospital data.',
+    icon: 'health',
   },
 ];
 
@@ -90,7 +86,7 @@ export const socials = [
   {
     label: 'Google Scholar',
     value: 'Scholar profile',
-    href: 'https://scholar.google.com/citations?hl=en&user=NCdDTeEAAAAJ',
+    href: 'https://scholar.google.ca/citations?user=NCdDTeEAAAAJ',
     icon: 'scholar',
   },
   { label: 'X', value: '@NasikSami', href: 'https://x.com/NasikSami', icon: 'x' },

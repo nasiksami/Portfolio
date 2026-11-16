@@ -4,6 +4,7 @@ import { FiMenu, FiMoon, FiSun, FiSunrise, FiX } from 'react-icons/fi';
 import { navLinks, profile } from '../data/profile';
 import { useScrollSpy } from '../hooks/useScrollSpy';
 import { PIN_MODES, useSkyPin } from '../hooks/useSkyPin';
+import { useSite } from '../site';
 import Button from './ui/Button';
 
 const SECTION_IDS = navLinks.map((link) => link.id);
@@ -54,12 +55,15 @@ function SkyPin({ pin, setPin }) {
 }
 
 function NavItems({ activeId, selectId, onSelect, compact = false }) {
+  // On the home page these are in-page jumps; from a case study they lead
+  // back to the same sections of the home page.
+  const { home } = useSite();
   return navLinks.map((link, index) => {
     const isActive = activeId === link.id;
     return (
       <li key={link.id}>
         <a
-          href={'#' + link.id}
+          href={home(link.id)}
           onClick={() => {
             selectId(link.id);
             onSelect?.();
@@ -97,6 +101,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { activeId, selectId } = useScrollSpy(SECTION_IDS);
   const { pin, setPin } = useSkyPin();
+  const { home, isHome, root, to } = useSite();
   const reduceMotion = useReducedMotion();
   const menuButtonRef = useRef(null);
   const menuRef = useRef(null);
@@ -171,7 +176,11 @@ export default function Navbar() {
     <>
       <header className={headerClass}>
         <nav aria-label="Primary" className="shell flex h-16 items-center justify-between gap-4 md:h-20">
-          <a href="#top" className="tap group gap-2.5 text-content-primary">
+          <a
+            href={isHome ? '#top' : root}
+            aria-label={isHome ? 'Nasik Sami Khan, back to top' : 'Nasik Sami Khan, home'}
+            className="tap group gap-2.5 text-content-primary"
+          >
             <span className="display text-[1.65rem] leading-none">Nasik</span>
             <span
               aria-hidden="true"
@@ -187,7 +196,7 @@ export default function Navbar() {
             <SkyPin pin={pin} setPin={setPin} />
 
             <Button
-              href="#contact"
+              href={home('contact')}
               variant="solid"
               size="sm"
               className="hidden sm:inline-flex"
@@ -235,7 +244,7 @@ export default function Navbar() {
                 />
               </ul>
               <Button
-                href={profile.resumeUrl}
+                href={to(profile.resumeUrl)}
                 external
                 variant="outline"
                 className="mt-10 w-full"
