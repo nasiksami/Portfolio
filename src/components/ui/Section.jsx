@@ -11,6 +11,9 @@ import HorizonRule from '../HorizonRule';
  * its foot unless `ground="solid"`. `arc` is this section's stretch of the
  * day from ARC in src/sky.js: it fixes the palette and paints the sky once,
  * so scrolling never restyles the section.
+ *
+ * `headingLevel={1}` makes the title the page's h1, and `kicker` is a line of
+ * small text above it; both are used by the case-study pages.
  */
 export default function Section({
   id,
@@ -22,10 +25,14 @@ export default function Section({
   sky,
   backdrop,
   ground = 'fade',
+  headingLevel = 2,
+  kicker,
   children,
   className = '',
 }) {
   const headingId = id + '-heading';
+  // A case-study page's first section carries the page title, so it is an h1.
+  const Heading = headingLevel === 1 ? 'h1' : 'h2';
 
   return (
     <section
@@ -47,10 +54,15 @@ export default function Section({
             </Reveal>
 
             <div className="lg:col-span-10 lg:col-start-3">
+              {kicker && (
+                <Reveal>
+                  <div className="mb-5">{kicker}</div>
+                </Reveal>
+              )}
               <Reveal variant="rise">
-                <h2 id={headingId} className="display d-1 text-content-primary">
+                <Heading id={headingId} className="display d-1 text-content-primary">
                   {title}
-                </h2>
+                </Heading>
               </Reveal>
               {description && (
                 <Reveal delay={0.08}>

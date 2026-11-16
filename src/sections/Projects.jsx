@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { FiArrowUpRight } from 'react-icons/fi';
+import { FiArrowRight, FiArrowUpRight } from 'react-icons/fi';
 import { categories, projects } from '../data/projects';
 import { ARC } from '../sky';
+import { useSite } from '../site';
 import Section from '../components/ui/Section';
 import Tag from '../components/ui/Tag';
 import Emphasis from '../components/ui/Emphasis';
@@ -10,12 +11,17 @@ import Emphasis from '../components/ui/Emphasis';
 const slug = (title) => 'project-' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const number = (index) => String(index + 1).padStart(2, '0');
 
+/**
+ * Every card has the same parts in the same order: category and role, title,
+ * the problem, the approach, links, then one result and the stack. Links
+ * appear only where they exist.
+ */
 function ProjectEntry({ project, index }) {
-  const { paper, demo, repo } = project.links ?? {};
-  const links = [
+  const { to } = useSite();
+  const { caseStudy, paper, code } = project.links ?? {};
+  const external = [
     paper && { href: paper, label: 'Read paper', context: 'for ' + project.title },
-    demo && { href: demo, label: 'Live demo', context: 'of ' + project.title },
-    repo && { href: repo, label: 'Source', context: 'for ' + project.title },
+    code && { href: code, label: 'Source code', context: 'for ' + project.title },
   ].filter(Boolean);
 
   return (
@@ -37,13 +43,21 @@ function ProjectEntry({ project, index }) {
           {project.title}
         </h3>
 
-        <p className="mt-6 max-w-prose text-base text-content-secondary">
-          <Emphasis>{project.description}</Emphasis>
+        <p className="mt-6 max-w-prose text-lg text-content-primary">{project.problem}</p>
+        <p className="mt-4 max-w-prose text-base text-content-secondary">
+          <Emphasis>{project.approach}</Emphasis>
         </p>
 
-        {links.length > 0 && (
+        {(caseStudy || external.length > 0) && (
           <div className="mt-6 flex flex-wrap gap-x-7 gap-y-2">
-            {links.map((link) => (
+            {caseStudy && (
+              <a href={to('projects/' + caseStudy + '/')} className="link-draw meta tap gap-1.5 text-accent">
+                Case study
+                <span className="sr-only"> of {project.title}</span>
+                <FiArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+            )}
+            {external.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -61,14 +75,11 @@ function ProjectEntry({ project, index }) {
       </div>
 
       <div className="lg:col-span-3 lg:col-start-10">
-        {project.impact && (
-          <div className="border-l border-accent pl-5">
-            <p className="meta-sm text-accent">Impact</p>
-            <p className="mt-2 text-base font-semibold text-content-primary">
-              {project.impact}
-            </p>
-          </div>
-        )}
+        <div className="border-l border-accent pl-5">
+          <p className="meta-sm text-accent">Result</p>
+          <p className="mt-2 text-base font-semibold text-content-primary">{project.result}</p>
+          {project.source && <p className="meta-sm mt-3 text-content-muted">{project.source}</p>}
+        </div>
 
         <p className="meta-sm mt-8 text-content-muted">Stack</p>
         <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -98,9 +109,10 @@ export default function Projects() {
       label="Work"
       arc={ARC.projects}
       title="Selected work"
-      description="Research and engineering work spanning applied AI, network systems, and full-stack product delivery."
+      description="Three projects with full case studies, then the rest: applied AI research, network systems and full-stack development."
       sky={
         <div
+          role="group"
           aria-label="Filter projects by category"
           className="mt-12 flex flex-wrap gap-2 md:mt-16"
         >

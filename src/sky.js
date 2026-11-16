@@ -43,6 +43,11 @@ export const ARC = {
   skills: { from: 0.66, to: 0.84 },
   contact: { from: 0.84, to: 1 },
   footer: { from: 1, to: 1 },
+  // Case-study pages run the same day in three sections: morning,
+  // the working day, then dusk through to night.
+  caseIntro: { from: 0.14, to: 0.3 },
+  caseBody: { from: 0.3, to: 0.46 },
+  caseClose: { from: 0.46, cross: 0.49, to: 1 },
 };
 
 const mix = (a, b, f) => a.map((v, i) => Math.round(v + (b[i] - v) * f));
