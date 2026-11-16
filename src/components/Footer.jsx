@@ -4,8 +4,8 @@ import HorizonRule from './HorizonRule';
 import { ARC, skyProps } from '../sky';
 
 /**
- * The last of the ground. The name stands on one final horizon at wordmark
- * scale; below the rule a slim strip of sky closes the page where it began.
+ * The last of the ground. Below the final horizon rule a slim strip of sky
+ * closes the page where it began.
  */
 export default function Footer() {
   return (
@@ -49,24 +49,15 @@ export default function Footer() {
               </ul>
             </nav>
           </div>
-
-          <a
-            href="#top"
-            aria-label={'Back to top — ' + profile.name}
-            className="display mt-20 block w-full text-[clamp(3.2rem,11.5vw,11rem)] leading-[0.8] tracking-[-0.05em] text-content-primary transition-colors hover:text-accent md:mt-28"
-          >
-            {profile.name}
-          </a>
         </div>
       </div>
 
       <HorizonRule />
 
-      <div className="shell flex flex-col gap-2 py-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="shell py-6">
         <p className="meta-sm text-content-muted">
           © {new Date().getFullYear()} {profile.name}. All rights reserved.
         </p>
-        <p className="meta-sm text-content-muted">Built with React, Vite &amp; Tailwind CSS.</p>
       </div>
     </footer>
   );
